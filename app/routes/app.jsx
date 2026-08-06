@@ -9,6 +9,8 @@ import { AnimatePresence, motion } from "framer-motion";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
+export const meta = ({ data }) => [{ name: "shopify-api-key", content: data?.apiKey || "" }];
+
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
 
@@ -25,6 +27,7 @@ export default function App() {
       <AppProvider embedded apiKey={apiKey}>
         <s-app-nav>
           <s-link href="/app">Dashboard</s-link>
+          <s-link href="/app/submissions">Submissions</s-link>
           <s-link href="/app/templates">Templates</s-link>
           <s-link href="/app/pricing">Pricing</s-link>
         </s-app-nav>

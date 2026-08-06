@@ -2,7 +2,7 @@ export const templates = [
   {
     id: 1,
     name: "Contact Form",
-    isPro: false,
+    plan: "FREE",
     description: "A clean, responsive way for customers to reach your support team directly.",
     category: "Support",
     estimatedConversion: "18% - 22%",
@@ -14,7 +14,7 @@ export const templates = [
   {
     id: 2,
     name: "Newsletter Signup",
-    isPro: false,
+    plan: "BASIC",
     description: "Capture leads quickly with a high-converting email subscription form.",
     category: "Lead Gen",
     estimatedConversion: "25% - 35%",
@@ -26,7 +26,7 @@ export const templates = [
   {
     id: 3,
     name: "Product Request Form",
-    isPro: true,
+    plan: "PRO",
     description: "Allow customers to request out-of-stock items or custom products.",
     category: "Sales",
     estimatedConversion: "12% - 15%",
@@ -38,7 +38,7 @@ export const templates = [
   {
     id: 4,
     name: "Feedback Form",
-    isPro: false,
+    plan: "BASIC",
     description: "Gather valuable insights and reviews from your recent buyers.",
     category: "Research",
     estimatedConversion: "10% - 18%",
@@ -50,7 +50,7 @@ export const templates = [
   {
     id: 5,
     name: "Order Customization Form",
-    isPro: true,
+    plan: "PRO",
     description: "Collect detailed personalization requirements before an order is placed.",
     category: "Sales",
     estimatedConversion: "8% - 12%",
@@ -62,7 +62,7 @@ export const templates = [
   {
     id: 6,
     name: "Event Registration Form",
-    isPro: false,
+    plan: "PRO",
     description: "Register attendees for webinars, pop-ups, or in-store events.",
     category: "Lead Gen",
     estimatedConversion: "20% - 28%",

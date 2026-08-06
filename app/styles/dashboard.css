@@ -1,132 +1,92 @@
 /* app/styles/dashboard.css */
-
-html, body {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  width: 100%;
+:root {
+  --app-primary: #008060;
+  --app-primary-hover: #006E52;
+  --app-bg: #F6F8FB;
+  --app-card-bg: #FFFFFF;
+  --app-border: #E5E7EB;
+  --app-text-primary: #202223;
+  --app-text-secondary: #6D7175;
+  --app-success: #22C55E;
+  --app-warning: #F59E0B;
+  --app-danger: #DC2626;
+  --app-shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --app-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-@keyframes fadeInSaaS {
-  from { opacity: 0; transform: translateY(10px); }
+html, body {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text-primary);
+  scroll-behavior: smooth;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+@keyframes fadeInSoft {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .saas-dashboard {
-  animation: fadeInSaaS 0.4s ease-out forwards;
+  animation: fadeInSoft 0.3s ease-out forwards;
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
 }
 
 .custom-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  width: 100%;
+  gap: 20px;
 }
 
 .custom-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
+  gap: 20px;
 }
 
 @media (max-width: 1024px) {
-  .custom-grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .custom-grid-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .custom-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .custom-grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .custom-grid-4,
-  .custom-grid-3 {
-    grid-template-columns: 1fr;
-  }
+  .custom-grid-4, .custom-grid-3 { grid-template-columns: 1fr; }
 }
 
-/* Linear-inspired Gradient Hero */
-.saas-hero-container {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
-  border-bottom: 1px solid rgba(79, 70, 229, 0.1);
-  padding: 32px 0;
-  margin-bottom: 24px;
-}
-
-.saas-hero-content {
-  max-width: 1040px;
+/* Polaris Override for Cards */
+.Polaris-Page {
+  max-width: 1200px !important;
   margin: 0 auto;
-  padding: 0 32px;
 }
 
-.saas-hero-title {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #111827;
-  margin-bottom: 8px;
-}
-
-.saas-hero-subtitle {
-  font-size: 15px;
-  color: #6B7280;
-}
-
-/* Framer-inspired Glass Metric Cards */
-.metric-card-wrapper .Polaris-Card {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(8px);
-  position: relative;
-  overflow: hidden;
+.Polaris-Card, .saas-table-card .Polaris-Card {
+  border-radius: 12px !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: var(--app-shadow-card) !important;
+  background-color: var(--app-card-bg) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
 }
 
 .metric-card-wrapper .Polaris-Card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -8px rgba(79, 70, 229, 0.15) !important;
-  border-color: #6366F1 !important;
-}
-
-/* Top accent line on cards */
-.metric-card-wrapper .Polaris-Card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #4F46E5, #818CF8);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.metric-card-wrapper .Polaris-Card:hover::before {
-  opacity: 1;
+  box-shadow: var(--app-shadow-hover) !important;
 }
 
 /* Typography inside metrics */
 .metric-label {
   font-size: 13px;
   font-weight: 500;
-  color: #6B7280;
+  color: var(--app-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
   margin-bottom: 8px;
 }
 
 .metric-value {
-  font-size: 36px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--app-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .metric-trend {
@@ -137,47 +97,17 @@ html, body {
   gap: 4px;
   margin-top: 8px;
 }
-.metric-trend.positive { color: #10B981; }
-.metric-trend.neutral { color: #6B7280; }
+.metric-trend.positive { color: var(--app-success); }
+.metric-trend.neutral { color: var(--app-text-secondary); }
 
-/* Stripe-inspired Action Buttons */
-.saas-action-button .Polaris-Button {
-  transition: all 0.15s ease-in-out !important;
-  border-radius: 6px !important;
-  font-weight: 500 !important;
-}
-
-.saas-action-button.primary .Polaris-Button {
-  background-color: #111827 !important; /* Vercel dark button style */
-  color: white !important;
-  border: none !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-}
-
-.saas-action-button.primary .Polaris-Button:hover {
-  background-color: #374151 !important;
-  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Activity Table enhancements */
-.saas-table-card .Polaris-Card {
-  border-radius: 12px;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-}
-
-.saas-table-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #E5E7EB;
-}
-
+/* Table Enhancements */
 .saas-table-row {
-  padding: 16px 24px;
-  border-bottom: 1px solid #F3F4F6;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--app-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.2s ease;
 }
 
 .saas-table-row:hover {
@@ -190,18 +120,33 @@ html, body {
 
 .status-badge {
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
 }
-.status-badge.active { background: #ECFDF5; color: #059669; }
-.status-badge.draft { background: #F3F4F6; color: #4B5563; }
+.status-badge.active { background: #E6F4EA; color: var(--app-primary); }
+.status-badge.draft { background: #F3F4F6; color: var(--app-text-secondary); }
 
-/* Reduce motion */
+/* Buttons */
+.saas-action-button .Polaris-Button, .gallery-button-wrapper .Polaris-Button {
+  transition: all 0.2s ease !important;
+  border-radius: 8px !important;
+}
+
+.saas-action-button.primary .Polaris-Button, .gallery-button-wrapper .Polaris-Button {
+  background-color: var(--app-primary) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.saas-action-button.primary .Polaris-Button:hover, .gallery-button-wrapper .Polaris-Button:hover {
+  background-color: var(--app-primary-hover) !important;
+  transform: translateY(-1px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .saas-dashboard,
   .metric-card-wrapper .Polaris-Card,
-  .metric-card-wrapper .Polaris-Card::before,
   .saas-action-button .Polaris-Button,
   .saas-table-row {
     animation: none !important;
