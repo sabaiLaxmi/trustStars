@@ -1,0 +1,211 @@
+/* app/styles/dashboard.css */
+
+html, body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+@keyframes fadeInSaaS {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.saas-dashboard {
+  animation: fadeInSaaS 0.4s ease-out forwards;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.custom-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.custom-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .custom-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .custom-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-grid-4,
+  .custom-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Linear-inspired Gradient Hero */
+.saas-hero-container {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+  border-bottom: 1px solid rgba(79, 70, 229, 0.1);
+  padding: 32px 0;
+  margin-bottom: 24px;
+}
+
+.saas-hero-content {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.saas-hero-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.saas-hero-subtitle {
+  font-size: 15px;
+  color: #6B7280;
+}
+
+/* Framer-inspired Glass Metric Cards */
+.metric-card-wrapper .Polaris-Card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card-wrapper .Polaris-Card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(79, 70, 229, 0.15) !important;
+  border-color: #6366F1 !important;
+}
+
+/* Top accent line on cards */
+.metric-card-wrapper .Polaris-Card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #818CF8);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.metric-card-wrapper .Polaris-Card:hover::before {
+  opacity: 1;
+}
+
+/* Typography inside metrics */
+.metric-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.metric-trend {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+.metric-trend.positive { color: #10B981; }
+.metric-trend.neutral { color: #6B7280; }
+
+/* Stripe-inspired Action Buttons */
+.saas-action-button .Polaris-Button {
+  transition: all 0.15s ease-in-out !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+.saas-action-button.primary .Polaris-Button {
+  background-color: #111827 !important; /* Vercel dark button style */
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.saas-action-button.primary .Polaris-Button:hover {
+  background-color: #374151 !important;
+  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Activity Table enhancements */
+.saas-table-card .Polaris-Card {
+  border-radius: 12px;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.saas-table-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.saas-table-row {
+  padding: 16px 24px;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.15s ease;
+}
+
+.saas-table-row:hover {
+  background-color: #F9FAFB;
+}
+
+.saas-table-row:last-child {
+  border-bottom: none;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status-badge.active { background: #ECFDF5; color: #059669; }
+.status-badge.draft { background: #F3F4F6; color: #4B5563; }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .saas-dashboard,
+  .metric-card-wrapper .Polaris-Card,
+  .metric-card-wrapper .Polaris-Card::before,
+  .saas-action-button .Polaris-Button,
+  .saas-table-row {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
