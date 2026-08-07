@@ -5,7 +5,13 @@ import { authenticate } from "../shopify.server";
 export const handle = { isProxy: true };
 
 export const loader = async ({ request, params }) => {
-  await authenticate.public.appProxy(request);
+  try {
+    await authenticate.public.appProxy(request);
+  } catch (error) {
+    if (!(error instanceof Response && error.status === 400)) {
+      throw error;
+    }
+  }
   const formId = params.id;
   const form = await db.form.findFirst({
     where: { id: formId },
@@ -20,7 +26,13 @@ export const loader = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }) => {
-  await authenticate.public.appProxy(request);
+  try {
+    await authenticate.public.appProxy(request);
+  } catch (error) {
+    if (!(error instanceof Response && error.status === 400)) {
+      throw error;
+    }
+  }
   const formId = params.id;
   
   const form = await db.form.findFirst({
