@@ -2,5 +2,10 @@ import { redirect } from "react-router";
 
 export const loader = async ({ request }) => {
   const url = new URL(request.url);
-  throw redirect(`/app?${url.searchParams.toString()}`);
+  
+  if (url.searchParams.get("shop")) {
+    throw redirect(`/app?${url.searchParams.toString()}`);
+  }
+
+  throw redirect("/auth/login");
 };
