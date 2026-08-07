@@ -1,7 +1,7 @@
 <div class="truststars-form-embed-wrapper" style="width: 100%; margin: 20px 0;">
   {% if block.settings.form_id != blank %}
     <iframe 
-      src="{{ shop.url }}/apps/truststars/{{ block.settings.form_id }}?embedded=true&shop={{ shop.domain }}" 
+      src="/apps/truststars/{{ block.settings.form_id }}?embedded=true&shop={{ shop.domain }}" 
       width="100%" 
       height="{{ block.settings.iframe_height }}px" 
       style="border: none; overflow: hidden; display: block;" 
@@ -18,7 +18,7 @@
 {% schema %}
 {
   "name": "TrustStars Form",
-  "target": "body",
+  "target": "section",
   "settings": [
     {
       "type": "text",
