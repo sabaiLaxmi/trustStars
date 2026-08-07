@@ -12,8 +12,8 @@ export const loader = async ({ request, params }) => {
     include: { fields: { orderBy: { order: 'asc' } } }
   });
 
-  if (!form || form.status !== 'PUBLISHED') {
-    throw new Response("Form Not Found or Not Published", { status: 404 });
+  if (!form) {
+    throw new Response("Form Not Found", { status: 404 });
   }
 
   return data({ form });
@@ -24,7 +24,7 @@ export const action = async ({ request, params }) => {
   const formId = params.id;
   
   const form = await db.form.findFirst({
-    where: { id: formId, status: 'PUBLISHED' },
+    where: { id: formId },
     include: { fields: true }
   });
 
