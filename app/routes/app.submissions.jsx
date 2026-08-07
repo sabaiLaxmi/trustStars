@@ -69,29 +69,6 @@ export default function Submissions() {
 
   const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(filteredSubmissions);
 
-  const handleExportCSV = useCallback(() => {
-    const headers = ["ID", "Form Name", "Name", "Email", "Date", "Status"];
-    const rows = filteredSubmissions.map(sub => [
-      sub.id,
-      `"${sub.form.title}"`,
-      `"${sub.displayName}"`,
-      `"${sub.displayEmail}"`,
-      sub.date,
-      sub.status
-    ]);
-    
-    const csvContent = "data:text/csv;charset=utf-8," + 
-      [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-      
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "submissions.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, [filteredSubmissions]);
-
   const rowMarkup = filteredSubmissions.map(
     (sub, index) => (
       <IndexTable.Row
@@ -116,7 +93,6 @@ export default function Submissions() {
   return (
     <Page
       title="Submissions"
-      primaryAction={{ content: 'Export CSV', onAction: handleExportCSV, disabled: filteredSubmissions.length === 0 }}
     >
       <Layout>
         <Layout.Section>

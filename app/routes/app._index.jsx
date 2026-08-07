@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { Page, Card, Text, Button, InlineStack, Badge } from "@shopify/polaris";
+import { Page, Card, Text, Button, InlineStack, Badge, BlockStack } from "@shopify/polaris";
 import { BarChart3, FileText, UserCheck, Plus } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useNavigate } from "react-router";
@@ -38,33 +38,23 @@ export default function Dashboard() {
     <Page fullWidth>
       <div className="saas-dashboard">
         
-        {/* Hero Section */}
-        <motion.div 
-          className="saas-hero-container"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          <div className="saas-hero-content">
-            <InlineStack align="space-between" blockAlign="center">
-              <div>
-                <h1 className="saas-hero-title">Welcome to TrustStars</h1>
-                <p className="saas-hero-subtitle">Here's what's happening with your forms today.</p>
-              </div>
-              <div className="saas-action-button primary">
-                <Button 
-                  icon={<Plus size={16} />}
-                  onClick={() => navigate('/app/templates')}
-                >
-                  New Form
-                </Button>
-              </div>
-            </InlineStack>
-          </div>
-        </motion.div>
-
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 32px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 32px', paddingTop: '24px' }}>
           
+          {/* Hero Section */}
+          <motion.div 
+            className="saas-hero-container"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            style={{ marginBottom: '32px' }}
+          >
+            <div className="saas-hero-content">
+              <BlockStack gap="200">
+                <Text variant="headingXl" as="h1">Welcome to TrustStars</Text>
+                <Text variant="bodyLg" tone="subdued">Here's what's happening with your forms today.</Text>
+              </BlockStack>
+            </div>
+          </motion.div>
           {/* Metrics Grid */}
           <div style={{ marginBottom: '40px' }}>
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="custom-grid-3">

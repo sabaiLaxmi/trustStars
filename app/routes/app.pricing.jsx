@@ -15,54 +15,96 @@ export default function Pricing() {
         <Layout.Section>
           <Grid>
             {/* Free Plan */}
-            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 4, lg: 4, xl: 4 }}>
-              <Card>
-                <BlockStack gap="400">
-                  <Text as="h2" variant="headingLg">Free</Text>
-                  <Text as="p" variant="headingXl" fontWeight="bold">$0 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
-                  <Text as="p" tone="subdued">Perfect for getting started</Text>
-                  
-                  <Box paddingBlockStart="400" paddingBlockEnd="400">
-                    <List type="bullet">
-                      <List.Item><strong>1 Active Form</strong></List.Item>
-                      <List.Item><strong>50 Submissions</strong> / month</List.Item>
-                      <List.Item>Basic Templates</List.Item>
-                      <List.Item>Community Support</List.Item>
-                    </List>
-                  </Box>
-                  
-                  <Button disabled fullWidth>Current Plan</Button>
-                </BlockStack>
-              </Card>
-            </Grid.Cell>
-            
-            {/* Starter Plan */}
-            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 4, lg: 4, xl: 4 }}>
-              <Card>
-                <BlockStack gap="400">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <Text as="h2" variant="headingLg">Starter</Text>
-                  </InlineStack>
-                  <Text as="p" variant="headingXl" fontWeight="bold">$9 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
-                  <Text as="p" tone="subdued">For growing businesses</Text>
-                  
-                  <Box paddingBlockStart="400" paddingBlockEnd="400">
-                    <List type="bullet">
-                      <List.Item><strong>5 Active Forms</strong></List.Item>
-                      <List.Item><strong>500 Submissions</strong> / month</List.Item>
-                      <List.Item>Premium Templates</List.Item>
-                      <List.Item>Email Support</List.Item>
-                    </List>
-                  </Box>
-                  
-                  <Button onClick={() => console.log('Initiate charge')} fullWidth>Upgrade to Starter</Button>
-                </BlockStack>
-              </Card>
+            <Grid.Cell columnSpan={{ xs: 12, sm: 12, md: 4, lg: 4, xl: 4 }}>
+              <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card>
+                  <BlockStack gap="400">
+                    <Text as="h2" variant="headingLg">Free</Text>
+                    <Text as="p" variant="headingXl" fontWeight="bold">$0 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
+                    <Text as="p" tone="subdued">For individuals just getting started</Text>
+                    
+                    <Box paddingBlockStart="400" paddingBlockEnd="400" minHeight="300px">
+                      <List type="bullet">
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">Text/label editing</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">50 form submissions per month</Text>
+                          </InlineStack>
+                        </List.Item>
+                      </List>
+                    </Box>
+                    
+                    <Button disabled fullWidth>Current Plan</Button>
+                  </BlockStack>
+                </Card>
+              </div>
             </Grid.Cell>
 
+            {/* Starter Plan */}
+            <Grid.Cell columnSpan={{ xs: 12, sm: 12, md: 4, lg: 4, xl: 4 }}>
+              <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card>
+                  <BlockStack gap="400">
+                    <Text as="h2" variant="headingLg">Starter</Text>
+                    <Text as="p" variant="headingXl" fontWeight="bold">$4.99 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
+                    <Text as="p" tone="subdued">Perfect for growing stores</Text>
+                    
+                    <Box paddingBlockStart="400" paddingBlockEnd="400" minHeight="300px">
+                      <List type="bullet">
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">Text/label editing</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Font customization</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Image upload (up to 2/form)</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Theme access</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Basic color customization</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">150 form submissions per month</Text>
+                          </InlineStack>
+                        </List.Item>
+                      </List>
+                    </Box>
+                    
+                    <Button variant="secondary" onClick={() => shopify.toast.show('Billing integration coming soon')} fullWidth>Upgrade to Starter</Button>
+                  </BlockStack>
+                </Card>
+              </div>
+            </Grid.Cell>
+            
             {/* Pro Plan */}
-            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 4, lg: 4, xl: 4 }}>
-              <div style={{ position: 'relative', height: '100%' }}>
+            <Grid.Cell columnSpan={{ xs: 12, sm: 12, md: 4, lg: 4, xl: 4 }}>
+              <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* Highlight Border for Pro */}
                 <div style={{
                   position: 'absolute',
@@ -78,20 +120,57 @@ export default function Pricing() {
                       <Text as="h2" variant="headingLg">Pro</Text>
                       <Badge tone="success">Most Popular</Badge>
                     </InlineStack>
-                    <Text as="p" variant="headingXl" fontWeight="bold">$29 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
-                    <Text as="p" tone="subdued">For high-volume merchants</Text>
+                    <Text as="p" variant="headingXl" fontWeight="bold">$9.99 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
+                    <Text as="p" tone="subdued">For scaling businesses</Text>
                     
-                    <Box paddingBlockStart="400" paddingBlockEnd="400">
+                    <Box paddingBlockStart="400" paddingBlockEnd="400" minHeight="300px">
                       <List type="bullet">
-                        <List.Item><strong>Unlimited Forms</strong></List.Item>
-                        <List.Item><strong>Unlimited Submissions</strong></List.Item>
-                        <List.Item>Premium Templates & Analytics</List.Item>
-                        <List.Item>Priority 24/7 Support</List.Item>
-                        <List.Item>Remove Branding</List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">Text/label editing</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Field add/remove</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Full theme customization</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Branding removal</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="success">Available now</Badge>
+                            <Text as="span">Unlimited form submissions</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Unlimited image uploads</Text>
+                          </InlineStack>
+                        </List.Item>
+                        <List.Item>
+                          <InlineStack gap="200" blockAlign="center" wrap={false}>
+                            <Badge tone="info">Coming soon</Badge>
+                            <Text as="span">Priority support</Text>
+                          </InlineStack>
+                        </List.Item>
                       </List>
                     </Box>
                     
-                    <Button variant="primary" onClick={() => console.log('Initiate charge')} fullWidth>Upgrade to Pro</Button>
+                    <Button variant="primary" onClick={() => shopify.toast.show('Billing integration coming soon')} fullWidth>Upgrade to Pro</Button>
                   </BlockStack>
                 </Card>
               </div>

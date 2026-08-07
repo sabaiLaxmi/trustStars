@@ -13,6 +13,13 @@ const itemVariants = {
 const CURRENT_PLAN = "FREE";
 const PLAN_LEVELS = { FREE: 1, BASIC: 2, PRO: 3 };
 
+const categoryColors = {
+  "Customer Support": { bg: "#FEF3C7", icon: "#D97706" }, // Amber
+  "Marketing": { bg: "#DBEAFE", icon: "#2563EB" }, // Blue
+  "Sales": { bg: "#F3E8FF", icon: "#9333EA" }, // Purple
+  "Store Operations": { bg: "#CCFBF1", icon: "#0D9488" } // Teal
+};
+
 export function TemplateCard({ template, navigate }) {
   const IconComponent = LucideIcons[template.iconName] || LucideIcons.FileText;
   const submit = useSubmit();
@@ -39,6 +46,7 @@ export function TemplateCard({ template, navigate }) {
   const handleCloseModal = useCallback(() => setIsUpgradeModalOpen(false), []);
   const handleUpgrade = useCallback(() => {
     navigate('/app/pricing');
+    setIsUpgradeModalOpen(false);
   }, [navigate]);
 
   const requiredPlanName = template.plan === "PRO" ? "Pro" : "Basic";
@@ -68,7 +76,7 @@ export function TemplateCard({ template, navigate }) {
           {/* Large Thumbnail Preview */}
           <div style={{ 
             height: '200px', 
-            backgroundColor: '#F6F8FB',
+            background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
             position: 'relative',
             borderBottom: '1px solid #E5E7EB',
             overflow: 'hidden',
@@ -76,13 +84,13 @@ export function TemplateCard({ template, navigate }) {
             justifyContent: 'center',
             alignItems: 'flex-start'
           }}>
-            {/* Abstract Form UI Representation */}
+            {/* Realistic Form UI Representation */}
             <div style={{
               marginTop: '24px',
-              width: '80%',
+              width: '85%',
               height: '200px',
               backgroundColor: '#FFFFFF',
-              borderRadius: '8px 8px 0 0',
+              borderRadius: '10px 10px 0 0',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
               border: '1px solid #E5E7EB',
               borderBottom: 'none',
@@ -90,13 +98,40 @@ export function TemplateCard({ template, navigate }) {
               position: 'relative'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                 <IconComponent size={16} color="#008060" />
-                 <div style={{ width: '40%', height: '8px', backgroundColor: '#E5E7EB', borderRadius: '4px' }} />
+                 <div style={{
+                   width: '28px',
+                   height: '28px',
+                   borderRadius: '50%',
+                   backgroundColor: categoryColors[template.category]?.bg || "#E0E7FF",
+                   display: 'flex',
+                   alignItems: 'center',
+                   justifyContent: 'center'
+                 }}>
+                   <IconComponent size={14} color={categoryColors[template.category]?.icon || "#4F46E5"} />
+                 </div>
+                 <div style={{ width: '40%', height: '8px', backgroundColor: '#D1D5DB', borderRadius: '4px' }} />
               </div>
+              
               {Array.from({ length: Math.min(3, template.fieldsCount || 3) }).map((_, i) => (
-                 <div key={i} style={{ width: '100%', height: '24px', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '4px', marginBottom: '10px' }} />
+                 <div key={i} style={{ marginBottom: '12px' }}>
+                   <div style={{ width: '25%', height: '6px', backgroundColor: '#9CA3AF', borderRadius: '3px', marginBottom: '6px', opacity: 0.6 }} />
+                   <div style={{ width: '100%', height: '26px', backgroundColor: '#FFFFFF', border: '1px solid #D1D5DB', borderRadius: '6px' }} />
+                 </div>
               ))}
-              <div style={{ width: '35%', height: '28px', backgroundColor: '#008060', borderRadius: '4px', opacity: 0.9, marginTop: '12px' }} />
+              
+              <div style={{ 
+                width: '100%', 
+                height: '32px', 
+                backgroundColor: '#008060', 
+                borderRadius: '6px', 
+                marginTop: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+              }}>
+                <div style={{ width: '25%', height: '6px', backgroundColor: '#FFFFFF', borderRadius: '3px', opacity: 0.9 }} />
+              </div>
             </div>
             
             {/* Subtle Favorite Icon */}
@@ -146,25 +181,27 @@ export function TemplateCard({ template, navigate }) {
               </Text>
             </div>
             
-            <div style={{ flexGrow: 1, marginBottom: '24px' }}>
+            <div style={{ marginBottom: '24px' }}>
               <Text as="p" tone="subdued" variant="bodyMd">
                 {template.description}
               </Text>
             </div>
             
             {/* Action Buttons */}
-            <InlineStack gap="300" blockAlign="center" align="stretch" wrap={false}>
-              <div style={{ flex: 1, display: 'flex' }}>
-                <Button onClick={handlePreview} fullWidth>
-                  Preview
-                </Button>
-              </div>
-              <div style={{ flex: 1, display: 'flex' }}>
-                <Button variant="primary" onClick={handleUseTemplate} fullWidth>
-                  Use Template
-                </Button>
-              </div>
-            </InlineStack>
+            <div style={{ marginTop: 'auto' }}>
+              <InlineStack gap="300" blockAlign="center" align="stretch" wrap={false}>
+                <div style={{ flex: 1, display: 'flex' }}>
+                  <Button onClick={handlePreview} fullWidth>
+                    Preview
+                  </Button>
+                </div>
+                <div style={{ flex: 1, display: 'flex' }}>
+                  <Button variant="primary" onClick={handleUseTemplate} fullWidth>
+                    Use Template
+                  </Button>
+                </div>
+              </InlineStack>
+            </div>
           </div>
         </div>
       </motion.div>

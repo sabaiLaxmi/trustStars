@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useRouteError, useLocation } from "react-router";
+import { Outlet, useLoaderData, useRouteError, useLocation, Link } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { AppProvider as PolarisAppProvider } from "@shopify/polaris";
@@ -25,12 +25,12 @@ export default function App() {
   return (
     <PolarisAppProvider i18n={polarisTranslations}>
       <AppProvider embedded apiKey={apiKey}>
-        <s-app-nav>
-          <s-link href="/app">Dashboard</s-link>
-          <s-link href="/app/submissions">Submissions</s-link>
-          <s-link href="/app/templates">Templates</s-link>
-          <s-link href="/app/pricing">Pricing</s-link>
-        </s-app-nav>
+        <ui-nav-menu>
+          <Link to="/app" rel="home">Dashboard</Link>
+          <Link to="/app/submissions">Submissions</Link>
+          <Link to="/app/templates">Templates</Link>
+          <Link to="/app/pricing">Pricing</Link>
+        </ui-nav-menu>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

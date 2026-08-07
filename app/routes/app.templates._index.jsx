@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { Page, Layout, Grid, Card, BlockStack, Text, Button, Icon, Badge, InlineStack } from "@shopify/polaris";
+import { Page, Layout, InlineGrid, Card, BlockStack, Text, Button, Icon, Badge, InlineStack } from "@shopify/polaris";
 import { LockIcon } from "@shopify/polaris-icons";
 import { templates } from "../data/templates";
 import { useNavigate } from "react-router";
@@ -32,20 +32,52 @@ const itemVariants = {
 export default function Index() {
   const navigate = useNavigate();
 
+  const categoryOrder = [
+    "Customer Support",
+    "Marketing",
+    "Sales",
+    "Store Operations"
+  ];
+
+  const featuredTemplate = templates.find(t => t.name === "Contact Form");
+  
+  const templatesByCategory = categoryOrder.map(category => ({
+    category,
+    templates: templates.filter(t => t.category === category && t.id !== featuredTemplate?.id)
+  })).filter(g => g.templates.length > 0);
+
   return (
     <Page title="Form Template Gallery">
       <div className="gallery-grid">
         <Layout>
+          {featuredTemplate && (
+            <Layout.Section>
+              <BlockStack gap="400">
+                <Text variant="headingLg" as="h2">Featured Template</Text>
+                <InlineGrid columns={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2 }} gap="400">
+                  <TemplateCard template={featuredTemplate} navigate={navigate} />
+                </InlineGrid>
+              </BlockStack>
+            </Layout.Section>
+          )}
+
           <Layout.Section>
-            <motion.div variants={containerVariants} initial="hidden" animate="show">
-              <Grid>
-                {templates.map((template) => (
-                    <Grid.Cell key={template.id} columnSpan={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}>
-                       <TemplateCard template={template} navigate={navigate} />
-                    </Grid.Cell>
-                ))}
-              </Grid>
-            </motion.div>
+            <BlockStack gap="800">
+              {templatesByCategory.map(({ category, templates }) => (
+                <BlockStack key={category} gap="400">
+                  <Text variant="headingLg" as="h2">
+                    {category}
+                  </Text>
+                  <motion.div variants={containerVariants} initial="hidden" animate="show">
+                    <InlineGrid columns={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }} gap="400">
+                      {templates.map((template) => (
+                          <TemplateCard key={template.id} template={template} navigate={navigate} />
+                      ))}
+                    </InlineGrid>
+                  </motion.div>
+                </BlockStack>
+              ))}
+            </BlockStack>
           </Layout.Section>
         </Layout>
       </div>

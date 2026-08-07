@@ -29,6 +29,13 @@ export const action = async ({ request, params }) => {
 
   const formData = await request.formData();
   
+  // Anti-Spam Honeypot Check
+  const honeypot = formData.get("a_password");
+  if (honeypot) {
+    // If a bot fills this out, silently return success without saving
+    return data({ success: true });
+  }
+
   // Validation
   const errors = {};
   const values = [];
@@ -119,6 +126,12 @@ export default function PublicForm() {
             );
           })}
           
+          {/* Anti-Spam Honeypot */}
+          <div style={{ display: 'none' }} aria-hidden="true">
+            <label htmlFor="a_password">Password</label>
+            <input type="text" id="a_password" name="a_password" tabIndex="-1" autoComplete="off" />
+          </div>
+
           <button 
             type="submit" 
             style={{...styles.button, ...(isSubmitting ? styles.buttonDisabled : {})}}

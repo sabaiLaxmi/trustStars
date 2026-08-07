@@ -1,16 +1,11 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate, useRouteError, useSubmit, redirect } from "react-router";
-import { Page, Layout, Card, Button, BlockStack, Text, Badge, Grid, List, Box, InlineStack, Divider, Modal } from "@shopify/polaris";
+import { Page, Layout, Card, Button, BlockStack, Text, Badge, Grid, List, Box, InlineStack, Divider, Modal, TextField } from "@shopify/polaris";
 import { templates } from "../data/templates";
 import db from "../db.server";
 import * as LucideIcons from 'lucide-react';
 import { useCallback, useState } from "react";
-
-// Simulated current plan for locking logic
-const CURRENT_PLAN = "FREE";
-const PLAN_LEVELS = { FREE: 1, BASIC: 2, PRO: 3 };
-
 export const loader = async ({ request, params }) => {
   await authenticate.admin(request);
   const templateId = parseInt(params.id, 10);
@@ -59,23 +54,9 @@ export default function TemplateDetail() {
   const submit = useSubmit();
   const IconComponent = LucideIcons[template.iconName] || LucideIcons.FileText;
 
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
-  const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[CURRENT_PLAN];
-
   const handleUseTemplate = useCallback(() => {
-    if (isUpgradeRequired) {
-      setIsUpgradeModalOpen(true);
-      return;
-    }
     submit({}, { method: "post" });
-  }, [isUpgradeRequired, submit]);
-
-  const handleCloseModal = useCallback(() => setIsUpgradeModalOpen(false), []);
-  const handleUpgrade = useCallback(() => {
-    navigate('/app/pricing');
-  }, [navigate]);
-
-  const requiredPlanName = template.plan === "PRO" ? "Pro" : "Starter";
+  }, [submit]);
 
   // Mock data for the detailed view
   const mockFeatures = ["Fully responsive design", "Spam protection (reCAPTCHA)", "Automatic email notifications", "Customizable success message"];
@@ -90,7 +71,7 @@ export default function TemplateDetail() {
       title={template.name}
       backAction={{ content: 'Back to Gallery', onAction: () => navigate('/app/templates') }}
       primaryAction={{ 
-        content: isUpgradeRequired ? 'Upgrade to Use' : 'Use Template', 
+        content: 'Use Template', 
         onAction: handleUseTemplate,
         variant: 'primary'
       }}
@@ -101,34 +82,52 @@ export default function TemplateDetail() {
             {/* Large Preview */}
             <Card padding="0">
               <div style={{ 
-                height: '350px', 
                 backgroundColor: '#F6F8FB',
+                padding: '40px 20px',
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
-                borderBottom: '1px solid #E5E7EB',
-                position: 'relative'
+                alignItems: 'flex-start',
+                borderBottom: '1px solid #E5E7EB'
               }}>
-                <div style={{
-                  width: '60%',
+                <div style={{ 
+                  width: '100%', 
                   maxWidth: '500px',
-                  height: '250px',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '12px',
-                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #E5E7EB',
-                  padding: '24px',
-                  display: 'flex',
-                  flexDirection: 'column'
+                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-                    <IconComponent size={24} color="#008060" />
-                    <div style={{ width: '50%', height: '12px', backgroundColor: '#E5E7EB', borderRadius: '6px' }} />
-                  </div>
-                  {Array.from({ length: Math.min(4, template.fieldsCount || 4) }).map((_, i) => (
-                    <div key={i} style={{ width: '100%', height: '36px', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '6px', marginBottom: '16px' }} />
-                  ))}
-                  <div style={{ width: '100%', height: '40px', backgroundColor: '#008060', borderRadius: '6px', opacity: 0.9, marginTop: 'auto' }} />
+                  <Card>
+                    <BlockStack gap="500">
+                      <BlockStack gap="200">
+                        <InlineStack gap="200" blockAlign="center">
+                          <IconComponent size={28} color="#008060" />
+                          <Text variant="headingLg" as="h2">{template.name}</Text>
+                        </InlineStack>
+                        <Text variant="bodyMd" tone="subdued">
+                          Please fill out the form below and we will get back to you as soon as possible.
+                        </Text>
+                      </BlockStack>
+                      
+                      <BlockStack gap="400">
+                        <TextField 
+                          label="Full Name" 
+                          autoComplete="off" 
+                          placeholder="e.g. Jane Doe" 
+                        />
+                        <TextField 
+                          label="Email Address" 
+                          autoComplete="email" 
+                          placeholder="e.g. jane@example.com" 
+                        />
+                        {template.fieldsCount > 2 && (
+                          <TextField 
+                            label="Message" 
+                            multiline={4} 
+                            autoComplete="off" 
+                            placeholder="How can we help you today?" 
+                          />
+                        )}
+                      </BlockStack>
+                    </BlockStack>
+                  </Card>
                 </div>
               </div>
               <div style={{ padding: '24px' }}>
@@ -167,18 +166,6 @@ export default function TemplateDetail() {
                     <InlineStack align="space-between" blockAlign="center">
                       <Text tone="subdued">Category</Text>
                       <Badge tone="attention">{template.category}</Badge>
-                    </InlineStack>
-                    <Divider />
-                    
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Text tone="subdued">Supported Plans</Text>
-                      {template.plan === "PRO" ? (
-                        <Badge tone="magic">Pro</Badge>
-                      ) : template.plan === "BASIC" ? (
-                        <Badge tone="info">Starter & Pro</Badge>
-                      ) : (
-                        <Badge tone="success">All Plans</Badge>
-                      )}
                     </InlineStack>
                     <Divider />
                     
@@ -223,43 +210,6 @@ export default function TemplateDetail() {
           </BlockStack>
         </Layout.Section>
       </Layout>
-
-      {/* Upgrade Modal */}
-      <Modal
-        open={isUpgradeModalOpen}
-        onClose={handleCloseModal}
-        title={`Upgrade to ${requiredPlanName} Plan`}
-        primaryAction={{
-          content: 'Upgrade Plan',
-          onAction: handleUpgrade,
-        }}
-        secondaryActions={[
-          {
-            content: 'Cancel',
-            onAction: handleCloseModal,
-          },
-        ]}
-      >
-        <Modal.Section>
-          <BlockStack gap="400">
-            <Text as="p">
-              The <strong>{template.name}</strong> template is a premium feature available on the {requiredPlanName} plan and above. 
-              Upgrade your plan to unlock this template and access powerful new tools for your store.
-            </Text>
-            
-            <Box paddingBlockStart="400">
-              <Text variant="headingSm" as="h3">What you get when you upgrade:</Text>
-              <Box paddingBlockStart="200">
-                <List type="bullet">
-                  <List.Item>Full access to all {requiredPlanName} templates and features</List.Item>
-                  <List.Item>Increased monthly form submission limits</List.Item>
-                  <List.Item>Priority support from our team</List.Item>
-                </List>
-              </Box>
-            </Box>
-          </BlockStack>
-        </Modal.Section>
-      </Modal>
     </Page>
   );
 }
