@@ -2,6 +2,8 @@ import { useLoaderData, useActionData, Form, useNavigation, data } from "react-r
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
 
+export const handle = { isProxy: true };
+
 export const loader = async ({ request, params }) => {
   await authenticate.public.appProxy(request);
   const formId = params.id;

@@ -1,6 +1,9 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useMatches } from "react-router";
 
 export default function App() {
+  const matches = useMatches();
+  const isProxy = matches.some((match) => match.handle?.isProxy);
+
   return (
     <html lang="en">
       <head>
@@ -12,12 +15,12 @@ export default function App() {
           href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css"
         />
         <Meta />
-        <Links />
+        {!isProxy && <Links />}
       </head>
       <body>
         <Outlet />
-        <ScrollRestoration />
-        <Scripts />
+        {!isProxy && <ScrollRestoration />}
+        {!isProxy && <Scripts />}
       </body>
     </html>
   );
