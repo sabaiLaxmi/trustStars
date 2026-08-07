@@ -1,7 +1,9 @@
 import { useLoaderData, useActionData, Form, useNavigation, data } from "react-router";
 import db from "../db.server";
+import { authenticate } from "../shopify.server";
 
-export const loader = async ({ params }) => {
+export const loader = async ({ request, params }) => {
+  await authenticate.public.appProxy(request);
   const formId = params.id;
   const form = await db.form.findFirst({
     where: { id: formId },
@@ -16,6 +18,7 @@ export const loader = async ({ params }) => {
 };
 
 export const action = async ({ request, params }) => {
+  await authenticate.public.appProxy(request);
   const formId = params.id;
   
   const form = await db.form.findFirst({
