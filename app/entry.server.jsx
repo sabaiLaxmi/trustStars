@@ -25,7 +25,9 @@ export default async function handleRequest(
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
-          responseHeaders.set("Content-Type", "text/html");
+          const url = new URL(request.url);
+          const isAppProxy = url.pathname.startsWith("/p/");
+          responseHeaders.set("Content-Type", isAppProxy ? "application/liquid" : "text/html");
           resolve(
             new Response(stream, {
               headers: responseHeaders,
