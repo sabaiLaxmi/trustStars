@@ -1,7 +1,7 @@
 import { Text, Button, Badge, InlineStack, Modal, BlockStack, List, Box } from "@shopify/polaris";
 import { motion } from "framer-motion";
 import * as LucideIcons from 'lucide-react';
-import { useSubmit } from "react-router";
+import { useSubmit, useFetcher } from "react-router";
 import { useState, useCallback } from "react";
 
 const itemVariants = {
@@ -20,10 +20,26 @@ const categoryColors = {
   "Store Operations": { bg: "#CCFBF1", icon: "#0D9488" } // Teal
 };
 
-export function TemplateCard({ template, navigate }) {
+export function TemplateCard({ template, navigate, initialWishlisted = false }) {
   const IconComponent = LucideIcons[template.iconName] || LucideIcons.FileText;
   const submit = useSubmit();
+  const fetcher = useFetcher();
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+
+  // Optimistic UI state
+  const isWishlisting = fetcher.formData?.get("action") === "addWishlist" && fetcher.formData?.get("templateId") === String(template.id);
+  const isRemoving = fetcher.formData?.get("action") === "removeWishlist" && fetcher.formData?.get("templateId") === String(template.id);
+  const isWishlisted = isWishlisting ? true : (isRemoving ? false : initialWishlisted);
+
+  const toggleWishlist = useCallback((e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const actionType = isWishlisted ? "removeWishlist" : "addWishlist";
+    fetcher.submit(
+      { action: actionType, templateId: String(template.id) },
+      { method: "post", action: "/app/templates" }
+    );
+  }, [fetcher, isWishlisted, template.id]);
 
   const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[CURRENT_PLAN];
 
@@ -135,7 +151,9 @@ export function TemplateCard({ template, navigate }) {
             </div>
             
             {/* Subtle Favorite Icon */}
-            <div style={{ 
+            <div 
+              onClick={toggleWishlist}
+              style={{ 
               position: 'absolute', 
               top: '12px', 
               right: '12px', 
@@ -151,7 +169,7 @@ export function TemplateCard({ template, navigate }) {
               border: '1px solid #E5E7EB',
               transition: 'transform 0.15s ease'
             }}>
-               <LucideIcons.Heart size={16} color="#6D7175" />
+               <LucideIcons.Heart size={16} color={isWishlisted ? "#EF4444" : "#6D7175"} fill={isWishlisted ? "#EF4444" : "none"} />
             </div>
           </div>
           

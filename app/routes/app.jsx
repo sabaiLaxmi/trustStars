@@ -27,8 +27,8 @@ export default function App() {
       <AppProvider embedded apiKey={apiKey}>
         <ui-nav-menu>
           <Link to="/app" rel="home">Dashboard</Link>
-          <Link to="/app/submissions">Submissions</Link>
           <Link to="/app/templates">Templates</Link>
+          <Link to="/app/wishlist">Wishlist</Link>
           <Link to="/app/pricing">Pricing</Link>
         </ui-nav-menu>
         <AnimatePresence mode="wait">

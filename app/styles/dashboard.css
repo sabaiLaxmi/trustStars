@@ -148,9 +148,43 @@ html, body {
   .saas-dashboard,
   .metric-card-wrapper .Polaris-Card,
   .saas-action-button .Polaris-Button,
-  .saas-table-row {
+  .saas-table-row,
+  .marquee-content {
     animation: none !important;
     transition: none !important;
     transform: none !important;
   }
+}
+
+/* Staggered Letter Animation for TrustStars */
+.truststars-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(8px) translateX(-4px);
+  animation: revealLetter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes revealLetter {
+  0% { 
+    opacity: 0; 
+    transform: translateY(8px) translateX(-4px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) translateX(0); 
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .truststars-letter {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Ensure no horizontal scrollbar on body */
+body {
+  overflow-x: hidden;
 }

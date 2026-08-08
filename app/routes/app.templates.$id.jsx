@@ -66,6 +66,16 @@ export default function TemplateDetail() {
     { q: "Where do submissions go?", a: "All submissions are securely stored in your TrustStars dashboard." }
   ];
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+
+  const handleFieldChange = useCallback((value, field) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
   return (
     <Page
       title={template.name}
@@ -111,11 +121,15 @@ export default function TemplateDetail() {
                           label="Full Name" 
                           autoComplete="off" 
                           placeholder="e.g. Jane Doe" 
+                          value={formData.name}
+                          onChange={(value) => handleFieldChange(value, 'name')}
                         />
                         <TextField 
                           label="Email Address" 
                           autoComplete="email" 
                           placeholder="e.g. jane@example.com" 
+                          value={formData.email}
+                          onChange={(value) => handleFieldChange(value, 'email')}
                         />
                         {template.fieldsCount > 2 && (
                           <TextField 
@@ -123,6 +137,8 @@ export default function TemplateDetail() {
                             multiline={4} 
                             autoComplete="off" 
                             placeholder="How can we help you today?" 
+                            value={formData.message}
+                            onChange={(value) => handleFieldChange(value, 'message')}
                           />
                         )}
                       </BlockStack>

@@ -1,0 +1,90 @@
+/* Polaris-inspired Styling */
+.ts-contact-form-wrapper {
+  width: 100%;
+  margin: 32px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+.ts-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  padding: 24px;
+}
+.ts-form-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #202223;
+}
+.ts-form-group {
+  margin-bottom: 16px;
+}
+.ts-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #202223;
+}
+.ts-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #202223;
+  background-color: #FFFFFF;
+  border: 1px solid #898F94;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ts-input:focus {
+  outline: none;
+  border-color: #008060;
+  box-shadow: 0 0 0 2px rgba(0,128,96,0.2);
+}
+.ts-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.ts-submit-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+.ts-submit-btn:hover {
+  filter: brightness(0.9);
+}
+.ts-submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* Success State */
+.ts-success-message {
+  text-align: center;
+  padding: 32px 16px;
+}
+.ts-success-icon {
+  width: 48px;
+  height: 48px;
+  color: #008060;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+.ts-success-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #202223;
+  margin: 0;
+}

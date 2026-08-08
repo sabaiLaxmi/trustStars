@@ -77,3 +77,12 @@ model SubmissionValue {
   field        FormField  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
   value        String
 }
+
+model TemplateWishlist {
+  id         String   @id @default(uuid())
+  shop       String
+  templateId Int
+  createdAt  DateTime @default(now())
+
+  @@unique([shop, templateId])
+}
