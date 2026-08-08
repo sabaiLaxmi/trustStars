@@ -111,7 +111,7 @@ export default function PublicForm() {
         <h1 style={styles.title}>{form.title}</h1>
         {form.description && <p style={styles.description}>{form.description}</p>}
         
-        <Form method="post" style={styles.form}>
+        <form method="post" style={styles.form}>
           {form.fields.map((field) => {
             const error = actionData?.errors?.[field.id];
             return (
@@ -156,7 +156,7 @@ export default function PublicForm() {
           >
             {isSubmitting ? "Submitting..." : (form.submitText || "Submit")}
           </button>
-        </Form>
+        </form>
       </div>
     </div>
   );

@@ -27,8 +27,14 @@ export default async function handleRequest(
 
           const url = new URL(request.url);
           const isAppProxy = url.pathname.startsWith("/p/");
-          // Use text/html for App Proxy routes to prevent Shopify from wrapping the response in the merchant's theme layout.
-          responseHeaders.set("Content-Type", "text/html");
+          
+          if (isAppProxy) {
+            responseHeaders.set("Content-Type", "application/liquid");
+            body.write("{% layout none %}\n");
+          } else {
+            responseHeaders.set("Content-Type", "text/html");
+          }
+          
           resolve(
             new Response(stream, {
               headers: responseHeaders,
