@@ -10,6 +10,14 @@ export const templates = [
     setupTime: "2 mins",
     iconName: "MessageSquare",
     thumbnail: "/images/template1.png",
+    formHeading: "Contact Us",
+    formDescription: "Please fill out the form below and we will get back to you as soon as possible.",
+    imageLimit: 0,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXTAREA', label: 'Message', placeholder: 'How can we help you?', required: false, order: 2 }
+    ]
   },
   {
     id: 2,
@@ -22,6 +30,13 @@ export const templates = [
     setupTime: "1 min",
     iconName: "Mail",
     thumbnail: "/images/template2.png",
+    formHeading: "Stay in the Loop!",
+    formDescription: "Get the latest updates and offers straight to your inbox.",
+    imageLimit: 2,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 }
+    ]
   },
   {
     id: 3,
@@ -34,6 +49,15 @@ export const templates = [
     setupTime: "3 mins",
     iconName: "PackagePlus",
     thumbnail: "/images/template3.png",
+    formHeading: "Can't find what you're looking for?",
+    formDescription: "Tell us what you need and we'll try to source it.",
+    imageLimit: 2,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Product Name / Details', placeholder: 'What product do you need?', required: true, order: 2 },
+      { type: 'TEXTAREA', label: 'Additional Information', placeholder: 'Any other details?', required: false, order: 3 }
+    ]
   },
   {
     id: 4,
@@ -46,6 +70,15 @@ export const templates = [
     setupTime: "4 mins",
     iconName: "Star",
     thumbnail: "/images/template4.png",
+    formHeading: "We'd love your feedback",
+    formDescription: "Your experience helps us improve.",
+    imageLimit: 1,
+    defaultFields: [
+      { type: 'TEXT', label: 'Order Number (Optional)', placeholder: '#12345', required: false, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Rating (1-5)', placeholder: '5', required: true, order: 2 },
+      { type: 'TEXTAREA', label: 'Feedback / Comments', placeholder: 'How did we do?', required: true, order: 3 }
+    ]
   },
   {
     id: 5,
@@ -58,6 +91,15 @@ export const templates = [
     setupTime: "5 mins",
     iconName: "Settings2",
     thumbnail: "/images/template5.png",
+    formHeading: "Make it yours",
+    formDescription: "Tell us how you'd like your order customized.",
+    imageLimit: 3,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Order Number (Optional)', placeholder: '#12345', required: false, order: 2 },
+      { type: 'TEXTAREA', label: 'Customization Details', placeholder: 'Enter your custom requirements here', required: true, order: 3 }
+    ]
   },
   {
     id: 6,
@@ -70,6 +112,15 @@ export const templates = [
     setupTime: "3 mins",
     iconName: "CalendarDays",
     thumbnail: "/images/template6.png",
+    formHeading: "Reserve your spot",
+    formDescription: "Register below to join us.",
+    imageLimit: 0,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Phone Number (Optional)', placeholder: '555-0192', required: false, order: 2 },
+      { type: 'TEXT', label: 'Company (Optional)', placeholder: 'Acme Corp', required: false, order: 3 }
+    ]
   },
   {
     id: 7,
@@ -82,6 +133,15 @@ export const templates = [
     setupTime: "3 mins",
     iconName: "LifeBuoy",
     thumbnail: "/images/template7.png",
+    formHeading: "Need help? We're here for you",
+    formDescription: "Describe your issue and we'll get back to you soon.",
+    imageLimit: 2,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Issue Category', placeholder: 'Shipping, Returns, etc.', required: true, order: 2 },
+      { type: 'TEXTAREA', label: 'Description of Issue', placeholder: 'Please explain what went wrong', required: true, order: 3 }
+    ]
   },
   {
     id: 8,
@@ -94,5 +154,14 @@ export const templates = [
     setupTime: "2 mins",
     iconName: "Frown",
     thumbnail: "/images/template8.png",
+    formHeading: "We're sorry to hear that",
+    formDescription: "Please share the details so we can make it right.",
+    imageLimit: 3,
+    defaultFields: [
+      { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
+      { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
+      { type: 'TEXT', label: 'Order Number (Optional)', placeholder: '#12345', required: false, order: 2 },
+      { type: 'TEXTAREA', label: 'Complaint Details', placeholder: 'What happened?', required: true, order: 3 }
+    ]
   }
 ];

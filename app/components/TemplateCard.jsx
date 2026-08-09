@@ -1,4 +1,4 @@
-import { Text, Button, Badge, InlineStack, Modal, BlockStack, List, Box } from "@shopify/polaris";
+import { Text, Button, Badge, InlineStack, Modal, BlockStack, List, Box, Tooltip } from "@shopify/polaris";
 import { motion } from "framer-motion";
 import * as LucideIcons from 'lucide-react';
 import { useSubmit, useFetcher } from "react-router";
@@ -44,20 +44,14 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
   const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[CURRENT_PLAN];
 
   const handleUseTemplate = useCallback(() => {
-    if (isUpgradeRequired) {
-      setIsUpgradeModalOpen(true);
-      return;
-    }
+    // TEMPORARILY DISABLED REDIRECT FOR PREVIEW/TESTING
     submit({}, { method: "post", action: `/app/templates/${template.id}` });
-  }, [isUpgradeRequired, submit, template.id]);
+  }, [submit, template.id]);
 
   const handlePreview = useCallback(() => {
-    if (isUpgradeRequired) {
-      setIsUpgradeModalOpen(true);
-      return;
-    }
+    // TEMPORARILY DISABLED REDIRECT FOR PREVIEW/TESTING
     navigate(`/app/templates/${template.id}`);
-  }, [isUpgradeRequired, navigate, template.id]);
+  }, [navigate, template.id]);
 
   const handleCloseModal = useCallback(() => setIsUpgradeModalOpen(false), []);
   const handleUpgrade = useCallback(() => {
@@ -179,9 +173,13 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
               <InlineStack gap="200" blockAlign="center">
                 <Badge tone="attention">{template.category}</Badge>
                 {template.plan === "PRO" ? (
-                  <Badge tone="magic">Pro</Badge>
+                  <Tooltip content="Available on Pro plan">
+                    <Badge tone="magic">Pro</Badge>
+                  </Tooltip>
                 ) : template.plan === "BASIC" ? (
-                  <Badge tone="info">Starter</Badge>
+                  <Tooltip content="Available on Starter plan">
+                    <Badge tone="info">Starter</Badge>
+                  </Tooltip>
                 ) : (
                   <Badge tone="success">Free</Badge>
                 )}

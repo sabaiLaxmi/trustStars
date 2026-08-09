@@ -27,11 +27,7 @@ export const action = async ({ request, params }) => {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const defaultFields = [
-    { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
-    { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
-    { type: 'TEXTAREA', label: 'Message', placeholder: 'How can we help?', required: false, order: 2 }
-  ];
+  const defaultFields = template.defaultFields || [];
 
   const form = await db.form.create({
     data: {
@@ -39,6 +35,8 @@ export const action = async ({ request, params }) => {
       title: template.name,
       description: template.description,
       submitText: "Submit",
+      templateId: template.id,
+      accentColor: "#008060",
       fields: {
         create: defaultFields
       }
@@ -66,11 +64,7 @@ export default function TemplateDetail() {
     { q: "Where do submissions go?", a: "All submissions are securely stored in your TrustStars dashboard." }
   ];
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
+  const [formData, setFormData] = useState({});
 
   const handleFieldChange = useCallback((value, field) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -109,38 +103,25 @@ export default function TemplateDetail() {
                       <BlockStack gap="200">
                         <InlineStack gap="200" blockAlign="center">
                           <IconComponent size={28} color="#008060" />
-                          <Text variant="headingLg" as="h2">{template.name}</Text>
+                          <Text variant="headingLg" as="h2">{template.formHeading || template.name}</Text>
                         </InlineStack>
                         <Text variant="bodyMd" tone="subdued">
-                          Please fill out the form below and we will get back to you as soon as possible.
+                          {template.formDescription || "Please fill out the form below and we will get back to you as soon as possible."}
                         </Text>
                       </BlockStack>
                       
                       <BlockStack gap="400">
-                        <TextField 
-                          label="Full Name" 
-                          autoComplete="off" 
-                          placeholder="e.g. Jane Doe" 
-                          value={formData.name}
-                          onChange={(value) => handleFieldChange(value, 'name')}
-                        />
-                        <TextField 
-                          label="Email Address" 
-                          autoComplete="email" 
-                          placeholder="e.g. jane@example.com" 
-                          value={formData.email}
-                          onChange={(value) => handleFieldChange(value, 'email')}
-                        />
-                        {template.fieldsCount > 2 && (
-                          <TextField 
-                            label="Message" 
-                            multiline={4} 
-                            autoComplete="off" 
-                            placeholder="How can we help you today?" 
-                            value={formData.message}
-                            onChange={(value) => handleFieldChange(value, 'message')}
+                        {template.defaultFields && template.defaultFields.map((field, idx) => (
+                          <TextField
+                            key={idx}
+                            label={field.label}
+                            autoComplete="off"
+                            placeholder={field.placeholder}
+                            multiline={field.type === 'TEXTAREA' ? 4 : undefined}
+                            value={formData[field.label] || ""}
+                            onChange={(value) => handleFieldChange(value, field.label)}
                           />
-                        )}
+                        ))}
                       </BlockStack>
                     </BlockStack>
                   </Card>

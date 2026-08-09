@@ -5,6 +5,7 @@ import { useLoaderData, useNavigate, useSubmit, useActionData, useNavigation, us
 import { Page, Layout, Card, FormLayout, TextField, Button, BlockStack, Text, Checkbox, Banner, Box, Divider, InlineStack, Badge, Icon, ProgressBar } from "@shopify/polaris";
 import { LockIcon } from "@shopify/polaris-icons";
 import db from "../db.server";
+import { templates } from "../data/templates";
 
 export const loader = async ({ request, params }) => {
   const { session } = await authenticate.admin(request);
@@ -40,6 +41,7 @@ export const action = async ({ request, params }) => {
   const description = formData.get("description");
   const submitText = formData.get("submitText");
   const fieldsJson = formData.get("fields");
+  const accentColor = formData.get("accentColor");
 
   let parsedFields = [];
   try {
@@ -56,6 +58,7 @@ export const action = async ({ request, params }) => {
         title,
         description,
         submitText,
+        accentColor,
         status,
         fields: {
           create: parsedFields.map((field, index) => ({
@@ -85,9 +88,13 @@ export default function FormEditor() {
   const hasPro = CURRENT_PLAN === "PRO";
   const submissionLimit = CURRENT_PLAN === "FREE" ? 50 : CURRENT_PLAN === "STARTER" ? 150 : "Unlimited";
 
+  const template = templates.find(t => t.id === form.templateId) || templates[0];
+  const imageLimit = template.imageLimit || 0;
+
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description || "");
   const [submitText, setSubmitText] = useState(form.submitText || "Submit");
+  const [accentColor, setAccentColor] = useState(form.accentColor || "#008060");
   const [fields, setFields] = useState(form.fields || []);
   const [showToast, setShowToast] = useState(false);
 
@@ -95,6 +102,7 @@ export default function FormEditor() {
     setTitle(form?.title || "Untitled Form");
     setDescription(form?.description || "");
     setSubmitText(form?.submitText || "Submit");
+    setAccentColor(form?.accentColor || "#008060");
     setFields(form?.fields || []);
   }, [form]);
 
@@ -122,10 +130,13 @@ export default function FormEditor() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("submitText", submitText);
+    formData.append("accentColor", accentColor);
     formData.append("fields", JSON.stringify(fields));
     
     submit(formData, { method: "post" });
   };
+
+  const PRESET_COLORS = ["#008060", "#E32C2B", "#005BD3", "#000000", "#F49342", "#8A2BE2"];
 
   const isSaving = navigation.state === "submitting";
 
@@ -221,13 +232,29 @@ export default function FormEditor() {
                 <BlockStack gap="200">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
-                      <Text tone={hasStarter ? "base" : "subdued"}>Basic Color Customization</Text>
+                      <Text tone={hasStarter ? "base" : "subdued"}>Accent Color</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
                     {!hasStarter && <Badge tone="info">Starter</Badge>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                    <Button disabled={!hasStarter}>Customize Colors</Button>
+                    <InlineStack gap="200">
+                      {PRESET_COLORS.map(color => (
+                        <div 
+                          key={color}
+                          onClick={() => hasStarter && setAccentColor(color)}
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            backgroundColor: color,
+                            cursor: hasStarter ? 'pointer' : 'default',
+                            border: accentColor === color ? '3px solid #E5E7EB' : '1px solid transparent',
+                            boxShadow: accentColor === color ? '0 0 0 2px #202223' : 'none'
+                          }}
+                        />
+                      ))}
+                    </InlineStack>
                   </div>
                 </BlockStack>
 
@@ -250,18 +277,20 @@ export default function FormEditor() {
                 <Divider />
 
                 {/* Image Upload */}
-                <BlockStack gap="200">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <InlineStack gap="200" blockAlign="center">
-                      <Text tone={hasStarter ? "base" : "subdued"}>Image Upload (Max 2)</Text>
-                      {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
+                {imageLimit > 0 && (
+                  <BlockStack gap="200">
+                    <InlineStack align="space-between" blockAlign="center">
+                      <InlineStack gap="200" blockAlign="center">
+                        <Text tone={hasStarter ? "base" : "subdued"}>Image Upload (Max {imageLimit})</Text>
+                        {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
+                      </InlineStack>
+                      {!hasStarter && <Badge tone="info">Starter</Badge>}
                     </InlineStack>
-                    {!hasStarter && <Badge tone="info">Starter</Badge>}
-                  </InlineStack>
-                  <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                    <Button disabled={!hasStarter}>Upload Image</Button>
-                  </div>
-                </BlockStack>
+                    <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
+                      <Button disabled={!hasStarter}>Upload Image</Button>
+                    </div>
+                  </BlockStack>
+                )}
 
                 <Divider />
 

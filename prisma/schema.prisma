@@ -39,6 +39,8 @@ model Form {
   title       String
   description String?
   submitText  String?
+  templateId  Int?
+  accentColor String?
   status      String      @default("DRAFT")
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
