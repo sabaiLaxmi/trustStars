@@ -20,18 +20,23 @@ export const loader = async ({ request, params }) => {
 
   if (formId === "default" && shop) {
     form = await db.form.findFirst({
-      where: { shop: shop },
+      where: { shop: shop, status: "PUBLISHED" },
+      orderBy: { updatedAt: 'desc' },
       include: { fields: { orderBy: { order: 'asc' } } }
     });
+    
+    if (!form) {
+      return data({ error: "NoPublishedForms" }, { status: 404 });
+    }
   } else {
     form = await db.form.findFirst({
       where: { id: formId },
       include: { fields: { orderBy: { order: 'asc' } } }
     });
-  }
 
-  if (!form) {
-    return data({ error: "Form Not Found" }, { status: 404 });
+    if (!form) {
+      return data({ error: "Form Not Found" }, { status: 404 });
+    }
   }
 
   return data({ form });
@@ -53,18 +58,23 @@ export const action = async ({ request, params }) => {
   
   if (formId === "default" && shop) {
     form = await db.form.findFirst({
-      where: { shop: shop },
+      where: { shop: shop, status: "PUBLISHED" },
+      orderBy: { updatedAt: 'desc' },
       include: { fields: true }
     });
+    
+    if (!form) {
+      return data({ error: "NoPublishedForms" }, { status: 404 });
+    }
   } else {
     form = await db.form.findFirst({
       where: { id: formId },
       include: { fields: true }
     });
-  }
 
-  if (!form) {
-    return data({ error: "Form Not Found" }, { status: 404 });
+    if (!form) {
+      return data({ error: "Form Not Found" }, { status: 404 });
+    }
   }
 
   const formData = await request.formData();

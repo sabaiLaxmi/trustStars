@@ -11,9 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       // Fetch form configuration
       const response = await fetch(`/apps/truststars/api/${formId}`);
-      if (!response.ok) throw new Error('Form not found');
-      
       const data = await response.json();
+      
+      if (!response.ok) {
+        if (data.error === "NoPublishedForms") {
+          throw new Error('NoPublishedForms');
+        }
+        throw new Error('Form not found');
+      }
+      
       if (!data.form) throw new Error('Form data invalid');
       
       const form = data.form;
@@ -103,7 +109,15 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
     } catch (err) {
-      container.innerHTML = `<div class="ts-error-state">Unable to load form. Make sure your Form ID is correct.</div>`;
+      if (err.message === 'NoPublishedForms') {
+        container.innerHTML = `
+          <div style="padding: 40px; text-align: center; background: #f4f6f8; border-radius: 8px;">
+            <p style="margin: 0; color: #333; font-family: sans-serif;">No published forms yet — publish a form in the TrustStars app to display it here.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `<div class="ts-error-state">Unable to load form. Make sure your Form ID is correct.</div>`;
+      }
     }
   });
 });
