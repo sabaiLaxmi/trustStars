@@ -40,9 +40,11 @@ model Form {
   description String?
   submitText  String?
   templateId  Int?
-  accentColor String?
-  textColor   String?
-  status      String      @default("DRAFT")
+  accentColor   String?
+  backgroundColor String?
+  textColor     String?
+  fontFamily    String?
+  status        String      @default("DRAFT")
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   fields      FormField[]

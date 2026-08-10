@@ -28,30 +28,37 @@ document.addEventListener('DOMContentLoaded', function() {
       let fieldsHtml = '';
       form.fields.forEach(field => {
         const requiredAttr = field.required ? 'required' : '';
-        const requiredAsterisk = field.required ? '<span class="ts-required">*</span>' : '';
+        const requiredAsterisk = field.required ? '<span class="ts-required" style="color: inherit;">*</span>' : '';
         
         if (field.type === 'TEXTAREA') {
           fieldsHtml += `
             <div class="ts-form-group">
-              <label class="ts-label" for="${field.id}">${field.label} ${requiredAsterisk}</label>
-              <textarea id="${field.id}" name="${field.id}" class="ts-input ts-textarea" placeholder="${field.placeholder || ''}" rows="4" ${requiredAttr}></textarea>
+              <label class="ts-label" for="${field.id}" style="color: inherit; font-family: inherit;">${field.label} ${requiredAsterisk}</label>
+              <textarea id="${field.id}" name="${field.id}" class="ts-input ts-textarea" placeholder="${field.placeholder || ''}" rows="4" style="font-family: inherit;" ${requiredAttr}></textarea>
             </div>
           `;
         } else {
           const type = field.type === 'EMAIL' ? 'email' : 'text';
           fieldsHtml += `
             <div class="ts-form-group">
-              <label class="ts-label" for="${field.id}">${field.label} ${requiredAsterisk}</label>
-              <input type="${type}" id="${field.id}" name="${field.id}" class="ts-input" placeholder="${field.placeholder || ''}" ${requiredAttr} />
+              <label class="ts-label" for="${field.id}" style="color: inherit; font-family: inherit;">${field.label} ${requiredAsterisk}</label>
+              <input type="${type}" id="${field.id}" name="${field.id}" class="ts-input" placeholder="${field.placeholder || ''}" style="font-family: inherit;" ${requiredAttr} />
             </div>
           `;
         }
       });
 
+      const bgColor = form.backgroundColor || form.accentColor || 'transparent';
+      const txtColor = form.textColor || 'inherit';
+      const fontFam = form.fontFamily && form.fontFamily !== 'Default' ? form.fontFamily : 'inherit';
+      const btnBg = form.backgroundColor ? txtColor : '';
+      const btnText = form.backgroundColor ? bgColor : '';
+      const btnStyle = btnBg ? `style="background-color: ${btnBg}; color: ${btnText}; border: none;"` : '';
+
       container.innerHTML = `
-        <div class="ts-form-inner">
-          ${form.title ? `<h3 class="ts-form-title">${form.title}</h3>` : ''}
-          ${form.description ? `<p class="ts-form-description">${form.description}</p>` : ''}
+        <div class="ts-form-inner" style="background-color: ${bgColor}; color: ${txtColor}; font-family: ${fontFam}; padding: 24px; border-radius: 8px;">
+          ${form.title ? `<h3 class="ts-form-title" style="color: ${txtColor}; font-family: ${fontFam};">${form.title}</h3>` : ''}
+          ${form.description ? `<p class="ts-form-description" style="color: ${txtColor}; font-family: ${fontFam};">${form.description}</p>` : ''}
           
           <form id="ts-form-${blockId}" class="ts-form" action="/apps/truststars/api/${formId}" method="POST">
             ${fieldsHtml}
@@ -61,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="text" id="a_password" name="a_password" tabindex="-1" autocomplete="off" />
             </div>
             
-            <button type="submit" class="ts-submit-btn button btn">${form.submitText || 'Submit'}</button>
+            <button type="submit" class="ts-submit-btn button btn" ${btnStyle}>${form.submitText || 'Submit'}</button>
           </form>
           
           <div id="ts-success-${blockId}" class="ts-success-message" style="display: none;">

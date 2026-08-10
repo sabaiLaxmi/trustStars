@@ -43,7 +43,9 @@ export const action = async ({ request, params }) => {
   const submitText = formData.get("submitText");
   const fieldsJson = formData.get("fields");
   const accentColor = formData.get("accentColor");
+  const backgroundColor = formData.get("backgroundColor");
   const textColor = formData.get("textColor");
+  const fontFamily = formData.get("fontFamily");
 
   let parsedFields = [];
   try {
@@ -61,7 +63,9 @@ export const action = async ({ request, params }) => {
         description,
         submitText,
         accentColor,
+        backgroundColor,
         textColor,
+        fontFamily,
         status,
         fields: {
           create: parsedFields.map((field, index) => ({
@@ -100,15 +104,15 @@ export default function FormEditor() {
   
   const DEFAULT_TEXT_COLOR = "#FFFFFF";
   const DEFAULT_BG_COLOR = "#008060";
-  const [textColor, setTextColor] = useState(DEFAULT_TEXT_COLOR);
-  const [bgColor, setBgColor] = useState(form.accentColor || DEFAULT_BG_COLOR);
+  const [textColor, setTextColor] = useState(form.textColor || DEFAULT_TEXT_COLOR);
+  const [bgColor, setBgColor] = useState(form.backgroundColor || form.accentColor || DEFAULT_BG_COLOR);
   
   const [fields, setFields] = useState(form.fields || []);
   const [showToast, setShowToast] = useState(false);
   const [showPublishToast, setShowPublishToast] = useState(false);
 
   // New state variables for UI interactivity
-  const [selectedFont, setSelectedFont] = useState("Default");
+  const [selectedFont, setSelectedFont] = useState(form.fontFamily || "Default");
   const [isFontOpen, setIsFontOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("Minimal");
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
@@ -121,8 +125,9 @@ export default function FormEditor() {
     setTitle(form?.title || "Untitled Form");
     setDescription(form?.description || "");
     setSubmitText(form?.submitText || "Submit");
-    setBgColor(form?.accentColor || DEFAULT_BG_COLOR);
-    setTextColor(DEFAULT_TEXT_COLOR);
+    setBgColor(form?.backgroundColor || form?.accentColor || DEFAULT_BG_COLOR);
+    setTextColor(form?.textColor || DEFAULT_TEXT_COLOR);
+    setSelectedFont(form?.fontFamily || "Default");
     setFields(form?.fields || []);
   }, [form]);
 
@@ -179,7 +184,9 @@ export default function FormEditor() {
     formData.append("description", description);
     formData.append("submitText", submitText);
     formData.append("accentColor", bgColor);
+    formData.append("backgroundColor", bgColor);
     formData.append("textColor", textColor);
+    formData.append("fontFamily", selectedFont);
     formData.append("fields", JSON.stringify(fields));
     
     submit(formData, { method: "post" });
