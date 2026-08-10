@@ -1,18 +1,109 @@
-document.addEventListener('submit', function(event) {
-  if (event.target && event.target.classList.contains('ts-form')) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+  const wrappers = document.querySelectorAll('.ts-block-wrapper');
+  
+  wrappers.forEach(async (wrapper) => {
+    const formId = wrapper.getAttribute('data-form-id');
+    const blockId = wrapper.getAttribute('data-block-id');
+    const container = document.getElementById(`ts-form-container-${blockId}`);
     
-    // Hide the form
-    event.target.style.display = 'none';
-    
-    // Extract the block ID from the form's ID (e.g. ts-form-12345)
-    const blockId = event.target.id.replace('ts-form-', '');
-    
-    // Show the success message
-    const successMessage = document.getElementById('ts-success-' + blockId);
-    if (successMessage) {
-      successMessage.style.display = 'block';
-      successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (!formId) return;
+
+    try {
+      // Fetch form configuration
+      const response = await fetch(`/apps/truststars/api/${formId}`);
+      if (!response.ok) throw new Error('Form not found');
+      
+      const data = await response.json();
+      if (!data.form) throw new Error('Form data invalid');
+      
+      const form = data.form;
+      
+      // Build Form HTML
+      let fieldsHtml = '';
+      form.fields.forEach(field => {
+        const requiredAttr = field.required ? 'required' : '';
+        const requiredAsterisk = field.required ? '<span class="ts-required">*</span>' : '';
+        
+        if (field.type === 'TEXTAREA') {
+          fieldsHtml += `
+            <div class="ts-form-group">
+              <label class="ts-label" for="${field.id}">${field.label} ${requiredAsterisk}</label>
+              <textarea id="${field.id}" name="${field.id}" class="ts-input ts-textarea" placeholder="${field.placeholder || ''}" rows="4" ${requiredAttr}></textarea>
+            </div>
+          `;
+        } else {
+          const type = field.type === 'EMAIL' ? 'email' : 'text';
+          fieldsHtml += `
+            <div class="ts-form-group">
+              <label class="ts-label" for="${field.id}">${field.label} ${requiredAsterisk}</label>
+              <input type="${type}" id="${field.id}" name="${field.id}" class="ts-input" placeholder="${field.placeholder || ''}" ${requiredAttr} />
+            </div>
+          `;
+        }
+      });
+
+      container.innerHTML = `
+        <div class="ts-form-inner">
+          ${form.title ? `<h3 class="ts-form-title">${form.title}</h3>` : ''}
+          ${form.description ? `<p class="ts-form-description">${form.description}</p>` : ''}
+          
+          <form id="ts-form-${blockId}" class="ts-form" action="/apps/truststars/api/${formId}" method="POST">
+            ${fieldsHtml}
+            
+            <div style="display: none;" aria-hidden="true">
+              <label for="a_password">Password</label>
+              <input type="text" id="a_password" name="a_password" tabindex="-1" autocomplete="off" />
+            </div>
+            
+            <button type="submit" class="ts-submit-btn button btn">${form.submitText || 'Submit'}</button>
+          </form>
+          
+          <div id="ts-success-${blockId}" class="ts-success-message" style="display: none;">
+            <div class="ts-success-icon">✓</div>
+            <h3 class="ts-success-text">Thank You!</h3>
+            <p>Your submission has been received.</p>
+          </div>
+          
+          <div id="ts-error-${blockId}" class="ts-error-message" style="display: none; color: red; margin-top: 10px;">
+            There was an error submitting the form. Please check your inputs.
+          </div>
+        </div>
+      `;
+      
+      // Handle Submission
+      const formEl = document.getElementById(`ts-form-${blockId}`);
+      formEl.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const submitBtn = formEl.querySelector('.ts-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        const formData = new FormData(formEl);
+        
+        try {
+          const res = await fetch(formEl.action, {
+            method: 'POST',
+            body: formData
+          });
+          const result = await res.json();
+          
+          if (result.success) {
+            formEl.style.display = 'none';
+            document.getElementById(`ts-success-${blockId}`).style.display = 'block';
+            document.getElementById(`ts-error-${blockId}`).style.display = 'none';
+          } else {
+            throw new Error('Submission failed');
+          }
+        } catch (err) {
+          const errorEl = document.getElementById(`ts-error-${blockId}`);
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = form.submitText || 'Submit';
+        }
+      });
+      
+    } catch (err) {
+      container.innerHTML = `<div class="ts-error-state">Unable to load form. Make sure your Form ID is correct.</div>`;
     }
-  }
+  });
 });

@@ -2,38 +2,26 @@
 {
   "name": "TrustStars Contact Form",
   "target": "section",
+  "stylesheet": "contact_form.css",
+  "javascript": "contact_form.js",
   "settings": [
     {
       "type": "text",
       "id": "form_id",
-      "label": "Form ID",
-      "info": "Enter the ID of the form you want to display."
-    },
-    {
-      "type": "range",
-      "id": "iframe_height",
-      "min": 400,
-      "max": 1000,
-      "step": 50,
-      "label": "Form Height (px)",
-      "default": 600
+      "label": "Which form? (Paste Form ID)",
+      "info": "To find this, open your form in the TrustStars app and copy the ID from the URL. Leave blank to automatically load your first form."
     }
   ]
 }
 {% endschema %}
 
-<div class="ts-contact-form-wrapper" id="ts-contact-form-{{ block.id }}">
-  {% if block.settings.form_id != blank %}
-    <iframe 
-      src="/apps/truststars/{{ block.settings.form_id }}" 
-      width="100%" 
-      height="{{ block.settings.iframe_height }}px" 
-      frameborder="0"
-      style="border: none; overflow: hidden;"
-    ></iframe>
-  {% else %}
-    <div style="padding: 40px; text-align: center; background: #f4f6f8; border-radius: 8px;">
-      <p style="margin: 0; color: #333; font-family: sans-serif;">Please enter a Form ID in the block settings to display your form.</p>
-    </div>
-  {% endif %}
+{% assign active_form_id = block.settings.form_id %}
+{% if active_form_id == blank %}
+  {% assign active_form_id = "default" %}
+{% endif %}
+
+<div class="ts-contact-form-wrapper ts-block-wrapper" id="ts-contact-form-{{ block.id }}" data-block-id="{{ block.id }}" data-form-id="{{ active_form_id }}">
+  <div id="ts-form-container-{{ block.id }}" class="ts-form-container">
+    <div style="text-align: center; padding: 20px;" class="ts-loading-state">Loading form...</div>
+  </div>
 </div>

@@ -1,90 +1,98 @@
-/* Polaris-inspired Styling */
+/* Structure-only styling to allow Theme Inheritance */
 .ts-contact-form-wrapper {
   width: 100%;
   margin: 32px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
+
 .ts-form-container {
   max-width: 600px;
   margin: 0 auto;
-  background: #FFFFFF;
-  border-radius: 8px;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  padding: 24px;
+  padding: 24px 0;
 }
+
 .ts-form-title {
   margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #202223;
+  margin-bottom: 16px;
+  font-size: 1.75em;
 }
+
+.ts-form-description {
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
 .ts-form-group {
   margin-bottom: 16px;
 }
+
 .ts-label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
+  margin-bottom: 8px;
   font-weight: 500;
-  color: #202223;
-}
-.ts-input {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #202223;
-  background-color: #FFFFFF;
-  border: 1px solid #898F94;
-  border-radius: 4px;
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.ts-input:focus {
-  outline: none;
-  border-color: #008060;
-  box-shadow: 0 0 0 2px rgba(0,128,96,0.2);
-}
-.ts-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-.ts-submit-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  width: 100%;
-}
-.ts-submit-btn:hover {
-  filter: brightness(0.9);
-}
-.ts-submit-btn:active {
-  transform: translateY(1px);
 }
 
-/* Success State */
+.ts-required {
+  color: #e53e3e;
+  margin-left: 4px;
+}
+
+.ts-input {
+  width: 100%;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  /* Minimal default styling, allows theme inputs to override or blend */
+  border: 1px solid rgba(0,0,0,0.2);
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 4px;
+}
+
+.ts-input:focus {
+  outline: none;
+  border-color: currentColor;
+}
+
+.ts-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.ts-submit-btn {
+  /* Provide a fallback but expect theme .btn or .button to take over */
+  width: 100%;
+  padding: 14px 24px;
+  margin-top: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Status States */
 .ts-success-message {
   text-align: center;
   padding: 32px 16px;
 }
+
 .ts-success-icon {
-  width: 48px;
-  height: 48px;
-  color: #008060;
+  font-size: 48px;
+  color: #10B981;
   margin-bottom: 16px;
-  display: inline-block;
 }
+
 .ts-success-text {
-  font-size: 16px;
-  font-weight: 500;
-  color: #202223;
-  margin: 0;
+  margin: 0 0 8px 0;
+  font-size: 1.5em;
+}
+
+.ts-error-message, .ts-error-state {
+  text-align: center;
+  padding: 20px;
+  color: #e53e3e;
+}
+
+.ts-loading-state {
+  text-align: center;
+  opacity: 0.6;
 }
