@@ -109,6 +109,7 @@ export default function Auth() {
           initial="hidden"
           animate="visible"
           style={{ zIndex: 10 }}
+          className="brand-content"
         >
           <TrustStarsLogo />
           <motion.h1 variants={itemVariants} className="brand-title">

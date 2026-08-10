@@ -204,6 +204,11 @@ body, html {
     text-align: center;
     align-items: center;
   }
+  .brand-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .brand-title {
     font-size: 3rem;
   }
