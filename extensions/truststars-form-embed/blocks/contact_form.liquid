@@ -1,90 +1,39 @@
-<div class="ts-contact-form-wrapper" id="ts-contact-form-{{ block.id }}">
-  <div class="ts-form-container">
-    {% if block.settings.form_title != blank %}
-      <h2 class="ts-form-title">{{ block.settings.form_title }}</h2>
-    {% endif %}
-
-    <form class="ts-form" id="ts-form-{{ block.id }}" action="#">
-      <!-- Full Name -->
-      <div class="ts-form-group">
-        <label class="ts-label" for="ts-name-{{ block.id }}">Full Name</label>
-        <input 
-          class="ts-input" 
-          type="text" 
-          id="ts-name-{{ block.id }}" 
-          name="name" 
-          placeholder="Jane Doe" 
-          required 
-        />
-      </div>
-
-      <!-- Email Address -->
-      <div class="ts-form-group">
-        <label class="ts-label" for="ts-email-{{ block.id }}">Email Address</label>
-        <input 
-          class="ts-input" 
-          type="email" 
-          id="ts-email-{{ block.id }}" 
-          name="email" 
-          placeholder="jane@example.com" 
-          required 
-        />
-      </div>
-
-      <!-- Message -->
-      <div class="ts-form-group">
-        <label class="ts-label" for="ts-message-{{ block.id }}">Message</label>
-        <textarea 
-          class="ts-input ts-textarea" 
-          id="ts-message-{{ block.id }}" 
-          name="message" 
-          placeholder="How can we help you?" 
-          rows="4" 
-          required
-        ></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <button class="ts-submit-btn" type="submit" style="background-color: {{ block.settings.button_color | default: '#008060' }};">
-        {{ block.settings.submit_label | default: "Send Message" }}
-      </button>
-    </form>
-
-    <!-- Success Message (Hidden by default) -->
-    <div class="ts-success-message" id="ts-success-{{ block.id }}" style="display: none;">
-      <svg class="ts-success-icon" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-      </svg>
-      <p class="ts-success-text">Thank you for your message. We'll get back to you shortly!</p>
-    </div>
-  </div>
-</div>
-
 {% schema %}
 {
   "name": "TrustStars Contact Form",
   "target": "section",
-  "stylesheet": "contact_form.css",
-  "javascript": "contact_form.js",
   "settings": [
     {
       "type": "text",
-      "id": "form_title",
-      "label": "Form Title",
-      "default": "Contact Us"
+      "id": "form_id",
+      "label": "Form ID",
+      "info": "Enter the ID of the form you want to display."
     },
     {
-      "type": "text",
-      "id": "submit_label",
-      "label": "Submit Button Text",
-      "default": "Send Message"
-    },
-    {
-      "type": "color",
-      "id": "button_color",
-      "label": "Primary Button Color",
-      "default": "#008060"
+      "type": "range",
+      "id": "iframe_height",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "label": "Form Height (px)",
+      "default": 600
     }
   ]
 }
 {% endschema %}
+
+<div class="ts-contact-form-wrapper" id="ts-contact-form-{{ block.id }}">
+  {% if block.settings.form_id != blank %}
+    <iframe 
+      src="/apps/truststars/{{ block.settings.form_id }}" 
+      width="100%" 
+      height="{{ block.settings.iframe_height }}px" 
+      frameborder="0"
+      style="border: none; overflow: hidden;"
+    ></iframe>
+  {% else %}
+    <div style="padding: 40px; text-align: center; background: #f4f6f8; border-radius: 8px;">
+      <p style="margin: 0; color: #333; font-family: sans-serif;">Please enter a Form ID in the block settings to display your form.</p>
+    </div>
+  {% endif %}
+</div>

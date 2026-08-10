@@ -1,11 +1,12 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate, useSubmit, useActionData, useNavigation, useRouteError } from "react-router";
-import { Page, Layout, Card, FormLayout, TextField, Button, BlockStack, Text, Checkbox, Banner, Box, Divider, InlineStack, Badge, Icon, ProgressBar } from "@shopify/polaris";
-import { LockIcon } from "@shopify/polaris-icons";
+import { Page, Layout, Card, FormLayout, TextField, Button, BlockStack, Text, Checkbox, Banner, Box, Divider, InlineStack, Badge, Icon, ProgressBar, Popover, ActionList, Modal, Thumbnail } from "@shopify/polaris";
+import { LockIcon, DeleteIcon } from "@shopify/polaris-icons";
 import db from "../db.server";
 import { templates } from "../data/templates";
+import { CURRENT_PLAN } from "../config/billing";
 
 export const loader = async ({ request, params }) => {
   const { session } = await authenticate.admin(request);
@@ -42,6 +43,7 @@ export const action = async ({ request, params }) => {
   const submitText = formData.get("submitText");
   const fieldsJson = formData.get("fields");
   const accentColor = formData.get("accentColor");
+  const textColor = formData.get("textColor");
 
   let parsedFields = [];
   try {
@@ -59,6 +61,7 @@ export const action = async ({ request, params }) => {
         description,
         submitText,
         accentColor,
+        textColor,
         status,
         fields: {
           create: parsedFields.map((field, index) => ({
@@ -83,33 +86,55 @@ export default function FormEditor() {
   const submit = useSubmit();
   const navigation = useNavigation();
 
-  const CURRENT_PLAN = "FREE"; // Hardcoded for testing the locked state
-  const hasStarter = CURRENT_PLAN === "STARTER" || CURRENT_PLAN === "PRO";
-  const hasPro = CURRENT_PLAN === "PRO";
+  const template = templates.find(t => t.id === form.templateId) || templates[0];
+  
+  const hasStarter = template.plan === "BASIC" || template.plan === "PRO";
+  const hasPro = template.plan === "PRO";
   const submissionLimit = CURRENT_PLAN === "FREE" ? 50 : CURRENT_PLAN === "STARTER" ? 150 : "Unlimited";
 
-  const template = templates.find(t => t.id === form.templateId) || templates[0];
   const imageLimit = template.imageLimit || 0;
 
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description || "");
   const [submitText, setSubmitText] = useState(form.submitText || "Submit");
-  const [accentColor, setAccentColor] = useState(form.accentColor || "#008060");
+  
+  const DEFAULT_TEXT_COLOR = "#FFFFFF";
+  const DEFAULT_BG_COLOR = "#008060";
+  const [textColor, setTextColor] = useState(DEFAULT_TEXT_COLOR);
+  const [bgColor, setBgColor] = useState(form.accentColor || DEFAULT_BG_COLOR);
+  
   const [fields, setFields] = useState(form.fields || []);
   const [showToast, setShowToast] = useState(false);
+  const [showPublishToast, setShowPublishToast] = useState(false);
+
+  // New state variables for UI interactivity
+  const [selectedFont, setSelectedFont] = useState("Default");
+  const [isFontOpen, setIsFontOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("Minimal");
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const fileInputRef = useRef(null);
+  const [removeBranding, setRemoveBranding] = useState(false);
+  const [customDesigns, setCustomDesigns] = useState([]);
 
   useEffect(() => {
     setTitle(form?.title || "Untitled Form");
     setDescription(form?.description || "");
     setSubmitText(form?.submitText || "Submit");
-    setAccentColor(form?.accentColor || "#008060");
+    setBgColor(form?.accentColor || DEFAULT_BG_COLOR);
+    setTextColor(DEFAULT_TEXT_COLOR);
     setFields(form?.fields || []);
   }, [form]);
 
   useEffect(() => {
     if (actionData?.success) {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      if (actionData.status === 'PUBLISHED') {
+        setShowPublishToast(true);
+        setTimeout(() => setShowPublishToast(false), 5000);
+      } else {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
     }
   }, [actionData]);
 
@@ -124,19 +149,68 @@ export default function FormEditor() {
     setFields(newFields);
   };
 
+  const handleAddField = () => {
+    setFields([...fields, { type: 'TEXT', label: 'New Field', placeholder: '', required: false, order: fields.length }]);
+  };
+
+  const handleRemoveField = (indexToRemove) => {
+    setFields(fields.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    
+    // Create object URLs for image previews
+    const newImages = files.map(f => URL.createObjectURL(f));
+    const combined = [...uploadedImages, ...newImages].slice(0, imageLimit);
+    setUploadedImages(combined);
+    e.target.value = null; // reset input
+  };
+
+  const removeImage = (index) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSave = (intent) => {
     const formData = new FormData();
     formData.append("intent", intent);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("submitText", submitText);
-    formData.append("accentColor", accentColor);
+    formData.append("accentColor", bgColor);
+    formData.append("textColor", textColor);
     formData.append("fields", JSON.stringify(fields));
     
     submit(formData, { method: "post" });
   };
 
-  const PRESET_COLORS = ["#008060", "#E32C2B", "#005BD3", "#000000", "#F49342", "#8A2BE2"];
+  const PRESET_DESIGNS = [
+    { id: 'ocean', name: 'Ocean Blue', text: '#FFFFFF', bg: '#005BD3' },
+    { id: 'sunset', name: 'Warm Sunset', text: '#FFFFFF', bg: '#F49342' },
+    { id: 'mono', name: 'Minimal Mono', text: '#FFFFFF', bg: '#000000' },
+    { id: 'lavender', name: 'Soft Lavender', text: '#FFFFFF', bg: '#8A2BE2' },
+    { id: 'classic', name: 'Classic Green', text: '#FFFFFF', bg: '#008060' }
+  ];
+
+  const TEXT_COLORS = ["#FFFFFF", "#000000", "#333333", "#F4F6F8", "#E32C2B"];
+  const BG_COLORS = ["#008060", "#E32C2B", "#005BD3", "#000000", "#F49342", "#8A2BE2", "#FFFFFF", "#F4F6F8"];
+
+  const isCustomCombo = !PRESET_DESIGNS.concat(customDesigns).some(d => d.text === textColor && d.bg === bgColor);
+
+  const handleResetDesign = () => {
+    setTextColor(DEFAULT_TEXT_COLOR);
+    setBgColor(DEFAULT_BG_COLOR);
+  };
+
+  const handleSaveCustomDesign = () => {
+    setCustomDesigns([...customDesigns, { 
+      id: `custom-${Date.now()}`, 
+      name: `My Design ${customDesigns.length + 1}`,
+      text: textColor,
+      bg: bgColor
+    }]);
+  };
 
   const isSaving = navigation.state === "submitting";
 
@@ -144,7 +218,20 @@ export default function FormEditor() {
     <Page
       breadcrumbs={[{ content: 'Forms', onAction: () => navigate('/app') }]}
       title={title || "Untitled Form"}
-      titleMetadata={<Badge tone="info">{CURRENT_PLAN} Plan</Badge>}
+      titleMetadata={
+        <InlineStack gap="200" blockAlign="center">
+          <Badge tone={form.status === 'PUBLISHED' ? "success" : "info"}>
+            {form.status === 'PUBLISHED' ? "Published" : "Draft"}
+          </Badge>
+          {template.plan === "PRO" ? (
+            <Badge tone="magic">Pro Template</Badge>
+          ) : template.plan === "BASIC" ? (
+            <Badge tone="info">Starter Template</Badge>
+          ) : (
+            <Badge tone="success">Free Template</Badge>
+          )}
+        </InlineStack>
+      }
     >
       <Layout>
         <Layout.Section>
@@ -154,40 +241,50 @@ export default function FormEditor() {
                 Form saved successfully.
               </Banner>
             )}
+            {showPublishToast && (
+              <Banner tone="success" onDismiss={() => setShowPublishToast(false)}>
+                Your form is now live! Add it to your store from the Theme Editor to display it to customers.
+              </Banner>
+            )}
             
             <Card>
               <BlockStack gap="400">
                 <Text variant="headingMd" as="h2">Form Fields</Text>
                 <BlockStack gap="600">
                   {fields.map((field, index) => (
-                    <BlockStack gap="200" key={field.id || index}>
-                      <TextField
-                        labelHidden
-                        value={field.label}
-                        onChange={(val) => updateField(index, 'label', val)}
-                        autoComplete="off"
-                        placeholder="Field Label"
-                      />
-                      
-                      {field.type === 'TEXTAREA' ? (
-                        <TextField
-                          labelHidden
-                          value=""
-                          placeholder={field.placeholder || "Placeholder..."}
-                          multiline={4}
-                          autoComplete="off"
-                          disabled
-                        />
-                      ) : (
-                        <TextField
-                          labelHidden
-                          value=""
-                          placeholder={field.placeholder || "Placeholder..."}
-                          autoComplete="off"
-                          disabled
-                        />
-                      )}
-                    </BlockStack>
+                    <div key={field.id || index} style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                      <div style={{ flex: 1 }}>
+                        <BlockStack gap="200">
+                          <TextField
+                            labelHidden
+                            value={field.label}
+                            onChange={(val) => updateField(index, 'label', val)}
+                            autoComplete="off"
+                            placeholder="Field Label"
+                          />
+                          
+                          {field.type === 'TEXTAREA' ? (
+                            <TextField
+                              labelHidden
+                              value=""
+                              placeholder={field.placeholder || "Placeholder..."}
+                              multiline={4}
+                              autoComplete="off"
+                              disabled
+                            />
+                          ) : (
+                            <TextField
+                              labelHidden
+                              value=""
+                              placeholder={field.placeholder || "Placeholder..."}
+                              autoComplete="off"
+                              disabled
+                            />
+                          )}
+                        </BlockStack>
+                      </div>
+                      <Button tone="critical" variant="plain" icon={DeleteIcon} onClick={() => handleRemoveField(index)} />
+                    </div>
                   ))}
                 </BlockStack>
                 
@@ -201,7 +298,7 @@ export default function FormEditor() {
                   </InlineStack>
                   <Box paddingBlockStart="200">
                     <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
-                      <Button disabled={!hasPro}>Add Field</Button>
+                      <Button disabled={!hasPro} onClick={handleAddField}>Add Field</Button>
                     </div>
                   </Box>
                 </Box>
@@ -222,39 +319,133 @@ export default function FormEditor() {
                     {!hasStarter && <Badge tone="info">Starter</Badge>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                    <Button disabled={!hasStarter}>Customize Fonts</Button>
+                    <Popover
+                      active={isFontOpen}
+                      activator={
+                        <Button disabled={!hasStarter} onClick={() => setIsFontOpen(true)}>
+                          Customize Fonts ({selectedFont})
+                        </Button>
+                      }
+                      onClose={() => setIsFontOpen(false)}
+                    >
+                      <ActionList
+                        actionRole="menuitem"
+                        items={["Default", "Serif", "Rounded", "Modern"].map(font => ({
+                          content: font,
+                          onAction: () => { setSelectedFont(font); setIsFontOpen(false); }
+                        }))}
+                      />
+                    </Popover>
                   </div>
                 </BlockStack>
 
                 <Divider />
 
-                {/* Color Customization */}
-                <BlockStack gap="200">
+                {/* Design & Colors Customization */}
+                <BlockStack gap="400">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
-                      <Text tone={hasStarter ? "base" : "subdued"}>Accent Color</Text>
+                      <Text tone={hasStarter ? "base" : "subdued"}>Form Design</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
                     {!hasStarter && <Badge tone="info">Starter</Badge>}
                   </InlineStack>
+                  
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                    <InlineStack gap="200">
-                      {PRESET_COLORS.map(color => (
-                        <div 
-                          key={color}
-                          onClick={() => hasStarter && setAccentColor(color)}
-                          style={{
-                            width: '32px',
-                            height: '32px',
-                            borderRadius: '50%',
-                            backgroundColor: color,
-                            cursor: hasStarter ? 'pointer' : 'default',
-                            border: accentColor === color ? '3px solid #E5E7EB' : '1px solid transparent',
-                            boxShadow: accentColor === color ? '0 0 0 2px #202223' : 'none'
-                          }}
-                        />
-                      ))}
-                    </InlineStack>
+                    <BlockStack gap="400">
+                      {/* Live Preview */}
+                      <div style={{ 
+                        padding: '16px', 
+                        backgroundColor: bgColor, 
+                        color: textColor, 
+                        borderRadius: '8px', 
+                        textAlign: 'center',
+                        border: '1px solid #e3e3e3'
+                      }}>
+                        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Live Preview</div>
+                        <div style={{ fontSize: '14px', opacity: 0.9 }}>This is how your form will look.</div>
+                      </div>
+
+                      {/* Presets */}
+                      <BlockStack gap="200">
+                        <InlineStack align="space-between" blockAlign="center">
+                          <Text variant="headingSm" as="h3">Choose a Design</Text>
+                          <Button variant="plain" onClick={handleResetDesign}>Reset to Default</Button>
+                        </InlineStack>
+                        <InlineStack gap="300" wrap>
+                          {[...PRESET_DESIGNS, ...customDesigns].map(preset => (
+                            <div 
+                              key={preset.id}
+                              onClick={() => { setTextColor(preset.text); setBgColor(preset.bg); }}
+                              style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              <div style={{
+                                width: '60px', height: '40px', borderRadius: '4px',
+                                backgroundColor: preset.bg, color: preset.text,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: (textColor === preset.text && bgColor === preset.bg) ? '2px solid #202223' : '1px solid #e3e3e3',
+                                fontSize: '12px', fontWeight: 'bold'
+                              }}>
+                                Aa
+                              </div>
+                              <div style={{ fontSize: '12px' }}>{preset.name}</div>
+                            </div>
+                          ))}
+                        </InlineStack>
+                      </BlockStack>
+
+                      <Divider />
+
+                      {/* Text Color Row */}
+                      <BlockStack gap="200">
+                        <Text variant="headingSm" as="h3">Text Color</Text>
+                        <InlineStack gap="200">
+                          {TEXT_COLORS.map(color => (
+                            <div 
+                              key={color}
+                              onClick={() => setTextColor(color)}
+                              style={{
+                                width: '32px', height: '32px', borderRadius: '50%',
+                                backgroundColor: color, cursor: 'pointer',
+                                border: textColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
+                                boxShadow: textColor === color ? '0 0 0 2px #202223' : 'none'
+                              }}
+                            />
+                          ))}
+                        </InlineStack>
+                      </BlockStack>
+
+                      {/* Background Color Row */}
+                      <BlockStack gap="200">
+                        <Text variant="headingSm" as="h3">Background Color</Text>
+                        <InlineStack gap="200">
+                          {BG_COLORS.map(color => (
+                            <div 
+                              key={color}
+                              onClick={() => setBgColor(color)}
+                              style={{
+                                width: '32px', height: '32px', borderRadius: '50%',
+                                backgroundColor: color, cursor: 'pointer',
+                                border: bgColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
+                                boxShadow: bgColor === color ? '0 0 0 2px #202223' : 'none'
+                              }}
+                            />
+                          ))}
+                        </InlineStack>
+                      </BlockStack>
+
+                      {/* Save Custom Design */}
+                      {isCustomCombo && (
+                        <Box paddingBlockStart="200">
+                          <InlineStack>
+                            <Button onClick={handleSaveCustomDesign}>Save as My Design</Button>
+                          </InlineStack>
+                        </Box>
+                      )}
+                    </BlockStack>
                   </div>
                 </BlockStack>
 
@@ -270,8 +461,35 @@ export default function FormEditor() {
                     {!hasStarter && <Badge tone="info">Starter</Badge>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                    <Button disabled={!hasStarter}>Browse Themes</Button>
+                    <Button disabled={!hasStarter} onClick={() => setIsThemeModalOpen(true)}>Browse Themes</Button>
                   </div>
+                  
+                  <Modal
+                    open={isThemeModalOpen}
+                    onClose={() => setIsThemeModalOpen(false)}
+                    title="Select a Theme Style"
+                  >
+                    <Modal.Section>
+                      <InlineStack gap="400">
+                        {["Minimal", "Bold", "Classic"].map(theme => (
+                          <div 
+                            key={theme}
+                            onClick={() => setSelectedTheme(theme)}
+                            style={{ 
+                              padding: '24px', 
+                              border: selectedTheme === theme ? '2px solid #000' : '1px solid #ccc',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              fontWeight: selectedTheme === theme ? 'bold' : 'normal',
+                              background: selectedTheme === theme ? '#f4f4f4' : 'transparent'
+                            }}
+                          >
+                            {theme}
+                          </div>
+                        ))}
+                      </InlineStack>
+                    </Modal.Section>
+                  </Modal>
                 </BlockStack>
 
                 <Divider />
@@ -287,7 +505,31 @@ export default function FormEditor() {
                       {!hasStarter && <Badge tone="info">Starter</Badge>}
                     </InlineStack>
                     <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
-                      <Button disabled={!hasStarter}>Upload Image</Button>
+                      <input type="file" ref={fileInputRef} hidden accept="image/*" multiple onChange={handleImageUpload} />
+                      <Button disabled={!hasStarter} onClick={() => fileInputRef.current?.click()}>
+                        Upload Image
+                      </Button>
+                      
+                      {uploadedImages.length > 0 && (
+                        <Box paddingBlockStart="200">
+                          <InlineStack gap="200">
+                            {uploadedImages.map((src, idx) => (
+                              <div key={idx} style={{ position: 'relative' }}>
+                                <Thumbnail source={src} alt="Uploaded" size="large" />
+                                <button 
+                                  onClick={() => removeImage(idx)}
+                                  style={{
+                                    position: 'absolute', top: '-8px', right: '-8px',
+                                    background: 'black', color: 'white', borderRadius: '50%',
+                                    width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    border: 'none', cursor: 'pointer', fontSize: '12px', zIndex: 1
+                                  }}
+                                >x</button>
+                              </div>
+                            ))}
+                          </InlineStack>
+                        </Box>
+                      )}
                     </div>
                   </BlockStack>
                 )}
@@ -304,7 +546,7 @@ export default function FormEditor() {
                     {!hasPro && <Badge tone="magic">Pro</Badge>}
                   </InlineStack>
                   <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
-                    <Checkbox label="Remove TrustStars branding" checked={false} disabled={!hasPro} />
+                    <Checkbox label="Remove TrustStars branding" checked={removeBranding} onChange={setRemoveBranding} disabled={!hasPro} />
                   </div>
                 </BlockStack>
 
@@ -318,9 +560,40 @@ export default function FormEditor() {
             <Card>
               <BlockStack gap="400">
                 <Text variant="headingMd" as="h2">Actions</Text>
-                <Button size="large" variant="primary" onClick={() => handleSave('publish')} loading={isSaving} fullWidth>
-                  Save Changes
-                </Button>
+                <InlineStack gap="300">
+                  <div style={{ flex: 1 }}>
+                    <Button 
+                      size="large" 
+                      onClick={() => handleSave('draft')} 
+                      loading={isSaving && submitText !== 'Publishing...'} 
+                      fullWidth
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <button
+                      onClick={() => handleSave('publish')}
+                      disabled={isSaving}
+                      style={{
+                        backgroundColor: bgColor,
+                        color: textColor,
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: bgColor === '#FFFFFF' ? '1px solid #e3e3e3' : 'none',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: isSaving ? 'not-allowed' : 'pointer',
+                        opacity: isSaving ? 0.7 : 1,
+                        transition: 'background-color 0.2s',
+                        minHeight: '44px'
+                      }}
+                    >
+                      {isSaving ? "Saving..." : "Publish"}
+                    </button>
+                  </div>
+                </InlineStack>
               </BlockStack>
             </Card>
 

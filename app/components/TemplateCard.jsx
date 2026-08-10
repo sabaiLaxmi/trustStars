@@ -9,8 +9,8 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
 };
 
-// Simulated merchant plan for demonstration
-const CURRENT_PLAN = "FREE";
+import { CURRENT_PLAN } from "../config/billing";
+
 const PLAN_LEVELS = { FREE: 1, BASIC: 2, PRO: 3 };
 
 const categoryColors = {
@@ -44,14 +44,20 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
   const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[CURRENT_PLAN];
 
   const handleUseTemplate = useCallback(() => {
-    // TEMPORARILY DISABLED REDIRECT FOR PREVIEW/TESTING
-    submit({}, { method: "post", action: `/app/templates/${template.id}` });
-  }, [submit, template.id]);
+    if (isUpgradeRequired) {
+      setIsUpgradeModalOpen(true);
+    } else {
+      submit({}, { method: "post", action: `/app/templates/${template.id}` });
+    }
+  }, [submit, template.id, isUpgradeRequired]);
 
   const handlePreview = useCallback(() => {
-    // TEMPORARILY DISABLED REDIRECT FOR PREVIEW/TESTING
-    navigate(`/app/templates/${template.id}`);
-  }, [navigate, template.id]);
+    if (isUpgradeRequired) {
+      setIsUpgradeModalOpen(true);
+    } else {
+      navigate(`/app/templates/${template.id}`);
+    }
+  }, [navigate, template.id, isUpgradeRequired]);
 
   const handleCloseModal = useCallback(() => setIsUpgradeModalOpen(false), []);
   const handleUpgrade = useCallback(() => {
