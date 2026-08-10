@@ -178,17 +178,19 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
             <InlineStack align="space-between" blockAlign="center">
               <InlineStack gap="200" blockAlign="center">
                 <Badge tone="attention">{template.category}</Badge>
-                {template.plan === "PRO" ? (
-                  <Tooltip content="Available on Pro plan">
-                    <Badge tone="magic">Pro</Badge>
-                  </Tooltip>
-                ) : template.plan === "BASIC" ? (
-                  <Tooltip content="Available on Starter plan">
-                    <Badge tone="info">Starter</Badge>
-                  </Tooltip>
-                ) : (
-                  <Badge tone="success">Free</Badge>
-                )}
+                <div onClick={(e) => { e.stopPropagation(); navigate('/app/pricing'); }} style={{ cursor: 'pointer' }}>
+                  {template.plan === "PRO" ? (
+                    <Tooltip content="Available on Pro plan">
+                      <Badge tone="magic">Pro</Badge>
+                    </Tooltip>
+                  ) : template.plan === "BASIC" ? (
+                    <Tooltip content="Available on Starter plan">
+                      <Badge tone="info">Starter</Badge>
+                    </Tooltip>
+                  ) : (
+                    <Badge tone="success">Free</Badge>
+                  )}
+                </div>
               </InlineStack>
               
               <InlineStack gap="100" blockAlign="center">

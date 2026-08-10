@@ -1,1 +1,1 @@
-export const CURRENT_PLAN = "PRO"; // Global mock for merchant's actual plan
+export const CURRENT_PLAN = "FREE"; // Global mock for merchant's actual plan

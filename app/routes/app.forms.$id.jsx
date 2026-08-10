@@ -230,13 +230,15 @@ export default function FormEditor() {
           <Badge tone={form.status === 'PUBLISHED' ? "success" : "info"}>
             {form.status === 'PUBLISHED' ? "Published" : "Draft"}
           </Badge>
-          {template.plan === "PRO" ? (
-            <Badge tone="magic">Pro Template</Badge>
-          ) : template.plan === "BASIC" ? (
-            <Badge tone="info">Starter Template</Badge>
-          ) : (
-            <Badge tone="success">Free Template</Badge>
-          )}
+          <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}>
+            {template.plan === "PRO" ? (
+              <Badge tone="magic">Pro Template</Badge>
+            ) : template.plan === "BASIC" ? (
+              <Badge tone="info">Starter Template</Badge>
+            ) : (
+              <Badge tone="success">Free Template</Badge>
+            )}
+          </div>
         </InlineStack>
       }
     >
@@ -301,7 +303,7 @@ export default function FormEditor() {
                       <Text tone={hasPro ? "base" : "subdued"}>Add / Remove Fields</Text>
                       {!hasPro && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasPro && <Badge tone="magic">Pro</Badge>}
+                    {!hasPro && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
                   </InlineStack>
                   <Box paddingBlockStart="200">
                     <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
@@ -323,7 +325,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Font Customization</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <Badge tone="info">Starter</Badge>}
+                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                     <Popover
@@ -355,7 +357,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Form Design</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <Badge tone="info">Starter</Badge>}
+                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
@@ -465,7 +467,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Theme Access</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <Badge tone="info">Starter</Badge>}
+                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                     <Button disabled={!hasStarter} onClick={() => setIsThemeModalOpen(true)}>Browse Themes</Button>
@@ -509,7 +511,7 @@ export default function FormEditor() {
                         <Text tone={hasStarter ? "base" : "subdued"}>Image Upload (Max {imageLimit})</Text>
                         {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                       </InlineStack>
-                      {!hasStarter && <Badge tone="info">Starter</Badge>}
+                      {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                     </InlineStack>
                     <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                       <input type="file" ref={fileInputRef} hidden accept="image/*" multiple onChange={handleImageUpload} />
@@ -550,7 +552,7 @@ export default function FormEditor() {
                       <Text tone={hasPro ? "base" : "subdued"}>Remove Branding</Text>
                       {!hasPro && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasPro && <Badge tone="magic">Pro</Badge>}
+                    {!hasPro && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
                     <Checkbox label="Remove TrustStars branding" checked={removeBranding} onChange={setRemoveBranding} disabled={!hasPro} />
