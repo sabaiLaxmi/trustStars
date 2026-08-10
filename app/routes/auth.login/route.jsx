@@ -52,6 +52,19 @@ const floatVariants2 = {
   }
 };
 
+const TrustStarsLogo = () => (
+  <motion.div 
+    initial={{ scale: 0.8, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ type: "spring", stiffness: 150, damping: 15 }}
+    whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
+    style={{ position: 'relative', width: '80px', height: '80px', marginBottom: '2rem', cursor: 'pointer' }}
+  >
+    <Star size={80} color="#FF8C00" fill="#FF8C00" style={{ position: 'absolute', top: 0, left: 0 }} />
+    <FileCheck size={40} color="#007BFF" fill="white" style={{ position: 'absolute', top: '22px', left: '20px', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.2))' }} />
+  </motion.div>
+);
+
 export default function Auth() {
   const loaderData = useLoaderData();
   const actionData = useActionData();
@@ -97,6 +110,7 @@ export default function Auth() {
           animate="visible"
           style={{ zIndex: 10 }}
         >
+          <TrustStarsLogo />
           <motion.h1 variants={itemVariants} className="brand-title">
             Build Trust.<br />
             Collect <span>Stars.</span>
