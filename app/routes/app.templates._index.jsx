@@ -1,10 +1,9 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { Page, Layout, InlineGrid, Card, BlockStack, Text, Button, Icon, Badge, InlineStack } from "@shopify/polaris";
-import { LockIcon } from "@shopify/polaris-icons";
+import { Page } from "@shopify/polaris";
 import { templates } from "../data/templates";
 import { useNavigate, useLoaderData } from "react-router";
-import * as LucideIcons from 'lucide-react';
+
 import { motion } from "framer-motion";
 import galleryStyles from "../styles/gallery.css?url";
 import { TemplateCard } from "../components/TemplateCard";
@@ -53,10 +52,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
-};
+
 
 export default function Index() {
   const navigate = useNavigate();

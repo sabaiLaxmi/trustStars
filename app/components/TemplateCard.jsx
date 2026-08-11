@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import * as LucideIcons from 'lucide-react';
 import { useSubmit, useFetcher } from "react-router";
 import { useState, useCallback } from "react";
+import PropTypes from 'prop-types';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -153,6 +154,9 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
             {/* Subtle Favorite Icon */}
             <div 
               onClick={toggleWishlist}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') toggleWishlist(e); }}
               style={{ 
               position: 'absolute', 
               top: '12px', 
@@ -178,7 +182,13 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
             <InlineStack align="space-between" blockAlign="center">
               <InlineStack gap="200" blockAlign="center">
                 <Badge tone="attention">{template.category}</Badge>
-                <div onClick={(e) => { e.stopPropagation(); navigate('/app/pricing'); }} style={{ cursor: 'pointer' }}>
+                <div 
+                  onClick={(e) => { e.stopPropagation(); navigate('/app/pricing'); }} 
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); navigate('/app/pricing'); } }}
+                  style={{ cursor: 'pointer' }}
+                >
                   {template.plan === "PRO" ? (
                     <Tooltip content="Available on Pro plan">
                       <Badge tone="magic">Pro</Badge>
@@ -269,3 +279,18 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
     </>
   );
 }
+
+TemplateCard.propTypes = {
+  template: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    iconName: PropTypes.string,
+    category: PropTypes.string,
+    plan: PropTypes.string,
+    fieldsCount: PropTypes.number,
+    setupTime: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string
+  }).isRequired,
+  navigate: PropTypes.func.isRequired,
+  initialWishlisted: PropTypes.bool
+};

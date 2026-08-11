@@ -4,6 +4,7 @@ import { Text } from '@shopify/polaris';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { TemplateCard } from './TemplateCard';
+import PropTypes from 'prop-types';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -52,3 +53,7 @@ export function FeaturedCarousel({ templates }) {
     </motion.div>
   );
 }
+
+FeaturedCarousel.propTypes = {
+  templates: PropTypes.array.isRequired
+};

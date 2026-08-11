@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { Page, BlockStack, Text, Button, EmptyState } from "@shopify/polaris";
+import { Page, BlockStack, Text, EmptyState } from "@shopify/polaris";
 import { templates } from "../data/templates";
 import { useNavigate, useLoaderData } from "react-router";
 import { motion } from "framer-motion";

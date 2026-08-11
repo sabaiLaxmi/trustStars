@@ -2,7 +2,7 @@ import { authenticate } from "../shopify.server";
 import db from "../db.server";
 
 export const action = async ({ request }) => {
-  const { topic, shop, session, admin, payload } = await authenticate.webhook(request);
+  const { topic, shop, admin, payload } = await authenticate.webhook(request);
 
   if (!admin) {
     // The admin context isn't available if the webhook is not authenticated by Shopify.

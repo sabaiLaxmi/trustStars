@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate, useSubmit, useActionData, useNavigation, useRouteError } from "react-router";
-import { Page, Layout, Card, FormLayout, TextField, Button, BlockStack, Text, Checkbox, Banner, Box, Divider, InlineStack, Badge, Icon, ProgressBar, Popover, ActionList, Modal, Thumbnail } from "@shopify/polaris";
+import { Page, Layout, Card, TextField, Button, BlockStack, Text, Checkbox, Banner, Box, Divider, InlineStack, Badge, Icon, ProgressBar, Popover, ActionList, Modal, Thumbnail } from "@shopify/polaris";
 import { LockIcon, DeleteIcon } from "@shopify/polaris-icons";
 import db from "../db.server";
 import { templates } from "../data/templates";
@@ -50,7 +50,9 @@ export const action = async ({ request, params }) => {
   let parsedFields = [];
   try {
     parsedFields = JSON.parse(fieldsJson);
-  } catch(e) {}
+  } catch(e) {
+    console.error("Failed to parse fields", e);
+  }
 
   const status = intent === "publish" ? "PUBLISHED" : "DRAFT";
 
@@ -143,10 +145,7 @@ export default function FormEditor() {
     }
   }, [actionData]);
 
-  const handleTitleChange = useCallback((value) => setTitle(value), []);
-  const handleDescriptionChange = useCallback((value) => setDescription(value), []);
-  const handleSubmitTextChange = useCallback((value) => setSubmitText(value), []);
-
+      
 
   const updateField = (index, key, value) => {
     const newFields = [...fields];
@@ -230,7 +229,7 @@ export default function FormEditor() {
           <Badge tone={form.status === 'PUBLISHED' ? "success" : "info"}>
             {form.status === 'PUBLISHED' ? "Published" : "Draft"}
           </Badge>
-          <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}>
+          <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}>
             {template.plan === "PRO" ? (
               <Badge tone="magic">Pro Template</Badge>
             ) : template.plan === "BASIC" ? (
@@ -303,7 +302,7 @@ export default function FormEditor() {
                       <Text tone={hasPro ? "base" : "subdued"}>Add / Remove Fields</Text>
                       {!hasPro && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasPro && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
+                    {!hasPro && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
                   </InlineStack>
                   <Box paddingBlockStart="200">
                     <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
@@ -325,7 +324,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Font Customization</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
+                    {!hasStarter && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                     <Popover
@@ -357,7 +356,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Form Design</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
+                    {!hasStarter && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
@@ -383,9 +382,7 @@ export default function FormEditor() {
                         </InlineStack>
                         <InlineStack gap="300" wrap>
                           {[...PRESET_DESIGNS, ...customDesigns].map(preset => (
-                            <div 
-                              key={preset.id}
-                              onClick={() => { setTextColor(preset.text); setBgColor(preset.bg); }}
+                            <div key={preset.id} role="button" tabIndex={0} onKeyDown={() => { setTextColor(preset.text); setBgColor(preset.bg); }} onClick={() => { setTextColor(preset.text); setBgColor(preset.bg); }}
                               style={{
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
                                 cursor: 'pointer'
@@ -413,9 +410,7 @@ export default function FormEditor() {
                         <Text variant="headingSm" as="h3">Text Color</Text>
                         <InlineStack gap="200">
                           {TEXT_COLORS.map(color => (
-                            <div 
-                              key={color}
-                              onClick={() => setTextColor(color)}
+                            <div key={color} role="button" tabIndex={0} onKeyDown={() => setTextColor(color)} onClick={() => setTextColor(color)}
                               style={{
                                 width: '32px', height: '32px', borderRadius: '50%',
                                 backgroundColor: color, cursor: 'pointer',
@@ -432,9 +427,7 @@ export default function FormEditor() {
                         <Text variant="headingSm" as="h3">Background Color</Text>
                         <InlineStack gap="200">
                           {BG_COLORS.map(color => (
-                            <div 
-                              key={color}
-                              onClick={() => setBgColor(color)}
+                            <div key={color} role="button" tabIndex={0} onKeyDown={() => setBgColor(color)} onClick={() => setBgColor(color)}
                               style={{
                                 width: '32px', height: '32px', borderRadius: '50%',
                                 backgroundColor: color, cursor: 'pointer',
@@ -467,7 +460,7 @@ export default function FormEditor() {
                       <Text tone={hasStarter ? "base" : "subdued"}>Theme Access</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
+                    {!hasStarter && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                     <Button disabled={!hasStarter} onClick={() => setIsThemeModalOpen(true)}>Browse Themes</Button>
@@ -481,9 +474,7 @@ export default function FormEditor() {
                     <Modal.Section>
                       <InlineStack gap="400">
                         {["Minimal", "Bold", "Classic"].map(theme => (
-                          <div 
-                            key={theme}
-                            onClick={() => setSelectedTheme(theme)}
+                          <div key={theme} role="button" tabIndex={0} onKeyDown={() => setSelectedTheme(theme)} onClick={() => setSelectedTheme(theme)}
                             style={{ 
                               padding: '24px', 
                               border: selectedTheme === theme ? '2px solid #000' : '1px solid #ccc',
@@ -511,7 +502,7 @@ export default function FormEditor() {
                         <Text tone={hasStarter ? "base" : "subdued"}>Image Upload (Max {imageLimit})</Text>
                         {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                       </InlineStack>
-                      {!hasStarter && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
+                      {!hasStarter && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
                     </InlineStack>
                     <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                       <input type="file" ref={fileInputRef} hidden accept="image/*" multiple onChange={handleImageUpload} />
@@ -552,7 +543,7 @@ export default function FormEditor() {
                       <Text tone={hasPro ? "base" : "subdued"}>Remove Branding</Text>
                       {!hasPro && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
-                    {!hasPro && <div onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
+                    {!hasPro && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="magic">Pro</Badge></div>}
                   </InlineStack>
                   <div style={{ opacity: hasPro ? 1 : 0.5, pointerEvents: hasPro ? 'auto' : 'none' }}>
                     <Checkbox label="Remove TrustStars branding" checked={removeBranding} onChange={setRemoveBranding} disabled={!hasPro} />

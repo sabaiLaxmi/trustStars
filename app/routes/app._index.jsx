@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { Page, Card, Text, Button, InlineStack, BlockStack, Icon } from "@shopify/polaris";
+import { Page, Card, Text, Button, InlineStack, BlockStack } from "@shopify/polaris";
 import * as LucideIcons from 'lucide-react';
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
@@ -118,7 +118,7 @@ export default function Dashboard() {
                     </InlineStack>
                     <BlockStack gap="200">
                       <Text variant="headingMd" as="h3">Pricing</Text>
-                      <Text tone="subdued" as="p">Choose the perfect plan that fits your store's growing needs.</Text>
+                      <Text tone="subdued" as="p">Choose the perfect plan that fits your store&apos;s growing needs.</Text>
                     </BlockStack>
                   </BlockStack>
                 </Card>

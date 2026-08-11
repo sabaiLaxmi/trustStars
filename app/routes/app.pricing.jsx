@@ -1,7 +1,7 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useRouteError } from "react-router";
-import { Page, Layout, Grid, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid } from "@shopify/polaris";
+import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid } from "@shopify/polaris";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);

@@ -1,7 +1,7 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate, useRouteError, useSubmit, redirect } from "react-router";
-import { Page, Layout, Card, Button, BlockStack, Text, Badge, Grid, List, Box, InlineStack, Divider, Modal, TextField } from "@shopify/polaris";
+import { Page, Layout, Card, BlockStack, Text, Badge, Grid, List, Box, InlineStack, Divider, TextField } from "@shopify/polaris";
 import { templates } from "../data/templates";
 import db from "../db.server";
 import * as LucideIcons from 'lucide-react';

@@ -1,4 +1,4 @@
-import { useLoaderData, useActionData, Form, useNavigation, data } from "react-router";
+import { useLoaderData, useActionData, useNavigation, data } from "react-router";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
 
@@ -106,10 +106,10 @@ export default function PublicForm() {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>{form.title}</h1>
-        {form.description && <p style={styles.description}>{form.description}</p>}
+    <div style={{...styles.container, backgroundColor: form.backgroundColor ? form.backgroundColor + '20' : '#F3F4F6'}}>
+      <div style={{...styles.card, backgroundColor: form.backgroundColor || 'white', color: form.textColor || '#111827', fontFamily: form.fontFamily && form.fontFamily !== 'Default' ? form.fontFamily : 'inherit'}}>
+        <h1 style={{...styles.title, color: form.textColor || '#111827'}}>{form.title}</h1>
+        {form.description && <p style={{...styles.description, color: form.textColor || '#4B5563'}}>{form.description}</p>}
         
         <form method="post" style={styles.form}>
           {form.fields.map((field) => {
@@ -151,7 +151,7 @@ export default function PublicForm() {
 
           <button 
             type="submit" 
-            style={{...styles.button, ...(isSubmitting ? styles.buttonDisabled : {})}}
+            style={{...styles.button, backgroundColor: form.textColor || '#000000', color: form.backgroundColor || '#ffffff', ...(isSubmitting ? styles.buttonDisabled : {})}}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : (form.submitText || "Submit")}

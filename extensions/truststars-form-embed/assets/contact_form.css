@@ -40,13 +40,12 @@
   width: 100%;
   padding: 12px 14px;
   box-sizing: border-box;
-  /* Minimal default styling, allows theme inputs to override or blend */
-  border: 1px solid rgba(0,0,0,0.2);
-  background-color: transparent;
-  color: inherit;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #111827;
   font-family: inherit;
-  font-size: inherit;
-  border-radius: 4px;
+  font-size: 16px;
+  border-radius: 6px;
 }
 
 .ts-input:focus {
