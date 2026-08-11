@@ -94,8 +94,8 @@ export default function FormEditor() {
 
   const template = templates.find(t => t.id === form.templateId) || templates[0];
   
-  const hasStarter = template.plan === "BASIC" || template.plan === "PRO";
-  const hasPro = template.plan === "PRO";
+  const hasStarter = true; // temporarily unlocked // template.plan === "BASIC" || template.plan === "PRO";
+  const hasPro = true; // temporarily unlocked // template.plan === "PRO";
   const submissionLimit = CURRENT_PLAN === "FREE" ? 50 : CURRENT_PLAN === "STARTER" ? 150 : "Unlimited";
 
   const imageLimit = template.imageLimit || 0;
