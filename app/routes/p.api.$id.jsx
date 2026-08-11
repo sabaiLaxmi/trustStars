@@ -39,7 +39,12 @@ export const loader = async ({ request, params }) => {
     }
   }
 
-  return data({ form });
+  return data({ form }, {
+    headers: {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache"
+    }
+  });
 };
 
 export const action = async ({ request, params }) => {
