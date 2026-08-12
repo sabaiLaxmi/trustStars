@@ -80,7 +80,7 @@ export default function Dashboard() {
                 <Card padding="500">
                   <BlockStack gap="400">
                     <InlineStack align="space-between" blockAlign="center">
-                      <div style={{ padding: '12px', background: '#F0F9FF', borderRadius: '12px', color: '#0284C7' }}>
+                      <div style={{ padding: '12px', background: '#FFF7ED', borderRadius: '12px', color: '#EA580C' }}>
                         <LucideIcons.LayoutTemplate size={24} />
                       </div>
                     </InlineStack>
@@ -96,7 +96,7 @@ export default function Dashboard() {
                 <Card padding="500">
                   <BlockStack gap="400">
                     <InlineStack align="space-between" blockAlign="center">
-                      <div style={{ padding: '12px', background: '#FEF2F2', borderRadius: '12px', color: '#DC2626' }}>
+                      <div style={{ padding: '12px', background: '#FFF7ED', borderRadius: '12px', color: '#EA580C' }}>
                         <LucideIcons.Heart size={24} />
                       </div>
                     </InlineStack>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                 <Card padding="500">
                   <BlockStack gap="400">
                     <InlineStack align="space-between" blockAlign="center">
-                      <div style={{ padding: '12px', background: '#F0FDF4', borderRadius: '12px', color: '#16A34A' }}>
+                      <div style={{ padding: '12px', background: '#FFF7ED', borderRadius: '12px', color: '#EA580C' }}>
                         <LucideIcons.CreditCard size={24} />
                       </div>
                     </InlineStack>
@@ -138,7 +138,7 @@ export default function Dashboard() {
               <motion.div variants={itemVariants} style={{ height: '100%' }}>
                 <Card padding="400">
                   <BlockStack gap="200">
-                    <LucideIcons.Wand2 size={20} color="#008060" />
+                    <LucideIcons.Wand2 size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Ready-to-use Templates</Text>
                     <Text tone="subdued" variant="bodySm">Start instantly with professionally designed forms.</Text>
                   </BlockStack>
@@ -148,7 +148,7 @@ export default function Dashboard() {
               <motion.div variants={itemVariants} style={{ height: '100%' }}>
                 <Card padding="400">
                   <BlockStack gap="200">
-                    <LucideIcons.Settings size={20} color="#008060" />
+                    <LucideIcons.Settings size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Easy Customization</Text>
                     <Text tone="subdued" variant="bodySm">Tailor fields and styling directly in Shopify.</Text>
                   </BlockStack>
@@ -158,7 +158,7 @@ export default function Dashboard() {
               <motion.div variants={itemVariants} style={{ height: '100%' }}>
                 <Card padding="400">
                   <BlockStack gap="200">
-                    <LucideIcons.Smartphone size={20} color="#008060" />
+                    <LucideIcons.Smartphone size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Responsive Forms</Text>
                     <Text tone="subdued" variant="bodySm">Looks perfect on desktop, tablet, and mobile.</Text>
                   </BlockStack>
@@ -168,7 +168,7 @@ export default function Dashboard() {
               <motion.div variants={itemVariants} style={{ height: '100%' }}>
                 <Card padding="400">
                   <BlockStack gap="200">
-                    <LucideIcons.Store size={20} color="#008060" />
+                    <LucideIcons.Store size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Theme Integration</Text>
                     <Text tone="subdued" variant="bodySm">Native App Blocks for Shopify Online Store 2.0.</Text>
                   </BlockStack>

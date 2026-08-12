@@ -93,7 +93,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
           {/* Large Thumbnail Preview */}
           <div style={{ 
             height: '200px', 
-            background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
+            background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
             position: 'relative',
             borderBottom: '1px solid #E5E7EB',
             overflow: 'hidden',

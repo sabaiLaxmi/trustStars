@@ -13,7 +13,7 @@ export const templates = [
     formHeading: "Contact Us",
     formDescription: "Please fill out the form below and we will get back to you as soon as possible.",
     imageLimit: 0,
-    previewColor: "#0D9488",
+    previewColor: "#EA580C", // Brand Orange
     hasImagePlaceholder: false,
     features: ["Spam Protection", "File Attachments"],
     defaultFields: [
@@ -36,7 +36,7 @@ export const templates = [
     formHeading: "Stay in the Loop!",
     formDescription: "Get the latest updates and offers straight to your inbox.",
     imageLimit: 2,
-    previewColor: "#E32C2B",
+    previewColor: "#F97316", // Brand Orange lighter
     hasImagePlaceholder: true,
     features: ["Hero Image", "High Conversion"],
     defaultFields: [
@@ -58,7 +58,7 @@ export const templates = [
     formHeading: "Can't find what you're looking for?",
     formDescription: "Tell us what you need and we'll try to source it.",
     imageLimit: 2,
-    previewColor: "#9333EA",
+    previewColor: "#C2410C", // Brand Orange darker
     hasImagePlaceholder: true,
     features: ["Product Links", "Stock Alerts"],
     defaultFields: [
@@ -82,7 +82,7 @@ export const templates = [
     formHeading: "We'd love your feedback",
     formDescription: "Your experience helps us improve.",
     imageLimit: 1,
-    previewColor: "#F49342",
+    previewColor: "#EA580C", // Brand Orange
     hasImagePlaceholder: false,
     features: ["Star Ratings", "Customer Insights"],
     defaultFields: [
@@ -106,7 +106,7 @@ export const templates = [
     formHeading: "Make it yours",
     formDescription: "Tell us how you'd like your order customized.",
     imageLimit: 3,
-    previewColor: "#2563EB",
+    previewColor: "#F97316", // Brand Orange lighter
     hasImagePlaceholder: true,
     features: ["Order Integration", "File Uploads"],
     defaultFields: [
@@ -130,7 +130,7 @@ export const templates = [
     formHeading: "Reserve your spot",
     formDescription: "Register below to join us.",
     imageLimit: 0,
-    previewColor: "#005BD3",
+    previewColor: "#C2410C", // Brand Orange darker
     hasImagePlaceholder: false,
     features: ["Calendar Sync", "Capacity Limits"],
     defaultFields: [
@@ -154,7 +154,7 @@ export const templates = [
     formHeading: "Need help? We're here for you",
     formDescription: "Describe your issue and we'll get back to you soon.",
     imageLimit: 2,
-    previewColor: "#8A2BE2",
+    previewColor: "#EA580C", // Brand Orange
     hasImagePlaceholder: false,
     features: ["Ticket Routing", "Priority Levels"],
     defaultFields: [
@@ -178,7 +178,7 @@ export const templates = [
     formHeading: "We're sorry to hear that",
     formDescription: "Please share the details so we can make it right.",
     imageLimit: 3,
-    previewColor: "#000000",
+    previewColor: "#C2410C", // Brand Orange darker
     hasImagePlaceholder: false,
     features: ["Private Resolution", "Order Lookup"],
     defaultFields: [
