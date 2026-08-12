@@ -13,6 +13,9 @@ export const templates = [
     formHeading: "Contact Us",
     formDescription: "Please fill out the form below and we will get back to you as soon as possible.",
     imageLimit: 0,
+    previewColor: "#0D9488",
+    hasImagePlaceholder: false,
+    features: ["Spam Protection", "File Attachments"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -33,6 +36,9 @@ export const templates = [
     formHeading: "Stay in the Loop!",
     formDescription: "Get the latest updates and offers straight to your inbox.",
     imageLimit: 2,
+    previewColor: "#E32C2B",
+    hasImagePlaceholder: true,
+    features: ["Hero Image", "High Conversion"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 }
@@ -52,6 +58,9 @@ export const templates = [
     formHeading: "Can't find what you're looking for?",
     formDescription: "Tell us what you need and we'll try to source it.",
     imageLimit: 2,
+    previewColor: "#9333EA",
+    hasImagePlaceholder: true,
+    features: ["Product Links", "Stock Alerts"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -73,6 +82,9 @@ export const templates = [
     formHeading: "We'd love your feedback",
     formDescription: "Your experience helps us improve.",
     imageLimit: 1,
+    previewColor: "#F49342",
+    hasImagePlaceholder: false,
+    features: ["Star Ratings", "Customer Insights"],
     defaultFields: [
       { type: 'TEXT', label: 'Order Number (Optional)', placeholder: '#12345', required: false, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -94,6 +106,9 @@ export const templates = [
     formHeading: "Make it yours",
     formDescription: "Tell us how you'd like your order customized.",
     imageLimit: 3,
+    previewColor: "#2563EB",
+    hasImagePlaceholder: true,
+    features: ["Order Integration", "File Uploads"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -115,6 +130,9 @@ export const templates = [
     formHeading: "Reserve your spot",
     formDescription: "Register below to join us.",
     imageLimit: 0,
+    previewColor: "#005BD3",
+    hasImagePlaceholder: false,
+    features: ["Calendar Sync", "Capacity Limits"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -136,6 +154,9 @@ export const templates = [
     formHeading: "Need help? We're here for you",
     formDescription: "Describe your issue and we'll get back to you soon.",
     imageLimit: 2,
+    previewColor: "#8A2BE2",
+    hasImagePlaceholder: false,
+    features: ["Ticket Routing", "Priority Levels"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },
@@ -157,6 +178,9 @@ export const templates = [
     formHeading: "We're sorry to hear that",
     formDescription: "Please share the details so we can make it right.",
     imageLimit: 3,
+    previewColor: "#000000",
+    hasImagePlaceholder: false,
+    features: ["Private Resolution", "Order Lookup"],
     defaultFields: [
       { type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 },
       { type: 'EMAIL', label: 'Email Address', placeholder: 'jane@example.com', required: true, order: 1 },

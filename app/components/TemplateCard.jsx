@@ -93,7 +93,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
           {/* Large Thumbnail Preview */}
           <div style={{ 
             height: '200px', 
-            background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
+            background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
             position: 'relative',
             borderBottom: '1px solid #E5E7EB',
             overflow: 'hidden',
@@ -101,53 +101,108 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
             justifyContent: 'center',
             alignItems: 'flex-start'
           }}>
+            
+            {/* Floating Feature Badges */}
+            {template.features && template.features.map((feature, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                transition={{ duration: 0.3, delay: idx * 0.1 }}
+                style={{
+                  position: 'absolute',
+                  top: idx === 0 ? '16px' : 'auto',
+                  bottom: idx === 1 ? '16px' : 'auto',
+                  left: idx === 0 ? '16px' : 'auto',
+                  right: idx === 1 ? '16px' : 'auto',
+                  backgroundColor: '#FFFFFF',
+                  padding: '6px 12px',
+                  borderRadius: '100px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                  border: '1px solid #E5E7EB',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  zIndex: 20,
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  color: '#374151'
+                }}
+              >
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: template.previewColor || '#4F46E5' }} />
+                {feature}
+              </motion.div>
+            ))}
+
             {/* Realistic Form UI Representation */}
             <div style={{
-              marginTop: '24px',
+              marginTop: '32px',
               width: '85%',
-              height: '200px',
+              height: '180px',
               backgroundColor: '#FFFFFF',
               borderRadius: '10px 10px 0 0',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
               border: '1px solid #E5E7EB',
               borderBottom: 'none',
-              padding: '16px',
-              position: 'relative'
+              padding: template.hasImagePlaceholder ? '0' : '16px',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                 <div style={{
-                   width: '28px',
-                   height: '28px',
-                   borderRadius: '50%',
-                   backgroundColor: categoryColors[template.category]?.bg || "#E0E7FF",
-                   display: 'flex',
-                   alignItems: 'center',
-                   justifyContent: 'center'
-                 }}>
-                   <IconComponent size={14} color={categoryColors[template.category]?.icon || "#4F46E5"} />
-                 </div>
-                 <div style={{ width: '40%', height: '8px', backgroundColor: '#D1D5DB', borderRadius: '4px' }} />
-              </div>
-              
-              {Array.from({ length: Math.min(3, template.fieldsCount || 3) }).map((_, i) => (
-                 <div key={i} style={{ marginBottom: '12px' }}>
-                   <div style={{ width: '25%', height: '6px', backgroundColor: '#9CA3AF', borderRadius: '3px', marginBottom: '6px', opacity: 0.6 }} />
-                   <div style={{ width: '100%', height: '26px', backgroundColor: '#FFFFFF', border: '1px solid #D1D5DB', borderRadius: '6px' }} />
-                 </div>
-              ))}
-              
-              <div style={{ 
-                width: '100%', 
-                height: '32px', 
-                backgroundColor: '#008060', 
-                borderRadius: '6px', 
-                marginTop: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
-              }}>
-                <div style={{ width: '25%', height: '6px', backgroundColor: '#FFFFFF', borderRadius: '3px', opacity: 0.9 }} />
+              {template.hasImagePlaceholder && (
+                <div style={{
+                  width: '100%',
+                  height: '60px',
+                  background: 'linear-gradient(45deg, #E2E8F0 0%, #CBD5E1 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px'
+                }}>
+                  <LucideIcons.Image size={20} color="#94A3B8" />
+                </div>
+              )}
+
+              <div style={{ padding: template.hasImagePlaceholder ? '0 16px' : '0', flex: 1 }}>
+                {!template.hasImagePlaceholder && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      backgroundColor: categoryColors[template.category]?.bg || "#E0E7FF",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <IconComponent size={14} color={categoryColors[template.category]?.icon || "#4F46E5"} />
+                    </div>
+                    <div style={{ width: '50%', height: '8px', backgroundColor: '#374151', borderRadius: '4px' }} />
+                  </div>
+                )}
+                
+                {Array.from({ length: Math.min(3, template.fieldsCount || 3) }).map((_, i) => (
+                  <div key={i} style={{ marginBottom: '10px' }}>
+                    <div style={{ width: '30%', height: '6px', backgroundColor: '#9CA3AF', borderRadius: '3px', marginBottom: '4px', opacity: 0.6 }} />
+                    <div style={{ width: '100%', height: '22px', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '4px' }} />
+                  </div>
+                ))}
+                
+                <div style={{ 
+                  width: '100%', 
+                  height: '28px', 
+                  backgroundColor: template.previewColor || '#008060', 
+                  borderRadius: '4px', 
+                  marginTop: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+                }}>
+                  <div style={{ width: '30%', height: '6px', backgroundColor: '#FFFFFF', borderRadius: '3px', opacity: 0.9 }} />
+                </div>
               </div>
             </div>
             
