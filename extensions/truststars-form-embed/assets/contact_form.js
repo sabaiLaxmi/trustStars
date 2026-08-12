@@ -1,7 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const wrappers = document.querySelectorAll('.ts-block-wrapper');
+function initTrustStarsForms() {
+  const wrappers = document.querySelectorAll('.ts-block-wrapper:not(.ts-initialized)');
   
   wrappers.forEach(async (wrapper) => {
+    wrapper.classList.add('ts-initialized'); // Mark as initialized
     const formId = wrapper.getAttribute('data-form-id');
     const blockId = wrapper.getAttribute('data-block-id');
     const container = document.getElementById(`ts-form-container-${blockId}`);
@@ -55,8 +56,28 @@ document.addEventListener('DOMContentLoaded', function() {
       const btnText = form.backgroundColor ? bgColor : '';
       const btnStyle = btnBg ? `style="background-color: ${btnBg}; color: ${btnText}; border: none;"` : '';
 
+      let imagesHtml = '';
+      if (form.images) {
+        try {
+          const imagesArray = JSON.parse(form.images);
+          if (imagesArray && imagesArray.length > 0) {
+            imagesHtml = '<div style="display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto;">' + 
+                         imagesArray.map(src => `<img src="${src}" style="max-width: 100%; max-height: 300px; border-radius: 8px; object-fit: cover; flex: 1; min-width: 0;" />`).join('') +
+                         '</div>';
+          }
+        } catch (e) {
+          console.error("Failed to parse images", e);
+        }
+      }
+
+      let brandingHtml = '';
+      if (!form.removeBranding) {
+        brandingHtml = `<div style="text-align: center; margin-top: 16px; font-size: 12px; opacity: 0.7;">Powered by <strong>TrustStars</strong></div>`;
+      }
+
       container.innerHTML = `
         <div class="ts-form-inner" style="background-color: ${bgColor}; color: ${txtColor}; font-family: ${fontFam}; padding: 24px; border-radius: 8px;">
+          ${imagesHtml}
           ${form.title ? `<h3 class="ts-form-title" style="color: ${txtColor}; font-family: ${fontFam};">${form.title}</h3>` : ''}
           ${form.description ? `<p class="ts-form-description" style="color: ${txtColor}; font-family: ${fontFam};">${form.description}</p>` : ''}
           
@@ -80,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <div id="ts-error-${blockId}" class="ts-error-message" style="display: none; color: red; margin-top: 10px;">
             There was an error submitting the form. Please check your inputs.
           </div>
+          
+          ${brandingHtml}
         </div>
       `;
       
@@ -127,4 +150,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-});
+}
+
+// Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTrustStarsForms);
+} else {
+  initTrustStarsForms();
+}
+
+// Support for Shopify Theme Editor (Dynamic block additions)
+document.addEventListener('shopify:section:load', initTrustStarsForms);
+document.addEventListener('shopify:block:select', initTrustStarsForms);
+

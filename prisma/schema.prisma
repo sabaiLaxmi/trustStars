@@ -44,6 +44,8 @@ model Form {
   backgroundColor String?
   textColor     String?
   fontFamily    String?
+  removeBranding Boolean  @default(false)
+  images        String?
   status        String      @default("DRAFT")
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

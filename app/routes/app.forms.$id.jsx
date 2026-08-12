@@ -46,6 +46,8 @@ export const action = async ({ request, params }) => {
   const backgroundColor = formData.get("backgroundColor");
   const textColor = formData.get("textColor");
   const fontFamily = formData.get("fontFamily");
+  const removeBranding = formData.get("removeBranding") === "true";
+  const images = formData.get("images");
 
   let parsedFields = [];
   try {
@@ -68,6 +70,8 @@ export const action = async ({ request, params }) => {
         backgroundColor,
         textColor,
         fontFamily,
+        removeBranding,
+        images,
         status,
         fields: {
           create: parsedFields.map((field, index) => ({
@@ -118,9 +122,9 @@ export default function FormEditor() {
   const [isFontOpen, setIsFontOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("Minimal");
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(form?.images ? JSON.parse(form.images) : []);
   const fileInputRef = useRef(null);
-  const [removeBranding, setRemoveBranding] = useState(false);
+  const [removeBranding, setRemoveBranding] = useState(form?.removeBranding || false);
   const [customDesigns, setCustomDesigns] = useState([]);
 
   useEffect(() => {
@@ -131,6 +135,8 @@ export default function FormEditor() {
     setTextColor(form?.textColor || DEFAULT_TEXT_COLOR);
     setSelectedFont(form?.fontFamily || "Default");
     setFields(form?.fields || []);
+    setUploadedImages(form?.images ? JSON.parse(form.images) : []);
+    setRemoveBranding(form?.removeBranding || false);
   }, [form]);
 
   useEffect(() => {
@@ -165,10 +171,26 @@ export default function FormEditor() {
     const files = Array.from(e.target.files);
     if (!files.length) return;
     
-    // Create object URLs for image previews
-    const newImages = files.map(f => URL.createObjectURL(f));
-    const combined = [...uploadedImages, ...newImages].slice(0, imageLimit);
-    setUploadedImages(combined);
+    const remainingSlots = imageLimit - uploadedImages.length;
+    const filesToProcess = files.slice(0, remainingSlots);
+    
+    if (filesToProcess.length === 0) return;
+
+    const newImages = [];
+    let processedCount = 0;
+
+    filesToProcess.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        newImages.push(event.target.result);
+        processedCount++;
+        if (processedCount === filesToProcess.length) {
+          setUploadedImages(prev => [...prev, ...newImages]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    
     e.target.value = null; // reset input
   };
 
@@ -186,6 +208,8 @@ export default function FormEditor() {
     formData.append("backgroundColor", bgColor);
     formData.append("textColor", textColor);
     formData.append("fontFamily", selectedFont);
+    formData.append("removeBranding", removeBranding);
+    formData.append("images", JSON.stringify(uploadedImages));
     formData.append("fields", JSON.stringify(fields));
     
     submit(formData, { method: "post" });
