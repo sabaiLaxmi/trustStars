@@ -49,9 +49,16 @@ function initTrustStarsForms() {
         }
       });
 
+      const FONT_MAP = {
+        'Serif': 'Georgia, serif',
+        'Rounded': '"Varela Round", "Nunito", ui-rounded, sans-serif',
+        'Modern': '"Inter", "Roboto", "Helvetica Neue", sans-serif',
+        'Default': 'inherit'
+      };
+
       const bgColor = form.backgroundColor || form.accentColor || 'transparent';
       const txtColor = form.textColor || 'inherit';
-      const fontFam = form.fontFamily && form.fontFamily !== 'Default' ? form.fontFamily : 'inherit';
+      const fontFam = form.fontFamily && FONT_MAP[form.fontFamily] ? FONT_MAP[form.fontFamily] : 'inherit';
       const btnBg = form.backgroundColor ? txtColor : '';
       const btnText = form.backgroundColor ? bgColor : '';
       const btnStyle = btnBg ? `style="background-color: ${btnBg}; color: ${btnText}; border: none;"` : '';
@@ -72,7 +79,7 @@ function initTrustStarsForms() {
 
       let brandingHtml = '';
       if (!form.removeBranding) {
-        brandingHtml = `<div style="text-align: center; margin-top: 16px; font-size: 12px; opacity: 0.7;">Powered by <strong>TrustStars</strong></div>`;
+        brandingHtml = `<div style="text-align: center; margin-top: 16px; font-size: 12px; opacity: 0.8; color: ${txtColor};">Powered by <strong>TrustStars</strong></div>`;
       }
 
       container.innerHTML = `

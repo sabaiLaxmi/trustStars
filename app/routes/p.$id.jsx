@@ -105,9 +105,33 @@ export default function PublicForm() {
     );
   }
 
+  const FONT_MAP = {
+    'Serif': 'Georgia, serif',
+    'Rounded': '"Varela Round", "Nunito", ui-rounded, sans-serif',
+    'Modern': '"Inter", "Roboto", "Helvetica Neue", sans-serif',
+    'Default': 'inherit'
+  };
+
+  const currentFont = form.fontFamily && FONT_MAP[form.fontFamily] ? FONT_MAP[form.fontFamily] : 'inherit';
+
+  let uploadedImages = [];
+  try {
+    if (form.images) uploadedImages = JSON.parse(form.images);
+  } catch (e) {}
+
   return (
     <div style={{...styles.container, backgroundColor: form.backgroundColor ? form.backgroundColor + '20' : '#F3F4F6'}}>
-      <div style={{...styles.card, backgroundColor: form.backgroundColor || 'white', color: form.textColor || '#111827', fontFamily: form.fontFamily && form.fontFamily !== 'Default' ? form.fontFamily : 'inherit'}}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Varela+Round&display=swap" rel="stylesheet" />
+      <div style={{...styles.card, backgroundColor: form.backgroundColor || 'white', color: form.textColor || '#111827', fontFamily: currentFont}}>
+        
+        {uploadedImages.length > 0 && (
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px' }}>
+            {uploadedImages.map((src, i) => (
+              <img key={i} src={src} alt="Form visual" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
+            ))}
+          </div>
+        )}
+
         <h1 style={{...styles.title, color: form.textColor || '#111827'}}>{form.title}</h1>
         {form.description && <p style={{...styles.description, color: form.textColor || '#4B5563'}}>{form.description}</p>}
         
@@ -158,7 +182,7 @@ export default function PublicForm() {
           </button>
 
           {!form.removeBranding && (
-            <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', opacity: 0.7 }}>
+            <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', opacity: 0.8, color: form.textColor || '#111827' }}>
               Powered by <strong>TrustStars</strong>
             </div>
           )}
@@ -220,13 +244,15 @@ const styles = {
     borderRadius: '6px',
     border: '1px solid #D1D5DB',
     fontSize: '16px',
+    fontFamily: 'inherit',
     outline: 'none',
     transition: 'border-color 0.2s',
     width: '100%',
     boxSizing: 'border-box'
   },
   textarea: {
-    resize: 'vertical'
+    resize: 'vertical',
+    fontFamily: 'inherit'
   },
   inputError: {
     borderColor: '#EF4444'
@@ -244,6 +270,7 @@ const styles = {
     border: 'none',
     fontSize: '16px',
     fontWeight: '500',
+    fontFamily: 'inherit',
     cursor: 'pointer',
     marginTop: '10px',
     transition: 'background-color 0.2s'
