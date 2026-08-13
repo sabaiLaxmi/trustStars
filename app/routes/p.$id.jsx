@@ -156,6 +156,12 @@ export default function PublicForm() {
           >
             {isSubmitting ? "Submitting..." : (form.submitText || "Submit")}
           </button>
+
+          {!form.removeBranding && (
+            <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', opacity: 0.7 }}>
+              Powered by <strong>TrustStars</strong>
+            </div>
+          )}
         </form>
       </div>
     </div>

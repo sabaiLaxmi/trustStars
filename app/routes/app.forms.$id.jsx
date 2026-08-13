@@ -390,12 +390,16 @@ export default function FormEditor() {
                         padding: '16px', 
                         backgroundColor: bgColor, 
                         color: textColor, 
+                        fontFamily: selectedFont !== 'Default' ? selectedFont : 'inherit',
                         borderRadius: '8px', 
                         textAlign: 'center',
                         border: '1px solid #e3e3e3'
                       }}>
                         <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Live Preview</div>
                         <div style={{ fontSize: '14px', opacity: 0.9 }}>This is how your form will look.</div>
+                        {!removeBranding && (
+                          <div style={{ marginTop: '16px', fontSize: '12px', opacity: 0.7 }}>Powered by <strong>TrustStars</strong></div>
+                        )}
                       </div>
 
                       {/* Presets */}
@@ -498,7 +502,19 @@ export default function FormEditor() {
                     <Modal.Section>
                       <InlineStack gap="400">
                         {["Minimal", "Bold", "Classic"].map(theme => (
-                          <div key={theme} role="button" tabIndex={0} onKeyDown={() => setSelectedTheme(theme)} onClick={() => setSelectedTheme(theme)}
+                          <div key={theme} role="button" tabIndex={0} 
+                            onKeyDown={() => {
+                              setSelectedTheme(theme);
+                              if (theme === "Minimal") { setBgColor("#FFFFFF"); setTextColor("#000000"); setSelectedFont("Default"); }
+                              if (theme === "Bold") { setBgColor("#000000"); setTextColor("#FFFFFF"); setSelectedFont("Modern"); }
+                              if (theme === "Classic") { setBgColor("#F4F6F8"); setTextColor("#333333"); setSelectedFont("Serif"); }
+                            }} 
+                            onClick={() => {
+                              setSelectedTheme(theme);
+                              if (theme === "Minimal") { setBgColor("#FFFFFF"); setTextColor("#000000"); setSelectedFont("Default"); }
+                              if (theme === "Bold") { setBgColor("#000000"); setTextColor("#FFFFFF"); setSelectedFont("Modern"); }
+                              if (theme === "Classic") { setBgColor("#F4F6F8"); setTextColor("#333333"); setSelectedFont("Serif"); }
+                            }}
                             style={{ 
                               padding: '24px', 
                               border: selectedTheme === theme ? '2px solid #000' : '1px solid #ccc',
