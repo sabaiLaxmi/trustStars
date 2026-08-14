@@ -48,7 +48,7 @@ export default function Pricing() {
               <Card>
                   <BlockStack gap="400">
                     <Text as="h2" variant="headingLg">Starter</Text>
-                    <Text as="p" variant="headingXl" fontWeight="bold">$4.99 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
+                    <Text as="p" variant="headingXl" fontWeight="bold">$20 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
                     <Text as="p" tone="subdued">Perfect for growing stores</Text>
                     
                     <Box paddingBlockStart="400" paddingBlockEnd="400" minHeight="300px">
@@ -114,7 +114,7 @@ export default function Pricing() {
                     <Text as="h2" variant="headingLg">Pro</Text>
                     <Badge tone="success">Most Popular</Badge>
                   </InlineStack>
-                  <Text as="p" variant="headingXl" fontWeight="bold">$9.99 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
+                  <Text as="p" variant="headingXl" fontWeight="bold">$25 <Text as="span" variant="bodyLg" tone="subdued">/ month</Text></Text>
                   <Text as="p" tone="subdued">For scaling businesses</Text>
                   
                   <Box paddingBlockStart="400" paddingBlockEnd="400" minHeight="300px">

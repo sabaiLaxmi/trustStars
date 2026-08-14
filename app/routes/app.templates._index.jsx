@@ -17,8 +17,12 @@ export const loader = async ({ request }) => {
     where: { shop: session.shop },
     select: { templateId: true }
   });
+  
+  const shopData = await db.shop.findUnique({ where: { id: session.shop } });
+  const currentPlan = shopData?.plan || "FREE";
+  
   const wishlistedIds = wishlistedTemplates.map(w => w.templateId);
-  return { wishlistedIds };
+  return { wishlistedIds, currentPlan };
 };
 
 export const action = async ({ request }) => {
@@ -56,7 +60,7 @@ const containerVariants = {
 
 export default function Index() {
   const navigate = useNavigate();
-  const { wishlistedIds } = useLoaderData();
+  const { wishlistedIds, currentPlan } = useLoaderData();
 
   return (
     <Page title="Form Template Gallery" fullWidth>
@@ -69,6 +73,7 @@ export default function Index() {
                   template={template} 
                   navigate={navigate} 
                   initialWishlisted={wishlistedIds.includes(template.id)} 
+                  currentPlan={currentPlan}
                 />
             ))}
           </div>

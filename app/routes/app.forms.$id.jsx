@@ -6,7 +6,6 @@ import { Page, Layout, Card, TextField, Button, BlockStack, Text, Checkbox, Bann
 import { LockIcon, DeleteIcon } from "@shopify/polaris-icons";
 import db from "../db.server";
 import { templates } from "../data/templates";
-import { CURRENT_PLAN } from "../config/billing";
 
 const FONT_MAP = {
   'Serif': 'Georgia, serif',
@@ -22,6 +21,9 @@ export const links = () => [
 export const loader = async ({ request, params }) => {
   const { session } = await authenticate.admin(request);
   const formId = params.id;
+  
+  const shopData = await db.shop.findUnique({ where: { id: session.shop } });
+  const currentPlan = shopData?.plan || "FREE";
 
   const form = await db.form.findFirst({
     where: { id: formId, shop: session.shop },
@@ -32,7 +34,7 @@ export const loader = async ({ request, params }) => {
     throw new Response("Form Not Found", { status: 404 });
   }
 
-  return { form };
+  return { form, currentPlan };
 };
 
 export const action = async ({ request, params }) => {
@@ -69,8 +71,6 @@ export const action = async ({ request, params }) => {
 
   const status = intent === "publish" ? "PUBLISHED" : "DRAFT";
 
-  console.log("Saving images to DB. Type:", typeof images, "Value:", images ? images.substring(0, 100) + "..." : images);
-
   await db.$transaction([
     db.formField.deleteMany({ where: { formId } }),
     db.form.update({
@@ -103,7 +103,7 @@ export const action = async ({ request, params }) => {
 };
 
 export default function FormEditor() {
-  const { form } = useLoaderData();
+  const { form, currentPlan } = useLoaderData();
   const actionData = useActionData();
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -111,11 +111,11 @@ export default function FormEditor() {
 
   const template = templates.find(t => t.id === form.templateId) || templates[0];
   
-  const hasStarter = true; // temporarily unlocked // template.plan === "BASIC" || template.plan === "PRO";
-  const hasPro = true; // temporarily unlocked // template.plan === "PRO";
-  const submissionLimit = CURRENT_PLAN === "FREE" ? 50 : CURRENT_PLAN === "STARTER" ? 150 : "Unlimited";
+  const hasStarter = currentPlan === "STARTER" || currentPlan === "PRO";
+  const hasPro = currentPlan === "PRO";
+  const submissionLimit = currentPlan === "FREE" ? 50 : currentPlan === "STARTER" ? 150 : "Unlimited";
 
-  const imageLimit = template.imageLimit || 0;
+  const imageLimit = currentPlan === "PRO" ? 100 : 2;
 
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description || "");
@@ -130,7 +130,6 @@ export default function FormEditor() {
   const [showToast, setShowToast] = useState(false);
   const [showPublishToast, setShowPublishToast] = useState(false);
 
-  // New state variables for UI interactivity
   const [selectedFont, setSelectedFont] = useState(form.fontFamily || "Default");
   const [isFontOpen, setIsFontOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("Minimal");
@@ -163,8 +162,6 @@ export default function FormEditor() {
       }
     }
   }, [actionData]);
-
-      
 
   const updateField = (index, key, value) => {
     const newFields = [...fields];
@@ -204,7 +201,7 @@ export default function FormEditor() {
       reader.readAsDataURL(file);
     });
     
-    e.target.value = null; // reset input
+    e.target.value = null;
   };
 
   const removeImage = (index) => {
@@ -354,7 +351,6 @@ export default function FormEditor() {
               <BlockStack gap="400">
                 <Text variant="headingMd" as="h2">Form Settings & Customization</Text>
                 
-                {/* Font Customization */}
                 <BlockStack gap="200">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
@@ -386,7 +382,6 @@ export default function FormEditor() {
 
                 <Divider />
 
-                {/* Design & Colors Customization */}
                 <BlockStack gap="400">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
@@ -398,7 +393,6 @@ export default function FormEditor() {
                   
                   <div style={{ opacity: hasStarter ? 1 : 0.5, pointerEvents: hasStarter ? 'auto' : 'none' }}>
                     <BlockStack gap="400">
-                      {/* Live Preview */}
                       <div style={{ 
                         padding: '16px', 
                         backgroundColor: bgColor, 
@@ -422,7 +416,6 @@ export default function FormEditor() {
                         )}
                       </div>
 
-                      {/* Presets */}
                       <BlockStack gap="200">
                         <InlineStack align="space-between" blockAlign="center">
                           <Text variant="headingSm" as="h3">Choose a Design</Text>
@@ -453,7 +446,6 @@ export default function FormEditor() {
 
                       <Divider />
 
-                      {/* Text Color Row */}
                       <BlockStack gap="200">
                         <Text variant="headingSm" as="h3">Text Color</Text>
                         <InlineStack gap="200">
@@ -470,7 +462,6 @@ export default function FormEditor() {
                         </InlineStack>
                       </BlockStack>
 
-                      {/* Background Color Row */}
                       <BlockStack gap="200">
                         <Text variant="headingSm" as="h3">Background Color</Text>
                         <InlineStack gap="200">
@@ -487,7 +478,6 @@ export default function FormEditor() {
                         </InlineStack>
                       </BlockStack>
 
-                      {/* Save Custom Design */}
                       {isCustomCombo && (
                         <Box paddingBlockStart="200">
                           <InlineStack>
@@ -501,7 +491,6 @@ export default function FormEditor() {
 
                 <Divider />
 
-                {/* Theme Access */}
                 <BlockStack gap="200">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
@@ -665,7 +654,7 @@ export default function FormEditor() {
                     <Text>Form Submissions</Text>
                     <Text fontWeight="bold">0 / {submissionLimit}</Text>
                   </InlineStack>
-                  {CURRENT_PLAN !== "PRO" && (
+                  {currentPlan !== "PRO" && (
                     <ProgressBar progress={0} tone="primary" />
                   )}
                   <Text tone="subdued" variant="bodySm">

@@ -10,9 +10,9 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
 };
 
-import { CURRENT_PLAN } from "../config/billing";
 
-const PLAN_LEVELS = { FREE: 1, BASIC: 2, PRO: 3 };
+
+const PLAN_LEVELS = { FREE: 1, STARTER: 2, BASIC: 2, PRO: 3 };
 
 const categoryColors = {
   "Customer Support": { bg: "#FEF3C7", icon: "#D97706" }, // Amber
@@ -21,7 +21,7 @@ const categoryColors = {
   "Store Operations": { bg: "#CCFBF1", icon: "#0D9488" } // Teal
 };
 
-export function TemplateCard({ template, navigate, initialWishlisted = false }) {
+export function TemplateCard({ template, navigate, initialWishlisted = false, currentPlan = "FREE" }) {
   const IconComponent = LucideIcons[template.iconName] || LucideIcons.FileText;
   const submit = useSubmit();
   const fetcher = useFetcher();
@@ -42,7 +42,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false }) 
     );
   }, [fetcher, isWishlisted, template.id]);
 
-  const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[CURRENT_PLAN];
+  const isUpgradeRequired = PLAN_LEVELS[template.plan] > PLAN_LEVELS[currentPlan];
 
   const handleUseTemplate = useCallback(() => {
     if (isUpgradeRequired) {
@@ -347,5 +347,6 @@ TemplateCard.propTypes = {
     description: PropTypes.string
   }).isRequired,
   navigate: PropTypes.func.isRequired,
-  initialWishlisted: PropTypes.bool
+  initialWishlisted: PropTypes.bool,
+  currentPlan: PropTypes.string
 };

@@ -93,3 +93,8 @@ model TemplateWishlist {
 
   @@unique([shop, templateId])
 }
+
+model Shop {
+  id    String @id
+  plan  String @default("FREE")
+}

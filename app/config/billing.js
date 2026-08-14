@@ -1,1 +1,2 @@
-export const CURRENT_PLAN = "PRO"; // Global mock for merchant's actual plan
+// Export actual billing constants here in the future
+
