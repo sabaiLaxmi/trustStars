@@ -8,18 +8,18 @@ import { motion } from "framer-motion";
 import galleryStyles from "../styles/gallery.css?url";
 import { TemplateCard } from "../components/TemplateCard";
 import db from "../db.server";
+import { verifyAndSyncPlan } from "../utils/billing.server";
 
 export const links = () => [{ rel: "stylesheet", href: galleryStyles }];
 
 export const loader = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
   const wishlistedTemplates = await db.templateWishlist.findMany({
     where: { shop: session.shop },
     select: { templateId: true }
   });
   
-  const shopData = await db.shop.findUnique({ where: { id: session.shop } });
-  const currentPlan = shopData?.plan || "FREE";
+  const currentPlan = await verifyAndSyncPlan(admin, session);
   
   const wishlistedIds = wishlistedTemplates.map(w => w.templateId);
   return { wishlistedIds, currentPlan };

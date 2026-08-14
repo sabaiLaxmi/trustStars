@@ -6,6 +6,7 @@ import { Page, Layout, Card, TextField, Button, BlockStack, Text, Checkbox, Bann
 import { LockIcon, DeleteIcon } from "@shopify/polaris-icons";
 import db from "../db.server";
 import { templates } from "../data/templates";
+import { verifyAndSyncPlan } from "../utils/billing.server";
 
 const FONT_MAP = {
   'Serif': 'Georgia, serif',
@@ -19,11 +20,10 @@ export const links = () => [
 ];
 
 export const loader = async ({ request, params }) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
   const formId = params.id;
   
-  const shopData = await db.shop.findUnique({ where: { id: session.shop } });
-  const currentPlan = shopData?.plan || "FREE";
+  const currentPlan = await verifyAndSyncPlan(admin, session);
 
   const form = await db.form.findFirst({
     where: { id: formId, shop: session.shop },

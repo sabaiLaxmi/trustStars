@@ -1,17 +1,137 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { useRouteError } from "react-router";
-import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid } from "@shopify/polaris";
+import { useRouteError, useSubmit, useNavigation, useActionData, useLoaderData } from "react-router";
+import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid, Banner } from "@shopify/polaris";
+import db from "../db.server";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
-  return null;
+  const { session, billing, admin } = await authenticate.admin(request);
+  const url = new URL(request.url);
+  const chargeId = url.searchParams.get("charge_id");
+
+  let error = null;
+
+  // Handle return from billing approval
+  if (chargeId) {
+    try {
+      const response = await admin.graphql(`
+        query {
+          currentAppInstallation {
+            activeSubscriptions {
+              id
+              name
+              status
+            }
+          }
+        }
+      `);
+      const { data } = await response.json();
+      const activeSubscriptions = data?.currentAppInstallation?.activeSubscriptions || [];
+      
+      const targetSub = activeSubscriptions.find(sub => 
+        (sub.name === "Starter" || sub.name === "Pro") && sub.status === "ACTIVE"
+      );
+
+      if (targetSub) {
+        // Confirm and persist plan
+        await db.shop.update({
+          where: { id: session.shop },
+          data: {
+            plan: targetSub.name === "Starter" ? "STARTER" : "PRO",
+            subscriptionId: targetSub.id
+          }
+        });
+      } else {
+        error = "Upgrade was not completed.";
+      }
+    } catch (err) {
+      console.error("Error verifying subscription:", err);
+      error = "Failed to verify subscription status. Please try again.";
+    }
+  }
+
+  const shop = await db.shop.findUnique({ where: { id: session.shop } });
+  const currentPlan = shop?.plan || "FREE";
+
+  return { currentPlan, error };
+};
+
+export const action = async ({ request }) => {
+  const { session, billing, admin } = await authenticate.admin(request);
+  const formData = await request.formData();
+  const plan = formData.get("plan"); // "Starter" or "Pro"
+  
+  if (plan !== "Starter" && plan !== "Pro") {
+    return { error: "Invalid plan selected" };
+  }
+
+  try {
+    const shop = await db.shop.findUnique({ where: { id: session.shop } });
+    
+    // Step 4: Handle plan changes by cancelling existing subscription first
+    if (shop?.subscriptionId) {
+      const response = await admin.graphql(`
+        mutation appSubscriptionCancel($id: ID!) {
+          appSubscriptionCancel(id: $id) {
+            appSubscription {
+              id
+              status
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      `, {
+        variables: { id: shop.subscriptionId }
+      });
+      const data = await response.json();
+      if (data?.data?.appSubscriptionCancel?.userErrors?.length > 0) {
+        console.error("Error cancelling existing subscription:", data.data.appSubscriptionCancel.userErrors);
+      }
+    }
+
+    // Step 1: Trigger subscription request
+    await billing.request({
+      plan: plan,
+      isTest: true,
+      returnUrl: \`\${process.env.SHOPIFY_APP_URL}/app/pricing\`
+    });
+  } catch (error) {
+    console.error("Billing request error:", error);
+    // If it's a redirect error from billing.request, throw it so Remix can redirect
+    if (error instanceof Response) {
+      throw error;
+    }
+    return { error: "Failed to initiate billing request. Please try again." };
+  }
 };
 
 export default function Pricing() {
+  const { currentPlan, error: loaderError } = useLoaderData();
+  const actionData = useActionData();
+  const submit = useSubmit();
+  const navigation = useNavigation();
+
+  const isUpgrading = navigation.state === "submitting" || navigation.state === "loading";
+  
+  const handleUpgrade = (plan) => {
+    submit({ plan }, { method: "post" });
+  };
+
+  const error = loaderError || actionData?.error;
+
   return (
     <Page title="Pricing Plans" subtitle="Choose the right plan for your business.">
       <Layout>
+        {error && (
+          <Layout.Section>
+            <Banner tone="warning">
+              <p>{error}</p>
+            </Banner>
+          </Layout.Section>
+        )}
         <Layout.Section>
           <InlineGrid columns={{ xs: 1, md: 3 }} gap="400" alignItems="start">
             {/* Free Plan */}
@@ -39,7 +159,7 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button disabled fullWidth>Current Plan</Button>
+                    <Button disabled fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free (Coming Soon)"}</Button>
                   </BlockStack>
                 </Card>
             </div>
@@ -92,7 +212,13 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button variant="secondary" onClick={() => shopify.toast.show('Billing integration coming soon')} fullWidth>Upgrade to Starter</Button>
+                    {currentPlan === "STARTER" ? (
+                      <Button disabled fullWidth>Current Plan</Button>
+                    ) : currentPlan === "PRO" ? (
+                      <Button onClick={() => handleUpgrade("Starter")} disabled={isUpgrading} fullWidth>Downgrade to Starter</Button>
+                    ) : (
+                      <Button variant="primary" onClick={() => handleUpgrade("Starter")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Starter</Button>
+                    )}
                   </BlockStack>
                 </Card>
             </div>
@@ -164,7 +290,11 @@ export default function Pricing() {
                     </List>
                   </Box>
                   
-                  <Button variant="primary" onClick={() => shopify.toast.show('Billing integration coming soon')} fullWidth>Upgrade to Pro</Button>
+                  {currentPlan === "PRO" ? (
+                    <Button disabled fullWidth>Current Plan</Button>
+                  ) : (
+                    <Button variant="primary" onClick={() => handleUpgrade("Pro")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Pro</Button>
+                  )}
                 </BlockStack>
               </Card>
             </div>

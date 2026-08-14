@@ -95,6 +95,7 @@ model TemplateWishlist {
 }
 
 model Shop {
-  id    String @id
-  plan  String @default("FREE")
+  id             String  @id
+  plan           String  @default("FREE")
+  subscriptionId String?
 }
