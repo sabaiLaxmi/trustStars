@@ -69,6 +69,8 @@ export const action = async ({ request, params }) => {
 
   const status = intent === "publish" ? "PUBLISHED" : "DRAFT";
 
+  console.log("Saving images to DB. Type:", typeof images, "Value:", images ? images.substring(0, 100) + "..." : images);
+
   await db.$transaction([
     db.formField.deleteMany({ where: { formId } }),
     db.form.update({
@@ -406,6 +408,13 @@ export default function FormEditor() {
                         textAlign: 'center',
                         border: '1px solid #e3e3e3'
                       }}>
+                        {uploadedImages.length > 0 && (
+                          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px' }}>
+                            {uploadedImages.map((src, i) => (
+                              <img key={i} src={src} alt="Form visual preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
+                            ))}
+                          </div>
+                        )}
                         <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Live Preview</div>
                         <div style={{ fontSize: '14px', opacity: 0.9 }}>This is how your form will look.</div>
                         {!removeBranding && (
