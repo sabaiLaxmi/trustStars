@@ -1,22 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 async function test() {
-  const db = prisma;
   try {
-    const form = await db.form.create({
-      data: {
-        shop: 'truststars-pmrpinot.myshopify.com',
-        title: 'Test Template',
-        description: 'Test',
-        submitText: 'Submit',
-        templateId: 1,
-        fields: {
-          create: [{ type: 'TEXT', label: 'Full Name', placeholder: 'Jane Doe', required: true, order: 0 }]
-        }
+    const forms = await prisma.form.findMany({
+      select: {
+        id: true,
+        title: true,
+        images: true,
+        templateId: true
       }
     });
-    console.log('Success:', form.id);
-    await db.form.delete({ where: { id: form.id } });
+    const sanitizedForms = forms.map(f => ({
+      ...f,
+      images: f.images ? `${f.images.substring(0, 100)}... (length: ${f.images.length})` : null
+    }));
+    console.log('Forms:', JSON.stringify(sanitizedForms, null, 2));
   } catch (e) {
     console.error('Error:', e);
   } finally {
