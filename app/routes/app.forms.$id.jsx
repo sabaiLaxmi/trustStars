@@ -115,7 +115,7 @@ export default function FormEditor() {
   const hasPro = currentPlan === "PRO";
   const submissionLimit = currentPlan === "FREE" ? 50 : currentPlan === "STARTER" ? 150 : "Unlimited";
 
-  const imageLimit = currentPlan === "PRO" ? 100 : 2;
+  const imageLimit = currentPlan === "PRO" ? 3 : currentPlan === "STARTER" ? 2 : 0;
 
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description || "");
