@@ -8,6 +8,17 @@ import db from "../db.server";
 import { templates } from "../data/templates";
 import { CURRENT_PLAN } from "../config/billing";
 
+const FONT_MAP = {
+  'Serif': 'Georgia, serif',
+  'Rounded': '"Varela Round", "Nunito", ui-rounded, sans-serif',
+  'Modern': '"Inter", "Roboto", "Helvetica Neue", sans-serif',
+  'Default': 'inherit'
+};
+
+export const links = () => [
+  { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Varela+Round&display=swap" }
+];
+
 export const loader = async ({ request, params }) => {
   const { session } = await authenticate.admin(request);
   const formId = params.id;
@@ -390,7 +401,7 @@ export default function FormEditor() {
                         padding: '16px', 
                         backgroundColor: bgColor, 
                         color: textColor, 
-                        fontFamily: selectedFont !== 'Default' ? selectedFont : 'inherit',
+                        fontFamily: selectedFont && FONT_MAP[selectedFont] ? FONT_MAP[selectedFont] : 'inherit',
                         borderRadius: '8px', 
                         textAlign: 'center',
                         border: '1px solid #e3e3e3'
