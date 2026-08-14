@@ -105,7 +105,7 @@ export const action = async ({ request }) => {
     await billing.request({
       plan: plan,
       isTest: true,
-      returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing`
+      returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing?shop=${session.shop}`
     });
   } catch (error) {
     console.error("Billing request error:", error);
