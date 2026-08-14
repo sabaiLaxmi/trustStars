@@ -127,7 +127,7 @@ export default function PublicForm() {
         {uploadedImages.length > 0 && (
           <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px' }}>
             {uploadedImages.map((src, i) => (
-              <img key={i} src={src} alt="Form visual" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
+              <img key={i} src={`../api/image?formId=${form.id}&index=${i}`} alt="Form visual" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
             ))}
           </div>
         )}
