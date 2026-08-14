@@ -99,6 +99,9 @@ export const action = async ({ request, params }) => {
     })
   ]);
 
+  console.log(`[DEBUG UPLOAD] Form ID: ${formId}`);
+  console.log(`[DEBUG UPLOAD] Saved images data (first 100 chars): ${images ? images.substring(0, 100) : 'null'}`);
+
   return { success: true, status };
 };
 
