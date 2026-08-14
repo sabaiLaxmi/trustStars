@@ -125,27 +125,11 @@ export default function PublicForm() {
       <div style={{...styles.card, backgroundColor: form.backgroundColor || 'white', color: form.textColor || '#111827', fontFamily: currentFont}}>
         
         {uploadedImages.length > 0 && (
-          <div id="proxy-images-container" style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px' }}>
-            {uploadedImages.map((_, i) => (
-              <img key={i} id={`proxy-image-${i}`} alt="Form visual" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px' }}>
+            {uploadedImages.map((src, i) => (
+              <img key={i} src={`../api/image?formId=${form.id}&index=${i}`} alt="Form visual" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', objectFit: 'cover', flex: 1, minWidth: 0 }} />
             ))}
           </div>
-        )}
-        
-        {uploadedImages.length > 0 && (
-          <script dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var images = ${JSON.stringify(uploadedImages)};
-                for (var i = 0; i < images.length; i++) {
-                  var img = document.getElementById('proxy-image-' + i);
-                  if (img) {
-                    img.src = images[i];
-                  }
-                }
-              })();
-            `
-          }} />
         )}
 
         <h1 style={{...styles.title, color: form.textColor || '#111827'}}>{form.title}</h1>
