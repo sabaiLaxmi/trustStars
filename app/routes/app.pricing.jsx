@@ -13,6 +13,9 @@ export const loader = async ({ request }) => {
 
   // Handle return from billing approval
   if (chargeId) {
+    console.log("====== BILLING REDIRECT RECEIVED ======");
+    console.log("Charge ID:", chargeId);
+    
     try {
       const response = await admin.graphql(`
         query {
@@ -26,6 +29,8 @@ export const loader = async ({ request }) => {
         }
       `);
       const { data } = await response.json();
+      console.log("GraphQL Data:", JSON.stringify(data, null, 2));
+      
       const activeSubscriptions = data?.currentAppInstallation?.activeSubscriptions || [];
       
       const targetSub = activeSubscriptions.find(sub => 
@@ -45,7 +50,11 @@ export const loader = async ({ request }) => {
         error = "Upgrade was not completed.";
       }
     } catch (err) {
-      console.error("Error verifying subscription:", err);
+      console.error("====== BILLING VERIFICATION ERROR ======");
+      console.error("Message:", err.message);
+      console.error("Full Error Object:", JSON.stringify(err, null, 2));
+      console.error("Stack Trace:", err.stack);
+      console.error("========================================");
       error = "Failed to verify subscription status. Please try again.";
     }
   }
