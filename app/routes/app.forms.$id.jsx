@@ -49,35 +49,19 @@ export const action = async ({ request, params }) => {
     throw new Response("Form Not Found", { status: 404 });
   }
 
-  let intent, title, description, submitText, fieldsJson, accentColor, backgroundColor, textColor, fontFamily, removeBranding, images;
+  const formData = await request.formData();
+  let intent = formData.get("intent");
+  let title = formData.get("title");
+  let description = formData.get("description");
+  let submitText = formData.get("submitText");
+  let fieldsJson = formData.get("fields");
+  let accentColor = formData.get("accentColor");
+  let backgroundColor = formData.get("backgroundColor");
+  let textColor = formData.get("textColor");
+  let fontFamily = formData.get("fontFamily");
+  let removeBranding = formData.get("removeBranding") === "true";
+  let images = formData.get("images");
 
-  if (request.headers.get("content-type")?.includes("application/json")) {
-    const data = await request.json();
-    intent = data.intent;
-    title = data.title;
-    description = data.description;
-    submitText = data.submitText;
-    fieldsJson = data.fields;
-    accentColor = data.accentColor;
-    backgroundColor = data.backgroundColor;
-    textColor = data.textColor;
-    fontFamily = data.fontFamily;
-    removeBranding = data.removeBranding;
-    images = data.images;
-  } else {
-    const formData = await request.formData();
-    intent = formData.get("intent");
-    title = formData.get("title");
-    description = formData.get("description");
-    submitText = formData.get("submitText");
-    fieldsJson = formData.get("fields");
-    accentColor = formData.get("accentColor");
-    backgroundColor = formData.get("backgroundColor");
-    textColor = formData.get("textColor");
-    fontFamily = formData.get("fontFamily");
-    removeBranding = formData.get("removeBranding") === "true";
-    images = formData.get("images");
-  }
 
   let parsedFields = [];
   try {
@@ -159,6 +143,7 @@ export default function FormEditor() {
   const fileInputRef = useRef(null);
   const [removeBranding, setRemoveBranding] = useState(form?.removeBranding || false);
   const [customDesigns, setCustomDesigns] = useState([]);
+  const [saveError, setSaveError] = useState(null);
 
   useEffect(() => {
     setTitle(form?.title || "Untitled Form");
@@ -229,22 +214,40 @@ export default function FormEditor() {
     setUploadedImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSave = (intent) => {
-    const data = {
-      intent,
-      title,
-      description,
-      submitText,
-      accentColor: bgColor,
-      backgroundColor: bgColor,
-      textColor,
-      fontFamily: selectedFont,
-      removeBranding,
-      images: JSON.stringify(uploadedImages),
-      fields: JSON.stringify(fields)
-    };
+  const handleSave = async (intent) => {
+    setSaveError(null);
+    const formData = new FormData();
+    formData.append("intent", intent);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("submitText", submitText);
+    formData.append("accentColor", bgColor);
+    formData.append("backgroundColor", bgColor);
+    formData.append("textColor", textColor);
+    formData.append("fontFamily", selectedFont);
+    formData.append("removeBranding", removeBranding);
+    formData.append("images", JSON.stringify(uploadedImages));
+    formData.append("fields", JSON.stringify(fields));
+
+    // Approximate size check for base64 strings to avoid 413 Payload Too Large silently failing
+    let totalSize = 0;
+    for (let [key, value] of formData.entries()) {
+      if (typeof value === 'string') {
+        totalSize += value.length;
+      }
+    }
     
-    submit(data, { method: "post", encType: "application/json" });
+    // Warn if payload is over ~2.5MB (standard limit is often 3MB-5MB for form-data, better to be safe)
+    if (totalSize > 2.5 * 1024 * 1024) {
+      setSaveError("Images are too large. Please upload smaller images to save successfully.");
+      return;
+    }
+    
+    try {
+      submit(formData, { method: "post" });
+    } catch (e) {
+      setSaveError("Failed to submit form due to a network error.");
+    }
   };
 
   const PRESET_DESIGNS = [
@@ -299,7 +302,14 @@ export default function FormEditor() {
     >
       <Layout>
         <Layout.Section>
-          <BlockStack gap="600">
+          {saveError && (
+            <Box paddingBlockEnd="400">
+              <Banner title="Failed to save form" tone="critical" onDismiss={() => setSaveError(null)}>
+                <p>{saveError}</p>
+              </Banner>
+            </Box>
+          )}
+          <BlockStack gap="400">
             {showToast && (
               <Banner tone="success" onDismiss={() => setShowToast(false)}>
                 Form saved successfully.
