@@ -116,18 +116,19 @@ export default function FormEditor() {
   
   const hasStarter = currentPlan === "STARTER" || currentPlan === "PRO";
   const hasPro = currentPlan === "PRO";
+  const isFree = currentPlan === "FREE";
   const submissionLimit = currentPlan === "FREE" ? 50 : currentPlan === "STARTER" ? 150 : "Unlimited";
 
-  const imageLimit = currentPlan === "PRO" ? 4 : currentPlan === "STARTER" ? 3 : 0;
+  const imageLimit = currentPlan === "PRO" ? 4 : currentPlan === "STARTER" ? 1 : 0;
 
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description || "");
   const [submitText, setSubmitText] = useState(form.submitText || "Submit");
   
-  const DEFAULT_TEXT_COLOR = "#FFFFFF";
-  const DEFAULT_BG_COLOR = "#008060";
-  const [textColor, setTextColor] = useState(form.textColor || DEFAULT_TEXT_COLOR);
-  const [bgColor, setBgColor] = useState(form.backgroundColor || form.accentColor || DEFAULT_BG_COLOR);
+  const DEFAULT_TEXT_COLOR = isFree ? "#000000" : "#FFFFFF";
+  const DEFAULT_BG_COLOR = isFree ? "#FFFFFF" : "#008060";
+  const [textColor, setTextColor] = useState(isFree ? "#000000" : (form.textColor || DEFAULT_TEXT_COLOR));
+  const [bgColor, setBgColor] = useState(isFree ? "#FFFFFF" : (form.backgroundColor || form.accentColor || DEFAULT_BG_COLOR));
   
   const [fields, setFields] = useState(form.fields || []);
   const [showToast, setShowToast] = useState(false);
@@ -146,8 +147,8 @@ export default function FormEditor() {
     setTitle(form?.title || "Untitled Form");
     setDescription(form?.description || "");
     setSubmitText(form?.submitText || "Submit");
-    setBgColor(form?.backgroundColor || form?.accentColor || DEFAULT_BG_COLOR);
-    setTextColor(form?.textColor || DEFAULT_TEXT_COLOR);
+    setBgColor(isFree ? "#FFFFFF" : (form?.backgroundColor || form?.accentColor || DEFAULT_BG_COLOR));
+    setTextColor(isFree ? "#000000" : (form?.textColor || DEFAULT_TEXT_COLOR));
     setSelectedFont(form?.fontFamily || "Default");
     setFields(form?.fields || []);
     setUploadedImages(form?.images ? JSON.parse(form.images) : []);
@@ -419,9 +420,11 @@ export default function FormEditor() {
                         )}
                       </div>
 
-                      <BlockStack gap="200">
-                        <InlineStack align="space-between" blockAlign="center">
-                          <Text variant="headingSm" as="h3">Choose a Design</Text>
+                      {!isFree && (
+                        <>
+                          <BlockStack gap="200">
+                            <InlineStack align="space-between" blockAlign="center">
+                              <Text variant="headingSm" as="h3">Choose a Design</Text>
                           <Button variant="plain" onClick={handleResetDesign}>Reset to Default</Button>
                         </InlineStack>
                         <InlineStack gap="300" wrap>
@@ -447,41 +450,51 @@ export default function FormEditor() {
                         </InlineStack>
                       </BlockStack>
 
-                      <Divider />
+                          <Divider />
+                        </>
+                      )}
 
                       <BlockStack gap="200">
                         <Text variant="headingSm" as="h3">Text Color</Text>
-                        <InlineStack gap="200">
-                          {TEXT_COLORS.map(color => (
-                            <div key={color} role="button" tabIndex={0} onKeyDown={() => setTextColor(color)} onClick={() => setTextColor(color)}
-                              style={{
-                                width: '32px', height: '32px', borderRadius: '50%',
-                                backgroundColor: color, cursor: 'pointer',
-                                border: textColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
-                                boxShadow: textColor === color ? '0 0 0 2px #202223' : 'none'
-                              }}
-                            />
-                          ))}
-                        </InlineStack>
+                        {isFree ? (
+                          <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#000000', border: '3px solid #E5E7EB', boxShadow: '0 0 0 2px #202223' }} />
+                        ) : (
+                          <InlineStack gap="200">
+                            {TEXT_COLORS.map(color => (
+                              <div key={color} role="button" tabIndex={0} onKeyDown={() => setTextColor(color)} onClick={() => setTextColor(color)}
+                                style={{
+                                  width: '32px', height: '32px', borderRadius: '50%',
+                                  backgroundColor: color, cursor: 'pointer',
+                                  border: textColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
+                                  boxShadow: textColor === color ? '0 0 0 2px #202223' : 'none'
+                                }}
+                              />
+                            ))}
+                          </InlineStack>
+                        )}
                       </BlockStack>
 
                       <BlockStack gap="200">
                         <Text variant="headingSm" as="h3">Background Color</Text>
-                        <InlineStack gap="200">
-                          {BG_COLORS.map(color => (
-                            <div key={color} role="button" tabIndex={0} onKeyDown={() => setBgColor(color)} onClick={() => setBgColor(color)}
-                              style={{
-                                width: '32px', height: '32px', borderRadius: '50%',
-                                backgroundColor: color, cursor: 'pointer',
-                                border: bgColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
-                                boxShadow: bgColor === color ? '0 0 0 2px #202223' : 'none'
-                              }}
-                            />
-                          ))}
-                        </InlineStack>
+                        {isFree ? (
+                          <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#FFFFFF', border: '3px solid #E5E7EB', boxShadow: '0 0 0 2px #202223' }} />
+                        ) : (
+                          <InlineStack gap="200">
+                            {BG_COLORS.map(color => (
+                              <div key={color} role="button" tabIndex={0} onKeyDown={() => setBgColor(color)} onClick={() => setBgColor(color)}
+                                style={{
+                                  width: '32px', height: '32px', borderRadius: '50%',
+                                  backgroundColor: color, cursor: 'pointer',
+                                  border: bgColor === color ? '3px solid #E5E7EB' : '1px solid #e3e3e3',
+                                  boxShadow: bgColor === color ? '0 0 0 2px #202223' : 'none'
+                                }}
+                              />
+                            ))}
+                          </InlineStack>
+                        )}
                       </BlockStack>
 
-                      {isCustomCombo && (
+                      {isCustomCombo && !isFree && (
                         <Box paddingBlockStart="200">
                           <InlineStack>
                             <Button onClick={handleSaveCustomDesign}>Save as My Design</Button>
@@ -492,12 +505,13 @@ export default function FormEditor() {
                   </div>
                 </BlockStack>
 
-                <Divider />
+                {!isFree && <Divider />}
 
-                <BlockStack gap="200">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <InlineStack gap="200" blockAlign="center">
-                      <Text tone={hasStarter ? "base" : "subdued"}>Theme Access</Text>
+                {!isFree && (
+                  <BlockStack gap="200">
+                    <InlineStack align="space-between" blockAlign="center">
+                      <InlineStack gap="200" blockAlign="center">
+                        <Text tone={hasStarter ? "base" : "subdued"}>Theme Access</Text>
                       {!hasStarter && <Icon source={LockIcon} tone="subdued" />}
                     </InlineStack>
                     {!hasStarter && <div role="button" tabIndex={0} onKeyDown={() => navigate('/app/pricing')} onClick={() => navigate('/app/pricing')} style={{ cursor: 'pointer' }}><Badge tone="info">Starter</Badge></div>}
@@ -542,12 +556,13 @@ export default function FormEditor() {
                       </InlineStack>
                     </Modal.Section>
                   </Modal>
-                </BlockStack>
+                  </BlockStack>
+                )}
 
-                <Divider />
+                {imageLimit > 0 && !isFree && <Divider />}
 
                 {/* Image Upload */}
-                {imageLimit > 0 && (
+                {imageLimit > 0 && !isFree && (
                   <BlockStack gap="200">
                     <InlineStack align="space-between" blockAlign="center">
                       <InlineStack gap="200" blockAlign="center">
@@ -586,9 +601,10 @@ export default function FormEditor() {
                   </BlockStack>
                 )}
 
-                <Divider />
+                {hasPro && <Divider />}
 
                 {/* Branding Removal */}
+                {hasPro && (
                 <BlockStack gap="200">
                   <InlineStack align="space-between" blockAlign="center">
                     <InlineStack gap="200" blockAlign="center">
@@ -601,6 +617,7 @@ export default function FormEditor() {
                     <Checkbox label="Remove TrustStars branding" checked={removeBranding} onChange={setRemoveBranding} disabled={!hasPro} />
                   </div>
                 </BlockStack>
+                )}
 
               </BlockStack>
             </Card>
