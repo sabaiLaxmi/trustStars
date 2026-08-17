@@ -188,4 +188,4 @@ export const templates = [
       { type: 'TEXTAREA', label: 'Complaint Details', placeholder: 'What happened?', required: true, order: 3 }
     ]
   }
-];
+].sort((a, b) => { const order = { FREE: 1, BASIC: 2, PRO: 3 }; return order[a.plan] - order[b.plan]; });
