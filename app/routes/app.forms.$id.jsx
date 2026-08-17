@@ -687,28 +687,47 @@ export default function FormEditor() {
             <Card>
               <BlockStack gap="400">
                 <Text variant="headingMd" as="h2">Actions</Text>
-                <InlineStack gap="300">
-                  <div style={{ flex: 1 }}>
-                    <Button 
-                      size="large" 
-                      onClick={() => handleSave('draft')} 
-                      loading={isSaving && submitText !== 'Publishing...'} 
-                      fullWidth
-                    >
-                      Save Changes
-                    </Button>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <Button 
-                      size="large" 
-                      onClick={() => handleSave('publish')} 
-                      disabled={isSaving}
-                      fullWidth
-                    >
-                      Publish
-                    </Button>
-                  </div>
-                </InlineStack>
+                <style>{`
+                  .gradient-actions-wrapper button {
+                    background: linear-gradient(to right, orange, blue) !important;
+                    color: white !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                  }
+                  .gradient-actions-wrapper button:hover {
+                    opacity: 0.9 !important;
+                  }
+                  .gradient-actions-wrapper button:disabled {
+                    opacity: 0.5 !important;
+                  }
+                  .gradient-actions-wrapper button svg {
+                    fill: white !important;
+                  }
+                `}</style>
+                <div className="gradient-actions-wrapper">
+                  <InlineStack gap="300">
+                    <div style={{ flex: 1 }}>
+                      <Button 
+                        size="large" 
+                        onClick={() => handleSave('draft')} 
+                        loading={isSaving && submitText !== 'Publishing...'} 
+                        fullWidth
+                      >
+                        Save Changes
+                      </Button>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <Button 
+                        size="large" 
+                        onClick={() => handleSave('publish')} 
+                        disabled={isSaving}
+                        fullWidth
+                      >
+                        Publish
+                      </Button>
+                    </div>
+                  </InlineStack>
+                </div>
               </BlockStack>
             </Card>
 
