@@ -624,48 +624,20 @@ export default function FormEditor() {
                     </Button>
                   </div>
                   <div style={{ flex: 1 }}>
-                    <button
-                      onClick={() => handleSave('publish')}
+                    <Button 
+                      size="large" 
+                      onClick={() => handleSave('publish')} 
                       disabled={isSaving}
-                      style={{
-                        backgroundColor: bgColor,
-                        color: textColor,
-                        width: '100%',
-                        padding: '12px',
-                        borderRadius: '8px',
-                        border: bgColor === '#FFFFFF' ? '1px solid #e3e3e3' : 'none',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        cursor: isSaving ? 'not-allowed' : 'pointer',
-                        opacity: isSaving ? 0.7 : 1,
-                        transition: 'background-color 0.2s',
-                        minHeight: '44px'
-                      }}
+                      fullWidth
                     >
-                      {isSaving ? "Saving..." : "Publish"}
-                    </button>
+                      Publish
+                    </Button>
                   </div>
                 </InlineStack>
               </BlockStack>
             </Card>
 
-            <Card>
-              <BlockStack gap="400">
-                <Text variant="headingMd" as="h2">Usage</Text>
-                <BlockStack gap="200">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <Text>Form Submissions</Text>
-                    <Text fontWeight="bold">0 / {submissionLimit}</Text>
-                  </InlineStack>
-                  {currentPlan !== "PRO" && (
-                    <ProgressBar progress={0} tone="primary" />
-                  )}
-                  <Text tone="subdued" variant="bodySm">
-                    Resets at the end of your billing cycle.
-                  </Text>
-                </BlockStack>
-              </BlockStack>
-            </Card>
+
           </BlockStack>
         </Layout.Section>
       </Layout>
