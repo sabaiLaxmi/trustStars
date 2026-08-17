@@ -198,11 +198,41 @@ export default function FormEditor() {
     filesToProcess.forEach(file => {
       const reader = new FileReader();
       reader.onload = (event) => {
-        newImages.push(event.target.result);
-        processedCount++;
-        if (processedCount === filesToProcess.length) {
-          setUploadedImages(prev => [...prev, ...newImages]);
-        }
+        const img = new Image();
+        img.onload = () => {
+          // Compress large images to max 1200px width/height and 0.8 quality JPEG
+          // This ensures base64 strings stay well under the 1MB text field limit
+          const MAX_SIZE = 1200;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > MAX_SIZE || height > MAX_SIZE) {
+            if (width > height) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            } else {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Output as JPEG to save space (unless it's a small PNG we don't want to compress as much)
+          // Always use jpeg for compression to avoid giant base64 payloads
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          
+          newImages.push(compressedDataUrl);
+          processedCount++;
+          if (processedCount === filesToProcess.length) {
+            setUploadedImages(prev => [...prev, ...newImages]);
+          }
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     });
