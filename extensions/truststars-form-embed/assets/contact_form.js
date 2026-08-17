@@ -85,8 +85,7 @@ function initTrustStarsForms() {
       container.innerHTML = `
         <div class="ts-form-inner" style="background-color: ${bgColor}; color: ${txtColor}; font-family: ${fontFam}; padding: 24px; border-radius: 8px;">
           ${imagesHtml}
-          ${form.title ? `<h3 class="ts-form-title" style="color: ${txtColor}; font-family: ${fontFam};">${form.title}</h3>` : ''}
-          ${form.description ? `<p class="ts-form-description" style="color: ${txtColor}; font-family: ${fontFam};">${form.description}</p>` : ''}
+
           
           <form id="ts-form-${blockId}" class="ts-form" action="/apps/truststars/api/${formId}" method="POST">
             ${fieldsHtml}

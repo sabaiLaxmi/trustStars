@@ -132,8 +132,6 @@ export default function PublicForm() {
           </div>
         )}
 
-        <h1 style={{...styles.title, color: form.textColor || '#111827'}}>{form.title}</h1>
-        {form.description && <p style={{...styles.description, color: form.textColor || '#4B5563'}}>{form.description}</p>}
         
         <form method="post" style={styles.form}>
           {form.fields.map((field) => {

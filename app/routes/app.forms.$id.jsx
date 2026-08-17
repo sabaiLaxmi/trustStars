@@ -244,7 +244,7 @@ export default function FormEditor() {
     }
     
     try {
-      submit(formData, { method: "post" });
+      submit(formData, { method: "post", encType: "multipart/form-data" });
     } catch (e) {
       setSaveError("Failed to submit form due to a network error.");
     }
