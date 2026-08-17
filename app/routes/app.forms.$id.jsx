@@ -49,18 +49,35 @@ export const action = async ({ request, params }) => {
     throw new Response("Form Not Found", { status: 404 });
   }
 
-  const formData = await request.formData();
-  const intent = formData.get("intent");
-  const title = formData.get("title");
-  const description = formData.get("description");
-  const submitText = formData.get("submitText");
-  const fieldsJson = formData.get("fields");
-  const accentColor = formData.get("accentColor");
-  const backgroundColor = formData.get("backgroundColor");
-  const textColor = formData.get("textColor");
-  const fontFamily = formData.get("fontFamily");
-  const removeBranding = formData.get("removeBranding") === "true";
-  const images = formData.get("images");
+  let intent, title, description, submitText, fieldsJson, accentColor, backgroundColor, textColor, fontFamily, removeBranding, images;
+
+  if (request.headers.get("content-type")?.includes("application/json")) {
+    const data = await request.json();
+    intent = data.intent;
+    title = data.title;
+    description = data.description;
+    submitText = data.submitText;
+    fieldsJson = data.fields;
+    accentColor = data.accentColor;
+    backgroundColor = data.backgroundColor;
+    textColor = data.textColor;
+    fontFamily = data.fontFamily;
+    removeBranding = data.removeBranding;
+    images = data.images;
+  } else {
+    const formData = await request.formData();
+    intent = formData.get("intent");
+    title = formData.get("title");
+    description = formData.get("description");
+    submitText = formData.get("submitText");
+    fieldsJson = formData.get("fields");
+    accentColor = formData.get("accentColor");
+    backgroundColor = formData.get("backgroundColor");
+    textColor = formData.get("textColor");
+    fontFamily = formData.get("fontFamily");
+    removeBranding = formData.get("removeBranding") === "true";
+    images = formData.get("images");
+  }
 
   let parsedFields = [];
   try {
@@ -213,20 +230,21 @@ export default function FormEditor() {
   };
 
   const handleSave = (intent) => {
-    const formData = new FormData();
-    formData.append("intent", intent);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("submitText", submitText);
-    formData.append("accentColor", bgColor);
-    formData.append("backgroundColor", bgColor);
-    formData.append("textColor", textColor);
-    formData.append("fontFamily", selectedFont);
-    formData.append("removeBranding", removeBranding);
-    formData.append("images", JSON.stringify(uploadedImages));
-    formData.append("fields", JSON.stringify(fields));
+    const data = {
+      intent,
+      title,
+      description,
+      submitText,
+      accentColor: bgColor,
+      backgroundColor: bgColor,
+      textColor,
+      fontFamily: selectedFont,
+      removeBranding,
+      images: JSON.stringify(uploadedImages),
+      fields: JSON.stringify(fields)
+    };
     
-    submit(formData, { method: "post" });
+    submit(data, { method: "post", encType: "application/json" });
   };
 
   const PRESET_DESIGNS = [
