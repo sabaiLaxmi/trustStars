@@ -198,8 +198,15 @@ html {
 }
 
 @media (max-width: 968px) {
+  body, html {
+    height: auto;
+    overflow: auto;
+  }
+
   .login-container {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
   .login-left {
@@ -222,6 +229,6 @@ html {
   .login-right {
     padding: 2rem;
     border-left: none;
-    align-items: flex-start;
+    align-items: center; /* Changed from flex-start to center for better mobile alignment */
   }
 }
