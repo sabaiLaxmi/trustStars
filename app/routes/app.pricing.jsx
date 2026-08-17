@@ -280,20 +280,14 @@ export default function Pricing() {
                       </List.Item>
                       <List.Item>
                         <InlineStack gap="200" blockAlign="center" wrap={false}>
-                          <Badge tone="info">Coming soon</Badge>
+                          <Badge tone="success">Available now</Badge>
                           <Text as="span">Unlimited form submissions</Text>
                         </InlineStack>
                       </List.Item>
                       <List.Item>
                         <InlineStack gap="200" blockAlign="center" wrap={false}>
-                          <Badge tone="info">Coming soon</Badge>
-                          <Text as="span">Unlimited image uploads</Text>
-                        </InlineStack>
-                      </List.Item>
-                      <List.Item>
-                        <InlineStack gap="200" blockAlign="center" wrap={false}>
-                          <Badge tone="info">Coming soon</Badge>
-                          <Text as="span">Priority support</Text>
+                          <Badge tone="success">Available now</Badge>
+                          <Text as="span">Image upload (up to 4/form)</Text>
                         </InlineStack>
                       </List.Item>
                     </List>
