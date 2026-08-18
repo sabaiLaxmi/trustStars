@@ -203,7 +203,7 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button disabled fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
+                    <Button onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
                   </BlockStack>
                 </Card>
                 </div>
