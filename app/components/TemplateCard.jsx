@@ -93,8 +93,8 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
             flexDirection: 'column', 
             height: '100%',
             background: '#FFF2DB',
-            borderRadius: '20px',
-            boxShadow: '0 10px 30px -10px rgba(0, 128, 96, 0.4)',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px -2px rgba(0, 128, 96, 0.15)',
             overflow: 'hidden',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
@@ -102,7 +102,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
         >
           {/* Large Thumbnail Preview */}
           <div style={{ 
-            height: '200px', 
+            height: '120px', 
             background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
             position: 'relative',
             borderBottom: '1px solid #E5E7EB',
@@ -147,9 +147,9 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
 
             {/* Realistic Form UI Representation */}
             <div style={{
-              marginTop: '32px',
+              marginTop: '16px',
               width: '85%',
-              height: '180px',
+              height: '100px',
               backgroundColor: '#FFFFFF',
               borderRadius: '10px 10px 0 0',
               boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
@@ -243,7 +243,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
           </div>
           
           {/* Content Area */}
-          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
             <InlineStack align="space-between" blockAlign="center">
               <InlineStack gap="200" blockAlign="center">
                 <Badge tone="attention">{template.category}</Badge>
