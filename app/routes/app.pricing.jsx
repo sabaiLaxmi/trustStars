@@ -68,9 +68,9 @@ export const loader = async ({ request }) => {
 export const action = async ({ request }) => {
   const { session, billing, admin } = await authenticate.admin(request);
   const formData = await request.formData();
-  const plan = formData.get("plan"); // "Starter" or "Pro"
+  const plan = formData.get("plan"); // "Starter", "Pro", or "Free"
   
-  if (plan !== "Starter" && plan !== "Pro") {
+  if (plan !== "Starter" && plan !== "Pro" && plan !== "Free") {
     return { error: "Invalid plan selected" };
   }
 
@@ -99,6 +99,14 @@ export const action = async ({ request }) => {
       if (data?.data?.appSubscriptionCancel?.userErrors?.length > 0) {
         console.error("Error cancelling existing subscription:", data.data.appSubscriptionCancel.userErrors);
       }
+    }
+
+    if (plan === "Free") {
+      await db.shop.update({
+        where: { id: session.shop },
+        data: { plan: "FREE", subscriptionId: null }
+      });
+      return { success: true };
     }
 
     // Step 1: Trigger subscription request
@@ -203,7 +211,7 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
+                    <Button variant="primary" onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
                   </BlockStack>
                 </Card>
                 </div>
