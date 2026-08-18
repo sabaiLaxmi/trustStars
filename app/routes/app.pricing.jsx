@@ -242,12 +242,6 @@ export default function Pricing() {
                         <List.Item>
                           <InlineStack gap="200" blockAlign="center" wrap={false}>
                             <Badge tone="success">Available now</Badge>
-                            <Text as="span">Theme access</Text>
-                          </InlineStack>
-                        </List.Item>
-                        <List.Item>
-                          <InlineStack gap="200" blockAlign="center" wrap={false}>
-                            <Badge tone="success">Available now</Badge>
                             <Text as="span">Basic color customization</Text>
                           </InlineStack>
                         </List.Item>
@@ -309,12 +303,6 @@ export default function Pricing() {
                         <InlineStack gap="200" blockAlign="center" wrap={false}>
                           <Badge tone="success">Available now</Badge>
                           <Text as="span">Field add/remove</Text>
-                        </InlineStack>
-                      </List.Item>
-                      <List.Item>
-                        <InlineStack gap="200" blockAlign="center" wrap={false}>
-                          <Badge tone="success">Available now</Badge>
-                          <Text as="span">Full theme customization</Text>
                         </InlineStack>
                       </List.Item>
                       <List.Item>
