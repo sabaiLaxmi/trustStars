@@ -308,6 +308,18 @@ export default function Pricing() {
                       <List.Item>
                         <InlineStack gap="200" blockAlign="center" wrap={false}>
                           <Badge tone="success">Available now</Badge>
+                          <Text as="span">Font customization</Text>
+                        </InlineStack>
+                      </List.Item>
+                      <List.Item>
+                        <InlineStack gap="200" blockAlign="center" wrap={false}>
+                          <Badge tone="success">Available now</Badge>
+                          <Text as="span">Basic color customization</Text>
+                        </InlineStack>
+                      </List.Item>
+                      <List.Item>
+                        <InlineStack gap="200" blockAlign="center" wrap={false}>
+                          <Badge tone="success">Available now</Badge>
                           <Text as="span">Branding removal</Text>
                         </InlineStack>
                       </List.Item>
