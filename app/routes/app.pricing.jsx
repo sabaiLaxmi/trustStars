@@ -236,7 +236,7 @@ export default function Pricing() {
                         <List.Item>
                           <InlineStack gap="200" blockAlign="center" wrap={false}>
                             <Badge tone="success">Available now</Badge>
-                            <Text as="span">Image upload (up to 1/form)</Text>
+                            <Text as="span">1 image uploaded max</Text>
                           </InlineStack>
                         </List.Item>
                         <List.Item>
