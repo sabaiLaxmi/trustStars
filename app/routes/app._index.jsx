@@ -182,7 +182,7 @@ export default function Dashboard() {
                     <Text variant="headingSm" as="h3">Theme Integration</Text>
                     <div style={{ minHeight: '40px' }}>
                       <Text tone="subdued" variant="bodySm">Native App Blocks for Shopify Online Store 2.0.</Text>
-                    </div>>
+                    </div>
                   </BlockStack>
                 </Card>
               </motion.div>
