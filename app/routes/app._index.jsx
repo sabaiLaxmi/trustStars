@@ -144,7 +144,9 @@ export default function Dashboard() {
                   <BlockStack gap="200">
                     <LucideIcons.Wand2 size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Ready-to-use Templates</Text>
-                    <Text tone="subdued" variant="bodySm">Start instantly with professionally designed forms.</Text>
+                    <div style={{ minHeight: '40px' }}>
+                      <Text tone="subdued" variant="bodySm">Start instantly with professionally designed forms.</Text>
+                    </div>
                   </BlockStack>
                 </Card>
               </motion.div>
@@ -154,7 +156,9 @@ export default function Dashboard() {
                   <BlockStack gap="200">
                     <LucideIcons.Settings size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Easy Customization</Text>
-                    <Text tone="subdued" variant="bodySm">Tailor fields and styling directly in Shopify.</Text>
+                    <div style={{ minHeight: '40px' }}>
+                      <Text tone="subdued" variant="bodySm">Tailor fields and styling directly in Shopify.</Text>
+                    </div>
                   </BlockStack>
                 </Card>
               </motion.div>
@@ -164,7 +168,9 @@ export default function Dashboard() {
                   <BlockStack gap="200">
                     <LucideIcons.Smartphone size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Responsive Forms</Text>
-                    <Text tone="subdued" variant="bodySm">Looks perfect on desktop, tablet, and mobile.</Text>
+                    <div style={{ minHeight: '40px' }}>
+                      <Text tone="subdued" variant="bodySm">Looks perfect on desktop, tablet, and mobile.</Text>
+                    </div>
                   </BlockStack>
                 </Card>
               </motion.div>
@@ -174,7 +180,9 @@ export default function Dashboard() {
                   <BlockStack gap="200">
                     <LucideIcons.Store size={20} color="#EA580C" />
                     <Text variant="headingSm" as="h3">Theme Integration</Text>
-                    <Text tone="subdued" variant="bodySm">Native App Blocks for Shopify Online Store 2.0.</Text>
+                    <div style={{ minHeight: '40px' }}>
+                      <Text tone="subdued" variant="bodySm">Native App Blocks for Shopify Online Store 2.0.</Text>
+                    </div>>
                   </BlockStack>
                 </Card>
               </motion.div>
