@@ -92,7 +92,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
             display: 'flex', 
             flexDirection: 'column', 
             height: '100%',
-            background: 'linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%)',
+            background: '#FFF2DB',
             borderRadius: '20px',
             boxShadow: '0 10px 30px -10px rgba(0, 128, 96, 0.4)',
             overflow: 'hidden',
