@@ -1,15 +1,6 @@
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-
-export const loader = async () => {
-  return json({
-    appName: "TrustStars",
-    lastUpdated: new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })
-  });
-};
-
 export default function PrivacyPolicy() {
-  const { appName, lastUpdated } = useLoaderData();
+  const appName = "TrustStars";
+  const lastUpdated = new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
     <div style={{
