@@ -160,6 +160,20 @@ export default function Pricing() {
               background: transparent !important;
               box-shadow: none !important;
             }
+            .upgrade-btn-wrapper button {
+              background: linear-gradient(135deg, #008060 0%, #004d3a 100%) !important;
+              color: white !important;
+              border: none !important;
+              box-shadow: 0 4px 15px rgba(0, 128, 96, 0.4) !important;
+              transition: all 0.2s ease !important;
+            }
+            .upgrade-btn-wrapper button:hover:not([disabled]) {
+              transform: translateY(-2px) scale(1.02) !important;
+              box-shadow: 0 6px 20px rgba(0, 128, 96, 0.6) !important;
+            }
+            .upgrade-btn-wrapper button:active:not([disabled]) {
+              transform: translateY(1px) scale(0.98) !important;
+            }
           `}</style>
           <InlineGrid columns={{ xs: 1, md: 3 }} gap="400" alignItems="start">
             {/* Free Plan */}
@@ -189,7 +203,7 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button disabled fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free (Coming Soon)"}</Button>
+                    <Button disabled fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
                   </BlockStack>
                 </Card>
                 </div>
@@ -222,7 +236,7 @@ export default function Pricing() {
                         <List.Item>
                           <InlineStack gap="200" blockAlign="center" wrap={false}>
                             <Badge tone="success">Available now</Badge>
-                            <Text as="span">Image upload (up to 2/form)</Text>
+                            <Text as="span">Image upload (up to 1/form)</Text>
                           </InlineStack>
                         </List.Item>
                         <List.Item>
@@ -251,7 +265,9 @@ export default function Pricing() {
                     ) : currentPlan === "PRO" ? (
                       <Button onClick={() => handleUpgrade("Starter")} disabled={isUpgrading} fullWidth>Downgrade to Starter</Button>
                     ) : (
-                      <Button variant="primary" onClick={() => handleUpgrade("Starter")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Starter</Button>
+                      <div className="upgrade-btn-wrapper">
+                        <Button variant="primary" onClick={() => handleUpgrade("Starter")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Starter</Button>
+                      </div>
                     )}
                   </BlockStack>
                 </Card>
@@ -325,7 +341,9 @@ export default function Pricing() {
                   {currentPlan === "PRO" ? (
                     <Button disabled fullWidth>Current Plan</Button>
                   ) : (
-                    <Button variant="primary" onClick={() => handleUpgrade("Pro")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Pro</Button>
+                    <div className="upgrade-btn-wrapper">
+                      <Button variant="primary" onClick={() => handleUpgrade("Pro")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Pro</Button>
+                    </div>
                   )}
                 </BlockStack>
               </Card>
