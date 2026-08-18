@@ -142,9 +142,23 @@ export default function Pricing() {
           </Layout.Section>
         )}
         <Layout.Section>
+          <style>{`
+            .pricing-card-container {
+              background: linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%);
+              border-radius: var(--p-border-radius-300, 12px);
+              height: 100%;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .pricing-card-container .Polaris-Card {
+              background: transparent !important;
+              box-shadow: none !important;
+            }
+          `}</style>
           <InlineGrid columns={{ xs: 1, md: 3 }} gap="400" alignItems="start">
             {/* Free Plan */}
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <Box padding={{ xs: "400", md: "0" }}>
+                <div className="pricing-card-container">
               <Card>
                   <BlockStack gap="400">
                     <Text as="h2" variant="headingLg">Free</Text>
@@ -171,9 +185,13 @@ export default function Pricing() {
                     <Button disabled fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free (Coming Soon)"}</Button>
                   </BlockStack>
                 </Card>
+                </div>
+              </Box>
             </div>
             {/* Starter Plan */}
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <Box padding={{ xs: "400", md: "0" }}>
+                <div className="pricing-card-container">
               <Card>
                   <BlockStack gap="400">
                     <Text as="h2" variant="headingLg">Starter</Text>
@@ -230,10 +248,14 @@ export default function Pricing() {
                     )}
                   </BlockStack>
                 </Card>
+                </div>
+              </Box>
             </div>
             
             {/* Pro Plan */}
             <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <Box padding={{ xs: "400", md: "0" }} style={{ height: '100%' }}>
+                <div className="pricing-card-container" style={{ position: 'relative', height: '100%' }}>
               {/* Highlight Border for Pro */}
               <div style={{
                 position: 'absolute',
@@ -300,6 +322,8 @@ export default function Pricing() {
                   )}
                 </BlockStack>
               </Card>
+                </div>
+              </Box>
             </div>
           </InlineGrid>
         </Layout.Section>

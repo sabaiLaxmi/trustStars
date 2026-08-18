@@ -70,6 +70,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
 
   return (
     <>
+      <Box padding={{ xs: "400", md: "0" }} minHeight="100%" width="100%">
       <motion.div 
         variants={itemVariants} 
         whileHover={{ y: -2 }} 
@@ -82,11 +83,206 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
             display: 'flex', 
             flexDirection: 'column', 
             height: '100%',
-            backgroundColor: '#FFFFFF',
+            background: 'linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%)',
             borderRadius: '12px',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
             overflow: 'hidden',
-            border: '1px solid #E5E7EB',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            transition: 'all 0.25s ease'
+          }}
+        >
+          {/* Large Thumbnail Preview */}
+          <div style={{ 
+            height: '200px', 
+            background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+            position: 'relative',
+            borderBottom: '1px solid #E5E7EB',
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start'
+          }}>
+            
+            {/* Floating Feature Badges */}
+            {template.features && template.features.map((feature, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                transition={{ duration: 0.3, delay: idx * 0.1 }}
+                style={{
+                  position: 'absolute',
+                  top: idx === 0 ? '16px' : 'auto',
+                  bottom: idx === 1 ? '16px' : 'auto',
+                  left: idx === 0 ? '16px' : 'auto',
+                  right: idx === 1 ? '16px' : 'auto',
+                  backgroundColor: '#FFFFFF',
+                  padding: '6px 12px',
+                  borderRadius: '100px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                  border: '1px solid #E5E7EB',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  zIndex: 20,
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  color: '#374151'
+                }}
+              >
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: template.previewColor || '#4F46E5' }} />
+                {feature}
+              </motion.div>
+            ))}
+
+            {/* Realistic Form UI Representation */}
+            <div style={{
+              marginTop: '32px',
+              width: '85%',
+              height: '180px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '10px 10px 0 0',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #E5E7EB',
+              borderBottom: 'none',
+              padding: template.hasImagePlaceholder ? '0' : '16px',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}>
+              {template.hasImagePlaceholder && (
+                <div style={{
+                  width: '100%',
+                  height: '60px',
+                  background: 'linear-gradient(45deg, #E2E8F0 0%, #CBD5E1 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px'
+                }}>
+                  <LucideIcons.Image size={20} color="#94A3B8" />
+                </div>
+              )}
+
+              <div style={{ padding: template.hasImagePlaceholder ? '0 16px' : '0', flex: 1 }}>
+                {!template.hasImagePlaceholder && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      backgroundColor: categoryColors[template.category]?.bg || "#E0E7FF",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <IconComponent size={14} color={categoryColors[template.category]?.icon || "#4F46E5"} />
+                    </div>
+                    <div style={{ width: '50%', height: '8px', backgroundColor: '#374151', borderRadius: '4px' }} />
+                  </div>
+                )}
+                
+                {Array.from({ length: Math.min(3, template.fieldsCount || 3) }).map((_, i) => (
+                  <div key={i} style={{ marginBottom: '10px' }}>
+                    <div style={{ width: '30%', height: '6px', backgroundColor: '#9CA3AF', borderRadius: '3px', marginBottom: '4px', opacity: 0.6 }} />
+                    <div style={{ width: '100%', height: '22px', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '4px' }} />
+                  </div>
+                ))}
+                
+                <div style={{ 
+                  width: '100%', 
+                  height: '28px', 
+                  backgroundColor: template.previewColor || '#008060', 
+                  borderRadius: '4px', 
+                  marginTop: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+                }}>
+                  <div style={{ width: '30%', height: '6px', backgroundColor: '#FFFFFF', borderRadius: '3px', opacity: 0.9 }} />
+                </div>
+              </div>
+            </div>
+            
+            {/* Subtle Favorite Icon */}
+            <div 
+              onClick={toggleWishlist}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') toggleWishlist(e); }}
+              style={{ 
+              position: 'absolute', 
+              top: '12px', 
+              right: '12px', 
+              cursor: 'pointer', 
+              zIndex: 10, 
+              background: '#FFFFFF', 
+              padding: '6px', 
+              borderRadius: '50%',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #E5E7EB',
+              transition: 'transform 0.15s ease'
+            }}>
+               <LucideIcons.Heart size={16} color={isWishlisted ? "#EF4444" : "#6D7175"} fill={isWishlisted ? "#EF4444" : "none"} />
+            </div>
+          </div>
+          
+          {/* Content Area */}
+          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+            <InlineStack align="space-between" blockAlign="center">
+              <InlineStack gap="200" blockAlign="center">
+                <Badge tone="attention">{template.category}</Badge>
+                <div 
+                  onClick={(e) => { e.stopPropagation(); navigate('/app/pricing'); }} 
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); navigate('/app/pricing'); } }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {template.plan === "PRO" ? (
+                    <Tooltip content="Available on Pro plan">
+                      <Badge tone="magic">Pro</Badge>
+                    </Tooltip>
+                  ) : template.plan === "BASIC" ? (
+                    <Tooltip content="Available on Starter plan">
+                      <Badge tone="info">Starter</Badge>
+                    </Tooltip>
+                  ) : (
+                    <Badge tone="success">Free</Badge>
+                  )}
+                </div>
+              </InlineStack>
+              
+              <InlineStack gap="100" blockAlign="center">
+                <LucideIcons.Clock size={14} color="#6D7175" />
+                <Text tone="subdued" variant="bodySm">{template.setupTime || '2 mins'}</Text>
+              </InlineStack>
+            </InlineStack>
+            
+      <Box padding={{ xs: "400", md: "0" }} minHeight="100%" width="100%">
+      <motion.div 
+        variants={itemVariants} 
+        whileHover={{ y: -2 }} 
+        transition={{ duration: 0.2 }}
+        style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      >
+        <div 
+          className="gallery-card"
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            height: '100%',
+            background: 'linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%)',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+            overflow: 'hidden',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             transition: 'all 0.25s ease'
           }}
         >
@@ -269,7 +465,6 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
                 {template.name}
               </Text>
             </div>
-            
             <div style={{ marginBottom: '24px' }}>
               <Text as="p" tone="subdued" variant="bodyMd">
                 {template.description}
@@ -294,6 +489,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
           </div>
         </div>
       </motion.div>
+      </Box>
 
       {/* Upgrade Modal */}
       <Modal
