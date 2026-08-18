@@ -128,11 +128,15 @@ export default function Dashboard() {
           </div>
 
           {/* Feature Section */}
+          <style>{`
+            .custom-grid-4 .Polaris-Card {
+              height: 100%;
+            }
+          `}</style>
           <div style={{ marginBottom: '64px' }}>
             <div style={{ marginBottom: '32px', textAlign: 'center' }}>
               <Text variant="headingXl" as="h2">Build forms your way</Text>
             </div>
-            
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="custom-grid-4">
               
               <motion.div variants={itemVariants} style={{ height: '100%' }}>
