@@ -145,9 +145,16 @@ export default function Pricing() {
           <style>{`
             .pricing-card-container {
               background: linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%);
-              border-radius: var(--p-border-radius-300, 12px);
+              border-radius: 20px;
               height: 100%;
               border: 1px solid rgba(255, 255, 255, 0.1);
+              box-shadow: 0 10px 30px -10px rgba(0, 128, 96, 0.4);
+              transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+            .pricing-card-container:hover {
+              transform: translateY(-6px);
+              box-shadow: 0 20px 40px -12px rgba(0, 128, 96, 0.6);
+              border-color: rgba(0, 128, 96, 0.4);
             }
             .pricing-card-container .Polaris-Card {
               background: transparent !important;

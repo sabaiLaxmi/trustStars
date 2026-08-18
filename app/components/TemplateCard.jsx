@@ -70,11 +70,20 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
 
   return (
     <>
+      <style>{`
+        .gallery-card {
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+        .gallery-card:hover {
+          box-shadow: 0 20px 40px -12px rgba(0, 128, 96, 0.6) !important;
+          border-color: rgba(0, 128, 96, 0.4) !important;
+        }
+      `}</style>
       <Box padding={{ xs: "400", md: "0" }} minHeight="100%" width="100%">
       <motion.div 
         variants={itemVariants} 
-        whileHover={{ y: -2 }} 
-        transition={{ duration: 0.2 }}
+        whileHover={{ y: -6 }} 
+        transition={{ duration: 0.3 }}
         style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
       >
         <div 
@@ -84,11 +93,11 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
             flexDirection: 'column', 
             height: '100%',
             background: 'linear-gradient(145deg, rgba(0, 128, 96, 0.15) 0%, rgba(20, 20, 20, 0.6) 100%)',
-            borderRadius: '12px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+            borderRadius: '20px',
+            boxShadow: '0 10px 30px -10px rgba(0, 128, 96, 0.4)',
             overflow: 'hidden',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            transition: 'all 0.25s ease'
+            transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
           }}
         >
           {/* Large Thumbnail Preview */}
