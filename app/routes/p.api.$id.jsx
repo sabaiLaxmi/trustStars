@@ -1,6 +1,7 @@
 import { data } from "react-router";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
+import { sendSubmissionEmail } from "../utils/email.server";
 
 export const handle = { isProxy: true };
 
@@ -119,6 +120,17 @@ export const action = async ({ request, params }) => {
       }
     }
   });
+
+  // Fetch merchant email to send notification
+  const session = await db.session.findFirst({
+    where: { shop: form.shop },
+    orderBy: { expires: 'desc' }
+  });
+
+  if (session && session.email) {
+    // We run this without awaiting to prevent blocking the response
+    sendSubmissionEmail(session.email, form.title, values).catch(console.error);
+  }
 
   return data({ success: true });
 };
