@@ -54,7 +54,7 @@ export async function sendSubmissionEmail(shopEmail, formName, values) {
 
     // Send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"TrustStars Forms" <noreply@truststars.app>',
+      from: '"TrustStars Forms" <onboarding@resend.dev>',
       to: shopEmail, // send to the shop's email
       subject: `New Form Submission: ${formName}`,
       html: htmlContent,
@@ -64,10 +64,13 @@ export async function sendSubmissionEmail(shopEmail, formName, values) {
     
     // Preview only available when sending through an Ethereal account
     if (nodemailer.getTestMessageUrl(info)) {
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      console.log("=========================================");
-      console.log("👉 OPEN THE LINK ABOVE TO VIEW THE EMAIL 👈");
-      console.log("=========================================");
+      const previewUrl = nodemailer.getTestMessageUrl(info);
+      console.error("\n\n\n");
+      console.error("=====================================================");
+      console.error("🚀 EMAIL HAS BEEN SENT SUCCESSFULLY! 🚀");
+      console.error("👉 OPEN THIS LINK TO VIEW IT: " + previewUrl);
+      console.error("=====================================================");
+      console.error("\n\n\n");
     }
 
     return true;

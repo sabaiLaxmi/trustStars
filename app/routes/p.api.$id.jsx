@@ -127,9 +127,11 @@ export const action = async ({ request, params }) => {
     orderBy: { expires: 'desc' }
   });
 
-  if (session && session.email) {
+  if (session) {
+    // If session.email is null, we fallback to the developer's email for testing
+    const targetEmail = session.email || "sabailaxmi04@gmail.com";
     // We run this without awaiting to prevent blocking the response
-    sendSubmissionEmail(session.email, form.title, values).catch(console.error);
+    sendSubmissionEmail(targetEmail, form.title, values).catch(console.error);
   }
 
   return data({ success: true });
