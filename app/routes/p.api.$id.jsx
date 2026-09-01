@@ -156,11 +156,15 @@ export const action = async ({ request, params }) => {
     
     // 1. Send notification to the Merchant
     sendSubmissionEmail(targetEmail, form.title, valuesForEmail).catch(console.error);
-    
-    // 2. Send confirmation to the Submitter (if they provided an email)
-    if (submitterEmail) {
-      sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, valuesForEmail).catch(console.error);
-    }
+  } else {
+    // Session not found in DB, fallback to developer email so merchant still gets notified
+    console.warn("Session not found for shop:", form.shop, "- falling back to default email");
+    sendSubmissionEmail("sabailaxmi04@gmail.com", form.title, valuesForEmail).catch(console.error);
+  }
+  
+  // 2. Send confirmation to the Submitter (if they provided an email) - always run this!
+  if (submitterEmail) {
+    sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, valuesForEmail).catch(console.error);
   }
 
   return data({ success: true });
