@@ -94,14 +94,24 @@ export const action = async ({ request, params }) => {
   // Validation
   const errors = {};
   const values = [];
+  let submitterEmail = null;
 
   for (const field of form.fields) {
     const value = formData.get(field.id) || "";
+    
+    // Check if this field is an email field to send an auto-responder
+    if (field.type === 'EMAIL' || field.label.toLowerCase().includes('email')) {
+      if (value.toString().trim()) {
+        submitterEmail = value.toString().trim();
+      }
+    }
+
     if (field.required && !value.toString().trim()) {
       errors[field.id] = "This field is required";
     }
+    
     values.push({
-      fieldId: field.id,
+      fieldId: field.label || field.id, // Better formatting for the email
       value: value.toString()
     });
   }
@@ -130,8 +140,14 @@ export const action = async ({ request, params }) => {
   if (session) {
     // If session.email is null, we fallback to the developer's email for testing
     const targetEmail = session.email || "sabailaxmi04@gmail.com";
-    // We run this without awaiting to prevent blocking the response
+    
+    // 1. Send notification to the Merchant
     sendSubmissionEmail(targetEmail, form.title, values).catch(console.error);
+    
+    // 2. Send confirmation to the Submitter (if they provided an email)
+    if (submitterEmail) {
+      sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, values).catch(console.error);
+    }
   }
 
   return data({ success: true });
