@@ -35,8 +35,8 @@ export async function sendSubmissionEmail(shopEmail, formName, values) {
       });
     }
 
-    // Determine the sender address (use environment variable if available, else Resend default)
-    const fromAddress = process.env.SMTP_FROM_EMAIL || '"TrustStars Forms" <onboarding@resend.dev>';
+    // Determine the sender address (use environment variable if available, else use the SMTP user email)
+    const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || '"TrustStars Forms" <noreply@truststars.com>';
 
     // Format the email body with a modern, clean HTML design
     let htmlContent = `
