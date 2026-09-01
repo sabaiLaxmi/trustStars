@@ -93,7 +93,8 @@ export const action = async ({ request, params }) => {
 
   // Validation
   const errors = {};
-  const values = [];
+  const valuesForDb = [];
+  const valuesForEmail = [];
   let submitterEmail = null;
 
   for (const field of form.fields) {
@@ -110,8 +111,15 @@ export const action = async ({ request, params }) => {
       errors[field.id] = "This field is required";
     }
     
-    values.push({
-      fieldId: field.label || field.id, // Better formatting for the email
+    // For database: Must use the exact relation field ID
+    valuesForDb.push({
+      fieldId: field.id,
+      value: value.toString()
+    });
+    
+    // For email: Use the human-readable label
+    valuesForEmail.push({
+      fieldId: field.label || field.id,
       value: value.toString()
     });
   }
@@ -121,15 +129,20 @@ export const action = async ({ request, params }) => {
   }
 
   // Save submission
-  await db.submission.create({
-    data: {
-      formId: form.id,
-      shop: form.shop,
-      values: {
-        create: values
+  try {
+    await db.submission.create({
+      data: {
+        formId: form.id,
+        shop: form.shop,
+        values: {
+          create: valuesForDb
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    console.error("Database save error:", err);
+    return data({ error: "Failed to save submission", success: false }, { status: 500 });
+  }
 
   // Fetch merchant email to send notification
   const session = await db.session.findFirst({
@@ -142,11 +155,11 @@ export const action = async ({ request, params }) => {
     const targetEmail = session.email || "sabailaxmi04@gmail.com";
     
     // 1. Send notification to the Merchant
-    sendSubmissionEmail(targetEmail, form.title, values).catch(console.error);
+    sendSubmissionEmail(targetEmail, form.title, valuesForEmail).catch(console.error);
     
     // 2. Send confirmation to the Submitter (if they provided an email)
     if (submitterEmail) {
-      sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, values).catch(console.error);
+      sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, valuesForEmail).catch(console.error);
     }
   }
 
