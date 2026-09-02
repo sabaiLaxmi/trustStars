@@ -161,17 +161,29 @@ function initTrustStarsForms() {
                   
                   if (customerEmail && templateCustomer) {
                     templateParams.to_email = customerEmail;
-                    emailjs.send(serviceId, templateCustomer, templateParams, publicKey).catch(err => {
+                    emailjs.send(serviceId, templateCustomer, templateParams, {
+                      publicKey: publicKey
+                    }).then(() => {
+                      console.log("Customer email sent successfully via EmailJS!");
+                    }).catch(err => {
                       console.error("Failed to send customer email", err);
                     });
                   }
 
                   if (shopEmail && templateMerchant) {
-                    emailjs.send(serviceId, templateMerchant, templateParams, publicKey).catch(err => {
+                    emailjs.send(serviceId, templateMerchant, templateParams, {
+                      publicKey: publicKey
+                    }).then(() => {
+                      console.log("Merchant email sent successfully via EmailJS!");
+                    }).catch(err => {
                       console.error("Failed to send merchant email", err);
                     });
                   }
+                } else {
+                  console.warn("EmailJS skipped: Public Key or Service ID is missing. Please add them in the Shopify Theme Editor.");
                 }
+              } else {
+                console.warn("EmailJS script not loaded.");
               }
             } catch (emailErr) {
               console.error("EmailJS error:", emailErr);
