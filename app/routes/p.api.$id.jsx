@@ -144,28 +144,8 @@ export const action = async ({ request, params }) => {
     return data({ error: "Failed to save submission", success: false }, { status: 500 });
   }
 
-  // Fetch merchant email to send notification
-  const session = await db.session.findFirst({
-    where: { shop: form.shop },
-    orderBy: { expires: 'desc' }
-  });
-
-  if (session) {
-    // If session.email is null, we fallback to the developer's email for testing
-    const targetEmail = session.email || "sabailaxmi04@gmail.com";
-    
-    // 1. Send notification to the Merchant
-    sendSubmissionEmail(targetEmail, form.title, valuesForEmail).catch(console.error);
-  } else {
-    // Session not found in DB, fallback to developer email so merchant still gets notified
-    console.warn("Session not found for shop:", form.shop, "- falling back to default email");
-    sendSubmissionEmail("sabailaxmi04@gmail.com", form.title, valuesForEmail).catch(console.error);
-  }
-  
-  // 2. Send confirmation to the Submitter (if they provided an email) - always run this!
-  if (submitterEmail) {
-    sendSubmissionEmail(submitterEmail, `Confirmation: ${form.title}`, valuesForEmail).catch(console.error);
-  }
+  // Email notifications are now handled reliably by the frontend EmailJS integration
+  // to avoid serverless function timeouts and slow SMTP/Ethereal test accounts.
 
   return data({ success: true });
 };
