@@ -133,6 +133,49 @@ function initTrustStarsForms() {
             formEl.style.display = 'none';
             document.getElementById(`ts-success-${blockId}`).style.display = 'block';
             document.getElementById(`ts-error-${blockId}`).style.display = 'none';
+            
+            try {
+              if (window.emailjs) {
+                const publicKey = wrapper.getAttribute('data-emailjs-public-key');
+                const serviceId = wrapper.getAttribute('data-emailjs-service-id');
+                const templateCustomer = wrapper.getAttribute('data-emailjs-template-customer');
+                const templateMerchant = wrapper.getAttribute('data-emailjs-template-merchant');
+                const shopEmail = wrapper.getAttribute('data-shop-email');
+
+                if (publicKey && serviceId) {
+                  const templateParams = {
+                    merchant_email: shopEmail
+                  };
+                  
+                  let customerEmail = '';
+                  form.fields.forEach(field => {
+                    const val = formData.get(field.id) || '';
+                    if (field.type === 'EMAIL' || field.label.toLowerCase().includes('email')) {
+                      if (val.trim()) {
+                        customerEmail = val.trim();
+                      }
+                    }
+                    templateParams[field.label] = val;
+                    templateParams[field.id] = val;
+                  });
+                  
+                  if (customerEmail && templateCustomer) {
+                    templateParams.to_email = customerEmail;
+                    emailjs.send(serviceId, templateCustomer, templateParams, publicKey).catch(err => {
+                      console.error("Failed to send customer email", err);
+                    });
+                  }
+
+                  if (shopEmail && templateMerchant) {
+                    emailjs.send(serviceId, templateMerchant, templateParams, publicKey).catch(err => {
+                      console.error("Failed to send merchant email", err);
+                    });
+                  }
+                }
+              }
+            } catch (emailErr) {
+              console.error("EmailJS error:", emailErr);
+            }
           } else {
             throw new Error('Submission failed');
           }
