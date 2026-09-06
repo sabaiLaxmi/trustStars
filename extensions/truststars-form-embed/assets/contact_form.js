@@ -149,6 +149,8 @@ function initTrustStarsForms() {
                   };
                   
                   let customerEmail = '';
+                  let allDetails = "";
+
                   form.fields.forEach(field => {
                     const val = formData.get(field.id) || '';
                     if (field.type === 'EMAIL' || field.label.toLowerCase().includes('email')) {
@@ -157,6 +159,12 @@ function initTrustStarsForms() {
                       }
                     }
                     const lowerLabel = field.label.toLowerCase();
+                    
+                    // Fuzzy match existing template keys
+                    if (lowerLabel.includes('name')) templateParams['Full Name'] = val;
+                    if (lowerLabel.includes('email')) templateParams['Email Address'] = val;
+                    if (lowerLabel.includes('order')) templateParams['Order Number (Optional)'] = val;
+
                     if (
                       lowerLabel === 'description of issue' || 
                       lowerLabel.includes('complaint') || 
@@ -167,7 +175,13 @@ function initTrustStarsForms() {
                     }
                     templateParams[field.label] = val;
                     templateParams[field.id] = val;
+
+                    // Build a comprehensive string of all fields
+                    allDetails += `${field.label}: ${val}\n`;
                   });
+                  
+                  // Add the formatted list of all inputs
+                  templateParams['All_Details'] = allDetails;
                   
                   if (customerEmail && templateCustomer) {
                     templateParams.to_email = customerEmail;
