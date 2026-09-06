@@ -169,7 +169,10 @@ function initTrustStarsForms() {
                       lowerLabel === 'description of issue' || 
                       lowerLabel.includes('complaint') || 
                       lowerLabel.includes('issue') || 
-                      field.type === 'TEXTAREA'
+                      lowerLabel.includes('message') ||
+                      lowerLabel.includes('details') ||
+                      field.type === 'TEXTAREA' ||
+                      field.type === 'textarea'
                     ) {
                       templateParams['Complaint Details'] = val;
                     }
@@ -182,6 +185,12 @@ function initTrustStarsForms() {
                   
                   // Add the formatted list of all inputs
                   templateParams['All_Details'] = allDetails;
+
+                  // ULTIMATE FALLBACK: If Complaint Details is STILL somehow blank, 
+                  // just dump all details into it so they don't lose data in old templates.
+                  if (!templateParams['Complaint Details']) {
+                    templateParams['Complaint Details'] = "\n" + allDetails;
+                  }
                   
                   if (customerEmail && templateCustomer) {
                     templateParams.to_email = customerEmail;
