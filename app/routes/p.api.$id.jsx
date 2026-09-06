@@ -40,7 +40,15 @@ export const loader = async ({ request, params }) => {
     }
   }
 
-  return data({ form }, {
+  return data({ 
+    form, 
+    emailjsConfig: {
+      publicKey: "YqosU54pP-irzvgQD",
+      serviceId: "service_qlb0lwb",
+      templateCustomer: "template_lwp0c1t",
+      templateMerchant: "template_s26uvix"
+    }
+  }, {
     headers: {
       "Cache-Control": "no-cache, no-store, must-revalidate",
       "Pragma": "no-cache"

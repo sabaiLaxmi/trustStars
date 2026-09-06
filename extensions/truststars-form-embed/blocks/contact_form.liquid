@@ -11,30 +11,6 @@
       "label": "Form ID (optional — leave blank to show your latest published form)",
       "info": "To find this, open your form in the TrustStars app and copy the ID from the URL."
     },
-    {
-      "type": "header",
-      "content": "EmailJS Configuration"
-    },
-    {
-      "type": "text",
-      "id": "emailjs_public_key",
-      "label": "Public Key"
-    },
-    {
-      "type": "text",
-      "id": "emailjs_service_id",
-      "label": "Service ID"
-    },
-    {
-      "type": "text",
-      "id": "emailjs_template_customer",
-      "label": "Customer Template ID"
-    },
-    {
-      "type": "text",
-      "id": "emailjs_template_merchant",
-      "label": "Merchant Template ID"
-    }
   ]
 }
 {% endschema %}
@@ -44,9 +20,9 @@
   {% assign active_form_id = "default" %}
 {% endif %}
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 
-<div class="ts-contact-form-wrapper ts-block-wrapper" id="ts-contact-form-{{ block.id }}" data-block-id="{{ block.id }}" data-form-id="{{ active_form_id }}" data-shop-email="{{ shop.email }}" data-emailjs-public-key="{{ block.settings.emailjs_public_key }}" data-emailjs-service-id="{{ block.settings.emailjs_service_id }}" data-emailjs-template-customer="{{ block.settings.emailjs_template_customer }}" data-emailjs-template-merchant="{{ block.settings.emailjs_template_merchant }}">
+<div class="ts-contact-form-wrapper ts-block-wrapper" id="ts-contact-form-{{ block.id }}" data-block-id="{{ block.id }}" data-form-id="{{ active_form_id }}" data-shop-email="{{ shop.email }}">
   <div id="ts-form-container-{{ block.id }}" class="ts-form-container">
     <div style="text-align: center; padding: 20px;" class="ts-loading-state">Loading form...</div>
   </div>

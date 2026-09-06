@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
           <p>We do not sell, trade, or rent your personal information to others. We only share information in the following circumstances:</p>
           <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
             <li><strong>With Shopify:</strong> As required to integrate the App with your store and fulfill mandatory webhook requests (e.g., data redaction).</li>
-            <li><strong>Legal Compliance:</strong> We may share your information to comply with applicable laws and regulations, or to respond to lawful requests for information we receive.</li>
+            <li><strong>Legal Comliance:</strong> We may share your information to comply with applicable laws and regulations, or to respond to lawful requests for information we receive.</li>
           </ul>
         </section>
 

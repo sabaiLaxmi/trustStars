@@ -136,10 +136,11 @@ function initTrustStarsForms() {
             
             try {
               if (window.emailjs) {
-                const publicKey = wrapper.getAttribute('data-emailjs-public-key');
-                const serviceId = wrapper.getAttribute('data-emailjs-service-id');
-                const templateCustomer = wrapper.getAttribute('data-emailjs-template-customer');
-                const templateMerchant = wrapper.getAttribute('data-emailjs-template-merchant');
+                const emailConfig = data.emailjsConfig || {};
+                const publicKey = emailConfig.publicKey;
+                const serviceId = emailConfig.serviceId;
+                const templateCustomer = emailConfig.templateCustomer;
+                const templateMerchant = emailConfig.templateMerchant;
                 const shopEmail = wrapper.getAttribute('data-shop-email');
 
                 if (publicKey && serviceId) {
@@ -154,6 +155,9 @@ function initTrustStarsForms() {
                       if (val.trim()) {
                         customerEmail = val.trim();
                       }
+                    }
+                    if (field.label === 'Description of Issue') {
+                      templateParams['Complaint Details'] = val;
                     }
                     templateParams[field.label] = val;
                     templateParams[field.id] = val;
@@ -180,7 +184,7 @@ function initTrustStarsForms() {
                     });
                   }
                 } else {
-                  console.warn("EmailJS skipped: Public Key or Service ID is missing. Please add them in the Shopify Theme Editor.");
+                  console.warn("EmailJS skipped: Config could not be loaded from backend.");
                 }
               } else {
                 console.warn("EmailJS script not loaded.");
