@@ -156,7 +156,13 @@ function initTrustStarsForms() {
                         customerEmail = val.trim();
                       }
                     }
-                    if (field.label === 'Description of Issue') {
+                    const lowerLabel = field.label.toLowerCase();
+                    if (
+                      lowerLabel === 'description of issue' || 
+                      lowerLabel.includes('complaint') || 
+                      lowerLabel.includes('issue') || 
+                      field.type === 'TEXTAREA'
+                    ) {
                       templateParams['Complaint Details'] = val;
                     }
                     templateParams[field.label] = val;
