@@ -147,13 +147,20 @@ export const action = async ({ request, params }) => {
         }
       }
     });
+    
+    // Get shop email to notify merchant
+    const session = await db.session.findFirst({
+      where: { shop: form.shop, email: { not: null } }
+    });
+    
+    if (session && session.email) {
+      // Send email
+      sendSubmissionEmail(session.email, form.title, valuesForEmail).catch(console.error);
+    }
   } catch (err) {
     console.error("Database save error:", err);
     return data({ error: "Failed to save submission", success: false }, { status: 500 });
   }
-
-  // Email notifications are now handled reliably by the frontend EmailJS integration
-  // to avoid serverless function timeouts and slow SMTP/Ethereal test accounts.
 
   return data({ success: true });
 };
