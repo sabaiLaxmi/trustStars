@@ -193,8 +193,8 @@ function initTrustStarsForms() {
                   }
                   
                   if (customerEmail && templateCustomer) {
-                    templateParams.to_email = customerEmail;
-                    emailjs.send(serviceId, templateCustomer, templateParams, {
+                    const customerParams = { ...templateParams, to_email: customerEmail };
+                    emailjs.send(serviceId, templateCustomer, customerParams, {
                       publicKey: publicKey
                     }).then(() => {
                       console.log("Customer email sent successfully via EmailJS!");
@@ -204,7 +204,8 @@ function initTrustStarsForms() {
                   }
 
                   if (shopEmail && templateMerchant) {
-                    emailjs.send(serviceId, templateMerchant, templateParams, {
+                    const merchantParams = { ...templateParams, to_email: shopEmail };
+                    emailjs.send(serviceId, templateMerchant, merchantParams, {
                       publicKey: publicKey
                     }).then(() => {
                       console.log("Merchant email sent successfully via EmailJS!");

@@ -43,10 +43,10 @@ export const loader = async ({ request, params }) => {
   return data({ 
     form, 
     emailjsConfig: {
-      publicKey: process.env.EMAILJS_PUBLIC_KEY || "YqosU54pP-irzvgQD",
-      serviceId: process.env.EMAILJS_SERVICE_ID || "service_qlb0lwb",
-      templateCustomer: process.env.EMAILJS_TEMPLATE_CUSTOMER || "template_lwp0c1t",
-      templateMerchant: process.env.EMAILJS_TEMPLATE_MERCHANT || "template_s26uvix"
+      publicKey: process.env.EMAILJS_PUBLIC_KEY || "",
+      serviceId: process.env.EMAILJS_SERVICE_ID || "",
+      templateCustomer: process.env.EMAILJS_TEMPLATE_CUSTOMER || "",
+      templateMerchant: process.env.EMAILJS_TEMPLATE_MERCHANT || ""
     }
   }, {
     headers: {
