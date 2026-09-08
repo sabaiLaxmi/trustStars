@@ -79,19 +79,19 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
           border-color: rgba(0, 128, 96, 0.4) !important;
         }
       `}</style>
-      <Box padding={{ xs: "400", md: "0" }} minHeight="100%" width="100%">
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <motion.div 
         variants={itemVariants} 
         whileHover={{ y: -6 }} 
         transition={{ duration: 0.3 }}
-        style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+        style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
       >
         <div 
           className="gallery-card"
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            height: '100%',
+            flexGrow: 1,
             background: '#FFF2DB',
             borderRadius: '12px',
             boxShadow: '0 4px 12px -2px rgba(0, 128, 96, 0.15)',
@@ -304,7 +304,7 @@ export function TemplateCard({ template, navigate, initialWishlisted = false, cu
           </div>
         </div>
       </motion.div>
-      </Box>
+      </div>
 
       {/* Upgrade Modal */}
       <Modal
