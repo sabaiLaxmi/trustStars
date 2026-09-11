@@ -17,27 +17,18 @@ export const loader = async ({ request }) => {
     console.log("Charge ID:", chargeId);
     
     try {
-      const response = await admin.graphql(`
-        query {
-          currentAppInstallation {
-            activeSubscriptions {
-              id
-              name
-              status
-            }
-          }
-        }
-      `);
-      const { data } = await response.json();
-      console.log("GraphQL Data:", JSON.stringify(data, null, 2));
+      const { hasActivePayment, appSubscriptions } = await billing.check({
+        plans: ["Starter", "Pro"],
+        isTest: true,
+      });
       
-      const activeSubscriptions = data?.currentAppInstallation?.activeSubscriptions || [];
+      console.log("Billing Check Result:", { hasActivePayment, appSubscriptions });
       
-      const targetSub = activeSubscriptions.find(sub => 
-        (sub.name === "Starter" || sub.name === "Pro") && sub.status === "ACTIVE"
+      const targetSub = appSubscriptions.find(sub => 
+        (sub.name === "Starter" || sub.name === "Pro")
       );
 
-      if (targetSub) {
+      if (hasActivePayment && targetSub) {
         // Confirm and persist plan
         await db.shop.update({
           where: { id: session.shop },
@@ -77,29 +68,7 @@ export const action = async ({ request }) => {
   try {
     const shop = await db.shop.findUnique({ where: { id: session.shop } });
     
-    // Step 4: Handle plan changes by cancelling existing subscription first
-    if (shop?.subscriptionId) {
-      const response = await admin.graphql(`
-        mutation appSubscriptionCancel($id: ID!) {
-          appSubscriptionCancel(id: $id) {
-            appSubscription {
-              id
-              status
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }
-      `, {
-        variables: { id: shop.subscriptionId }
-      });
-      const data = await response.json();
-      if (data?.data?.appSubscriptionCancel?.userErrors?.length > 0) {
-        console.error("Error cancelling existing subscription:", data.data.appSubscriptionCancel.userErrors);
-      }
-    }
+    // Removed manual appSubscriptionCancel as Shopify handles replacement automatically when billing.request is approved.
 
     if (plan === "Free") {
       await db.shop.update({
@@ -211,7 +180,11 @@ export default function Pricing() {
                       </List>
                     </Box>
                     
-                    <Button variant="primary" onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>{currentPlan === "FREE" ? "Current Plan" : "Downgrade to Free"}</Button>
+                    {currentPlan === "FREE" ? (
+                      <Button disabled fullWidth>Current Plan</Button>
+                    ) : (
+                      <Button onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>Downgrade to Free</Button>
+                    )}
                   </BlockStack>
                 </Card>
                 </div>
