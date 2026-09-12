@@ -17,16 +17,35 @@ export const loader = async ({ request }) => {
     console.log("Charge ID:", chargeId);
     
     try {
-      const { hasActivePayment, appSubscriptions } = await billing.check({
-        plans: ["Starter", "Pro"],
-        isTest: true,
-      });
-      
-      console.log("Billing Check Result:", { hasActivePayment, appSubscriptions });
-      
-      const targetSub = appSubscriptions.find(sub => 
-        (sub.name === "Starter" || sub.name === "Pro")
-      );
+      let hasActivePayment = false;
+      let appSubscriptions = [];
+      let targetSub = null;
+      let retries = 0;
+      const maxRetries = 4;
+
+      while (retries < maxRetries) {
+        const checkResult = await billing.check({
+          plans: ["Starter", "Pro"],
+          isTest: true,
+        });
+        hasActivePayment = checkResult.hasActivePayment;
+        appSubscriptions = checkResult.appSubscriptions;
+        
+        console.log(`Billing Check Result (Attempt ${retries + 1}):`, { hasActivePayment, appSubscriptions });
+        
+        targetSub = appSubscriptions.find(sub => 
+          (sub.name === "Starter" || sub.name === "Pro")
+        );
+
+        if (hasActivePayment && targetSub) {
+          break;
+        }
+
+        retries++;
+        if (retries < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s delay
+        }
+      }
 
       if (hasActivePayment && targetSub) {
         // Confirm and persist plan
