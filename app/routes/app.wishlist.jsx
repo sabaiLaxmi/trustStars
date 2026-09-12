@@ -7,11 +7,12 @@ import { motion } from "framer-motion";
 import galleryStyles from "../styles/gallery.css?url";
 import { TemplateCard } from "../components/TemplateCard";
 import db from "../db.server";
+import { verifyAndSyncPlan } from "../utils/billing.server";
 
 export const links = () => [{ rel: "stylesheet", href: galleryStyles }];
 
 export const loader = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
   
   // Fetch only wishlisted IDs for this specific shop
   const wishlistedTemplates = await db.templateWishlist.findMany({
@@ -19,12 +20,14 @@ export const loader = async ({ request }) => {
     select: { templateId: true }
   });
   
+  const currentPlan = await verifyAndSyncPlan(admin, session);
+  
   const wishlistedIds = wishlistedTemplates.map(w => w.templateId);
   
   // Map IDs to actual template objects
   const savedTemplates = templates.filter(t => wishlistedIds.includes(t.id));
 
-  return { savedTemplates };
+  return { savedTemplates, currentPlan };
 };
 
 const containerVariants = {
@@ -37,7 +40,7 @@ const containerVariants = {
 
 export default function Wishlist() {
   const navigate = useNavigate();
-  const { savedTemplates } = useLoaderData();
+  const { savedTemplates, currentPlan } = useLoaderData();
 
   return (
     <Page title="My Wishlist" fullWidth>
@@ -69,6 +72,7 @@ export default function Wishlist() {
                     template={template} 
                     navigate={navigate} 
                     initialWishlisted={true} 
+                    currentPlan={currentPlan}
                   />
                 ))}
               </div>
