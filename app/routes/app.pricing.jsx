@@ -56,9 +56,6 @@ export const loader = async ({ request }) => {
             subscriptionId: targetSub.id
           }
         });
-        
-        // Redirect to clean the charge_id from the URL
-        return redirect("/app/pricing");
       } else {
         error = "Upgrade was not completed.";
       }
