@@ -107,11 +107,14 @@ export const action = async ({ request }) => {
       returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing?shop=${session.shop}`
     });
   } catch (error) {
-    console.error("Billing request error:", error);
-    // If it's a redirect error from billing.request, throw it so Remix can redirect
+    // If it's a redirect error from billing.request (302) or a re-auth request (401),
+    // throw it immediately so Remix/AppBridge can handle the redirect.
     if (error instanceof Response) {
       throw error;
     }
+    
+    // Only log actual unexpected errors
+    console.error("Billing request error:", error);
     return { error: "Failed to initiate billing request. Please try again." };
   }
 };
