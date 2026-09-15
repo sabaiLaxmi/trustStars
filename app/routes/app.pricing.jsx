@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { useRouteError, useSubmit, useNavigation, useActionData, useLoaderData, redirect } from "react-router";
+import { useRouteError, useSubmit, useNavigation, useActionData, useLoaderData } from "react-router";
 import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid, Banner } from "@shopify/polaris";
 import db from "../db.server";
 
@@ -93,30 +93,6 @@ export const action = async ({ request }) => {
     // Removed manual appSubscriptionCancel as Shopify handles replacement automatically when billing.request is approved.
 
     if (plan === "Free") {
-      // If the user has an active subscription, we must cancel it on Shopify when they downgrade to Free
-      if (shop?.subscriptionId) {
-        try {
-          await admin.graphql(
-            `#graphql
-            mutation appSubscriptionCancel($id: ID!) {
-              appSubscriptionCancel(id: $id) {
-                appSubscription {
-                  id
-                  status
-                }
-                userErrors {
-                  field
-                  message
-                }
-              }
-            }`,
-            { variables: { id: shop.subscriptionId } }
-          );
-        } catch (cancelError) {
-          console.error("Failed to cancel Shopify subscription:", cancelError);
-        }
-      }
-
       await db.shop.update({
         where: { id: session.shop },
         data: { plan: "FREE", subscriptionId: null }
@@ -125,22 +101,17 @@ export const action = async ({ request }) => {
     }
 
     // Step 1: Trigger subscription request
-    const appUrl = process.env.SHOPIFY_APP_URL || "";
-    const baseUrl = appUrl.replace(/\/$/, "");
     await billing.request({
       plan: plan,
       isTest: true,
-      returnUrl: `${baseUrl}/app/pricing?shop=${session.shop}`
+      returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing?shop=${session.shop}`
     });
   } catch (error) {
-    // If it's a redirect error from billing.request (302) or a re-auth request (401),
-    // throw it immediately so Remix/AppBridge can handle the redirect.
+    console.error("Billing request error:", error);
+    // If it's a redirect error from billing.request, throw it so Remix can redirect
     if (error instanceof Response) {
       throw error;
     }
-    
-    // Only log actual unexpected errors
-    console.error("Billing request error:", error);
     return { error: "Failed to initiate billing request. Please try again." };
   }
 };
