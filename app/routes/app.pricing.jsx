@@ -1,6 +1,6 @@
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { useRouteError, useSubmit, useNavigation, useActionData, useLoaderData } from "react-router";
+import { useRouteError, useSubmit, useNavigation, useActionData, useLoaderData, redirect } from "react-router";
 import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineStack, InlineGrid, Banner } from "@shopify/polaris";
 import db from "../db.server";
 
@@ -58,12 +58,7 @@ export const loader = async ({ request }) => {
         });
         
         // Redirect to clean the charge_id from the URL
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: "/app/pricing"
-          }
-        });
+        return redirect("/app/pricing");
       } else {
         error = "Upgrade was not completed.";
       }
@@ -133,7 +128,8 @@ export const action = async ({ request }) => {
     }
 
     // Step 1: Trigger subscription request
-    const baseUrl = process.env.SHOPIFY_APP_URL.replace(/\/$/, "");
+    const appUrl = process.env.SHOPIFY_APP_URL || "";
+    const baseUrl = appUrl.replace(/\/$/, "");
     await billing.request({
       plan: plan,
       isTest: true,
