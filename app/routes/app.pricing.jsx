@@ -60,6 +60,9 @@ export const loader = async ({ request }) => {
         error = "Upgrade was not completed.";
       }
     } catch (err) {
+      if (err instanceof Response) {
+        throw err;
+      }
       console.error("====== BILLING VERIFICATION ERROR ======");
       console.error("Message:", err.message);
       console.error("Full Error Object:", JSON.stringify(err, null, 2));

@@ -194,24 +194,24 @@ function initTrustStarsForms() {
                   
                   if (customerEmail && templateCustomer) {
                     const customerParams = { ...templateParams, to_email: customerEmail };
-                    emailjs.send(serviceId, templateCustomer, customerParams, {
-                      publicKey: publicKey
-                    }).then(() => {
-                      console.log("Customer email sent successfully via EmailJS!");
-                    }).catch(err => {
-                      console.error("Failed to send customer email", err);
-                    });
+                    // emailjs.send(serviceId, templateCustomer, customerParams, {
+                    //   publicKey: publicKey
+                    // }).then(() => {
+                    //   console.log("Customer email sent successfully via EmailJS!");
+                    // }).catch(err => {
+                    //   console.error("Failed to send customer email", err);
+                    // });
                   }
 
                   if (shopEmail && templateMerchant) {
                     const merchantParams = { ...templateParams, to_email: shopEmail };
-                    emailjs.send(serviceId, templateMerchant, merchantParams, {
-                      publicKey: publicKey
-                    }).then(() => {
-                      console.log("Merchant email sent successfully via EmailJS!");
-                    }).catch(err => {
-                      console.error("Failed to send merchant email", err);
-                    });
+                    // emailjs.send(serviceId, templateMerchant, merchantParams, {
+                    //   publicKey: publicKey
+                    // }).then(() => {
+                    //   console.log("Merchant email sent successfully via EmailJS!");
+                    // }).catch(err => {
+                    //   console.error("Failed to send merchant email", err);
+                    // });
                   }
                 } else {
                   console.warn("EmailJS skipped: Config could not be loaded from backend.");

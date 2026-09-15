@@ -1,7 +1,7 @@
 import { data } from "react-router";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
-import { sendSubmissionEmail } from "../utils/email.server";
+import { sendSubmissionEmail, sendCustomerConfirmationEmail } from "../utils/email.server";
 
 export const handle = { isProxy: true };
 
@@ -156,6 +156,10 @@ export const action = async ({ request, params }) => {
     if (session && session.email) {
       // Send email
       sendSubmissionEmail(session.email, form.title, valuesForEmail).catch(console.error);
+    }
+
+    if (submitterEmail) {
+      sendCustomerConfirmationEmail(submitterEmail, form.title, valuesForEmail).catch(console.error);
     }
   } catch (err) {
     console.error("Database save error:", err);
