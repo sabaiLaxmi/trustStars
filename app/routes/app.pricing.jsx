@@ -56,6 +56,14 @@ export const loader = async ({ request }) => {
             subscriptionId: targetSub.id
           }
         });
+        
+        // Redirect to clean the charge_id from the URL
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: "/app/pricing"
+          }
+        });
       } else {
         error = "Upgrade was not completed.";
       }
@@ -93,6 +101,30 @@ export const action = async ({ request }) => {
     // Removed manual appSubscriptionCancel as Shopify handles replacement automatically when billing.request is approved.
 
     if (plan === "Free") {
+      // If the user has an active subscription, we must cancel it on Shopify when they downgrade to Free
+      if (shop?.subscriptionId) {
+        try {
+          await admin.graphql(
+            `#graphql
+            mutation appSubscriptionCancel($id: ID!) {
+              appSubscriptionCancel(id: $id) {
+                appSubscription {
+                  id
+                  status
+                }
+                userErrors {
+                  field
+                  message
+                }
+              }
+            }`,
+            { variables: { id: shop.subscriptionId } }
+          );
+        } catch (cancelError) {
+          console.error("Failed to cancel Shopify subscription:", cancelError);
+        }
+      }
+
       await db.shop.update({
         where: { id: session.shop },
         data: { plan: "FREE", subscriptionId: null }
@@ -101,10 +133,11 @@ export const action = async ({ request }) => {
     }
 
     // Step 1: Trigger subscription request
+    const baseUrl = process.env.SHOPIFY_APP_URL.replace(/\/$/, "");
     await billing.request({
       plan: plan,
       isTest: true,
-      returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing?shop=${session.shop}`
+      returnUrl: `${baseUrl}/app/pricing?shop=${session.shop}`
     });
   } catch (error) {
     // If it's a redirect error from billing.request (302) or a re-auth request (401),
