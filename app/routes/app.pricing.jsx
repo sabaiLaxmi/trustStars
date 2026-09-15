@@ -123,6 +123,11 @@ export default function Pricing() {
   const navigation = useNavigation();
 
   const isUpgrading = navigation.state === "submitting" || navigation.state === "loading";
+  const submittingPlan = navigation.formData?.get("plan");
+  
+  const isUpgradingFree = isUpgrading && submittingPlan === "Free";
+  const isUpgradingStarter = isUpgrading && submittingPlan === "Starter";
+  const isUpgradingPro = isUpgrading && submittingPlan === "Pro";
   
   const handleUpgrade = (plan) => {
     submit({ plan }, { method: "post" });
@@ -205,7 +210,7 @@ export default function Pricing() {
                     {currentPlan === "FREE" ? (
                       <Button disabled fullWidth>Current Plan</Button>
                     ) : (
-                      <Button onClick={() => handleUpgrade("Free")} disabled={isUpgrading} fullWidth>Downgrade to Free</Button>
+                      <Button onClick={() => handleUpgrade("Free")} loading={isUpgradingFree} disabled={isUpgrading} fullWidth>Downgrade to Free</Button>
                     )}
                   </BlockStack>
                 </Card>
@@ -260,10 +265,10 @@ export default function Pricing() {
                     {currentPlan === "STARTER" ? (
                       <Button disabled fullWidth>Current Plan</Button>
                     ) : currentPlan === "PRO" ? (
-                      <Button onClick={() => handleUpgrade("Starter")} disabled={isUpgrading} fullWidth>Downgrade to Starter</Button>
+                      <Button onClick={() => handleUpgrade("Starter")} loading={isUpgradingStarter} disabled={isUpgrading} fullWidth>Downgrade to Starter</Button>
                     ) : (
                       <div className="upgrade-btn-wrapper">
-                        <Button variant="primary" onClick={() => handleUpgrade("Starter")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Starter</Button>
+                        <Button variant="primary" onClick={() => handleUpgrade("Starter")} loading={isUpgradingStarter} disabled={isUpgrading} fullWidth>Upgrade to Starter</Button>
                       </div>
                     )}
                   </BlockStack>
@@ -345,7 +350,7 @@ export default function Pricing() {
                     <Button disabled fullWidth>Current Plan</Button>
                   ) : (
                     <div className="upgrade-btn-wrapper">
-                      <Button variant="primary" onClick={() => handleUpgrade("Pro")} loading={isUpgrading} disabled={isUpgrading} fullWidth>Upgrade to Pro</Button>
+                      <Button variant="primary" onClick={() => handleUpgrade("Pro")} loading={isUpgradingPro} disabled={isUpgrading} fullWidth>Upgrade to Pro</Button>
                     </div>
                   )}
                 </BlockStack>
