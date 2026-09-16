@@ -49,9 +49,14 @@ export const loader = async ({ request }) => {
 
       if (hasActivePayment && targetSub) {
         // Confirm and persist plan
-        await db.shop.update({
+        await db.shop.upsert({
           where: { id: session.shop },
-          data: {
+          update: {
+            plan: targetSub.name === "Starter" ? "STARTER" : "PRO",
+            subscriptionId: targetSub.id
+          },
+          create: {
+            id: session.shop,
             plan: targetSub.name === "Starter" ? "STARTER" : "PRO",
             subscriptionId: targetSub.id
           }
@@ -93,9 +98,10 @@ export const action = async ({ request }) => {
     // Removed manual appSubscriptionCancel as Shopify handles replacement automatically when billing.request is approved.
 
     if (plan === "Free") {
-      await db.shop.update({
+      await db.shop.upsert({
         where: { id: session.shop },
-        data: { plan: "FREE", subscriptionId: null }
+        update: { plan: "FREE", subscriptionId: null },
+        create: { id: session.shop, plan: "FREE", subscriptionId: null }
       });
       return { success: true };
     }
