@@ -98,12 +98,29 @@ export const action = async ({ request }) => {
     // Removed manual appSubscriptionCancel as Shopify handles replacement automatically when billing.request is approved.
 
     if (plan === "Free") {
+      if (shop?.subscriptionId) {
+        try {
+          await billing.cancel({
+            subscriptionId: shop.subscriptionId,
+            isTest: true,
+            prorate: true,
+          });
+        } catch (error) {
+          console.error("Failed to cancel Shopify subscription:", error);
+        }
+      }
+
       await db.shop.upsert({
         where: { id: session.shop },
         update: { plan: "FREE", subscriptionId: null },
         create: { id: session.shop, plan: "FREE", subscriptionId: null }
       });
-      return { success: true };
+      
+      // Force a redirect to refresh the page state
+      return new Response(null, {
+        status: 302,
+        headers: { Location: `/app/pricing?shop=${session.shop}` },
+      });
     }
 
     // Step 1: Trigger subscription request
