@@ -5,7 +5,7 @@ import { Page, Layout, Card, BlockStack, Text, Button, List, Box, Badge, InlineS
 import db from "../db.server";
 
 export const loader = async ({ request }) => {
-  const { session, billing, admin } = await authenticate.admin(request);
+  const { session, billing } = await authenticate.admin(request);
   const url = new URL(request.url);
   const chargeId = url.searchParams.get("charge_id");
 
@@ -26,7 +26,7 @@ export const loader = async ({ request }) => {
       while (retries < maxRetries) {
         const checkResult = await billing.check({
           plans: ["Starter", "Pro"],
-          isTest: true,
+          isTest: false,
         });
         hasActivePayment = checkResult.hasActivePayment;
         appSubscriptions = checkResult.appSubscriptions;
@@ -84,7 +84,7 @@ export const loader = async ({ request }) => {
 };
 
 export const action = async ({ request }) => {
-  const { session, billing, admin } = await authenticate.admin(request);
+  const { session, billing } = await authenticate.admin(request);
   const formData = await request.formData();
   const plan = formData.get("plan"); // "Starter", "Pro", or "Free"
   
@@ -102,7 +102,7 @@ export const action = async ({ request }) => {
         try {
           await billing.cancel({
             subscriptionId: shop.subscriptionId,
-            isTest: true,
+            isTest: false,
             prorate: true,
           });
         } catch (error) {
@@ -126,7 +126,7 @@ export const action = async ({ request }) => {
     // Step 1: Trigger subscription request
     await billing.request({
       plan: plan,
-      isTest: true,
+      isTest: false,
       returnUrl: `${process.env.SHOPIFY_APP_URL}/app/pricing?shop=${session.shop}`
     });
   } catch (error) {
